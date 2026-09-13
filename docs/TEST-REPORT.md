@@ -1,5 +1,8 @@
 # Implementation verification
 
+Latest rebrand verification (14 September 2026): source `872c226` passed all 530 tests in 37 files, 22 production browser scenarios (including lowercase `brio` header/title), lint, typecheck, and the isolated production build. Local browser and Next.js runtime checks found no errors. The hosted rebrand is deployed as `dpl_3Ywkgbs9Q3afzFf2jH7acFkfm2Dd`. See [hosted branding evidence](../artifacts/brio-browser-verification.json).
+
+
 Verified 14 September 2026. Source `6981750` passed **530 automated tests across 37 files**, **all 22 production browser scenarios**, lint, TypeScript and an isolated production build. [Final GitHub CI 34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`. Controller [PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged to protected `main` as `8a7636e2709d039773afa73857e6cb66f08a7d6f`.
 
 Cloud deployment checks and complete live execution are reported separately below. Earlier dated runs are retained as historical evidence.
@@ -34,7 +37,7 @@ No full customer-to-fix-to-public-reply run is claimed. Local Docker access was 
 
 GitHub Actions results are separate from local checks. Controller PR #1 is merged after final CI passed. The initial checkout failure and its fix are preserved in [earlier CI evidence](../artifacts/github-ci-verification.json); later successful runs supersede that failure. A configured key, successful health response or passing fixture does not count as a live integration test.
 
-## Mend and GCP follow-up
+## brio and GCP follow-up
 
 The 13-step simulation completed in the production browser with pause/reload/resume/restart coverage. Cross-tab SSE delivery passed with observer HTTP reads blocked; a 503 stream failure recovered through HTTP fallback and returned to SSE without a reload. Ten stream unit tests cover access failure, cancellation, native callback delivery, redaction and renewal. Five pending-worker tests ensure every job/import/verification endpoint rejects while setup is incomplete.
 
@@ -46,7 +49,7 @@ The user’s real metadata request returned HTTP 400 with “Query too complex.�
 
 ## Slack configuration evidence
 
-The replacement bot token passed Slack auth.test for BitsUp; Mend is installed with chat:write and joined the created mend-approvals channel. All six settings, including the user-supplied Elen engineer ID and David marketer ID, are saved privately and imported into hosted production Convex. The first exposed token was revoked. The public callback is enabled and its URL persisted after browser reload. A signed non-action callback probe passed signature validation and returned the expected `slack_context_denied` for absent action context; it created no approval. No live human approval decision was tested. [Configuration record](../artifacts/slack-setup.json) and [signed probe evidence](../artifacts/slack-signed-callback-verification.json).
+The replacement bot token passed Slack auth.test for BitsUp; brio’s Slack integration remains registered as `Mend`, is installed with chat:write and joined the created `mend-approvals` channel. All six settings, including the user-supplied Elen engineer ID and David marketer ID, are saved privately and imported into hosted production Convex. The first exposed token was revoked. The public callback is enabled and its URL persisted after browser reload. A signed non-action callback probe passed signature validation and returned the expected `slack_context_denied` for absent action context; it created no approval. No live human approval decision was tested. [Configuration record](../artifacts/slack-setup.json) and [signed probe evidence](../artifacts/slack-signed-callback-verification.json).
 
 ## Populated workspace iteration — 2026-09-14
 
@@ -54,9 +57,9 @@ Local verification on the complete seeded-workspace change passed 493 tests in 3
 
 ## Hosted verification — 14 September 2026
 
-Hosted Mend deployment `dpl_BXDqW34ib72uTQoTVsCCfbgXY3m4` runs source `e8f2dd0`; production Convex `resilient-perch-131` and both rebuilt workers run function/worker source `6981750`. These deployment identities do not prove a completed customer repair.
+Hosted brio deployment `dpl_BXDqW34ib72uTQoTVsCCfbgXY3m4` runs source `e8f2dd0`; production Convex `resilient-perch-131` and both rebuilt workers run function/worker source `6981750`. These deployment identities do not prove a completed customer repair.
 
-- [Hosted Mend admission](../artifacts/hosted-mend-verification.json): unauthenticated page redirect, API denial, wrong-code denial, secure HttpOnly cookie and authenticated live Convex state all verified.
+- [Hosted brio admission](../artifacts/hosted-mend-verification.json): unauthenticated page redirect, API denial, wrong-code denial, secure HttpOnly cookie and authenticated live Convex state all verified.
 - [Vercel and callback checks](../artifacts/hosted-provider-verification.json): token accesses the expected weather project, production alias resolves to the recorded deployment, candidate auto-assignment is disabled, only public identity settings exist, and unsigned Slack callback is refused.
 - [Cloud weather baseline](../artifacts/hosted-weather-baseline.json): signed GCP request returned 200; exact expected source identity matched; Chromium recorded 34 checks and reproduced the planted conversion defect. Twelve conversion observations intentionally fail. This is baseline reproduction, not a fixed release.
 - [Sandbox build](../artifacts/gcp-coding-sandbox-deployment.json): Cloud Build succeeded; immutable runtime passed Bun/Chromium smoke as UID 65532 with no network, read-only root and no Docker socket. Workflow lint and credential-cleanup checks passed. The reviewed controller workflow is merged; production Convex is pinned to controller main `8a7636e`. The merged weather baseline is deployed and verified; production `FDE_BASE_SHA` is pinned to `161835dba251f9739d25194ec21db0f2461df989`. Real GitHub OIDC pull/candidate execution awaits a valid signed Build.

@@ -1,4 +1,6 @@
-# Mend
+# brio
+
+brio is the product previously called Mend. Existing service URLs, project IDs and local paths retain their original names; the Slack app is still registered as `Mend`.
 
 A functional web control app for customer reports, engineering approvals, persona policies, and tracked public replies. The owned target is a separate weather repository with a deliberate Celsius/Fahrenheit conversion defect.
 
@@ -18,7 +20,7 @@ Open [the control app](http://127.0.0.1:3000). The demo needs no provider creden
 
 **Demo transitions are simulations.** They do not post publicly, call paid models, make real Slack decisions, alter the weather repository, or release production deployments. Source modes, evidence, and receipts retain fixture labels. Actual provider tests remain separate.
 
-The current workspace also has an anonymous **local** Convex deployment configured in the untracked `.env`. No cloud account was created. Start its development process with `bun run dev:convex` when working on backend functions; the local demo uses its own isolated file store.
+The workspace has an anonymous **local** Convex deployment for development and a separate hosted production deployment, `resilient-perch-131`. The hosted app and worker services are deployed; see the [remaining live verification checklist](docs/SETUP-REMAINING.md) for current status. Start local backend development with `bun run dev:convex`; the local demo uses its own isolated file store.
 
 The controller checkout is `/home/big-daddy/Desktop/hackathon`. The independent weather checkout is `/home/big-daddy/Desktop/hackathon-weather`, with its own Git history, package manifest, and application at the repository root. To inspect the seeded weather app in another terminal:
 

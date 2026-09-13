@@ -1,4 +1,4 @@
-# Mend: what remains to set up
+# brio: what remains to set up
 
 Updated 14 September 2026. This is the checklist for the existing installation. Do not recreate the completed projects.
 
@@ -7,14 +7,14 @@ Updated 14 September 2026. This is the checklist for the existing installation. 
 | Service | Existing installation | Evidence and remaining verification |
 | --- | --- | --- |
 | Convex | Team `vinay-chamola`, project `mend-hackathon`, production `resilient-perch-131` | Functions from `6981750` deployed; hosted authenticated state works. |
-| Mend website | [mend-hackathon.vercel.app](https://mend-hackathon.vercel.app) | Source `e8f2dd0` deployed as `dpl_BXDqW34ib72uTQoTVsCCfbgXY3m4`; shared-code admission verified. Local populated demo remains on port 3002; hosted production is separate. |
+| brio website | [mend-hackathon.vercel.app](https://mend-hackathon.vercel.app) | Source `872c226` deployed as `dpl_3Ywkgbs9Q3afzFf2jH7acFkfm2Dd`; shared-code admission verified. Local populated demo remains on port 3002; hosted production is separate. |
 | Weather website | [mend-weather.vercel.app](https://mend-weather.vercel.app) | Merged main `161835dba251f9739d25194ec21db0f2461df989` deployed as `dpl_2j3VMkCbdSJtAh565FdkXpu76PGK`; staged and stable URLs each passed exact identity verification and reproduced the planted defect in 34 browser checks. |
 | Vercel API | Token saved and imported into production Convex | Real project, deployment, production alias, staging settings and environment allowlist verified. Automatic domain assignment is disabled. |
 | GCP | Project `mend-hackathon-260914`, region `us-central1` | Social revision `00004-77f` and verifier `00003-s98` active and healthy; immutable sandbox image built and offline Chromium smoke passed. No further GCP credentials needed. |
 | OpenAI | App key installed; `gpt-5-mini` | Prior real writer, triage and persona evaluation passed. |
 | Linear | Drizzle team and Done state configured in hosted Convex | Metadata read verified; issue creation/update still needs a controlled live flow. |
 | GitHub | Separate controller/weather repositories and engineering environments | Controller PR #1 merged as `8a7636e`; final CI passed. Hosted callback, sandbox pull settings and Checks App configured; remaining baseline and execution work is below. |
-| Slack | Mend app in BitsUp, bot in `#mend-approvals` | Elen is engineer; David is marketer. Hosted secrets saved. Callback enabled and URL persisted after reload; actual human button test remains. |
+| Slack | brio’s app remains registered as `Mend` in BitsUp, bot in `#mend-approvals` | Elen is engineer; David is marketer. Hosted secrets saved. Callback enabled and URL persisted after reload; actual human button test remains. |
 
 ## 1. Verify a real signed Build
 
@@ -34,7 +34,7 @@ The immutable sandbox is built and its private registry access is configured. [S
 
 The expected configuration is:
 
-- App: Mend in BitsUp.
+- App: registered as `Mend` in BitsUp (legacy name for brio’s Slack integration).
 - Socket Mode: **Off**; this app receives HTTP interactions.
 - Interactivity: **On**.
 - Request URL: `https://resilient-perch-131.convex.site/slack/interactions`.
@@ -45,7 +45,7 @@ The saved URL has already been verified after reloading Slack settings. An unsig
 
 ## 3. X is ready; the controlled posting check remains
 
-**@Vinaychamoc5** was reimported after the operator explicitly requested enablement. The hosted worker returned HTTP 200 and verified the account identity; Mend reports **ready** with **paused false**. Both X switches are enabled on social revision `mend-social-worker-00004-77f` and production Convex. [Enablement evidence](../artifacts/x-automation-enablement.json).
+**@Vinaychamoc5** was reimported after the operator explicitly requested enablement. The hosted worker returned HTTP 200 and verified the account identity; brio reports **ready** with **paused false**. Both X switches are enabled on social revision `mend-social-worker-00004-77f` and production Convex. [Enablement evidence](../artifacts/x-automation-enablement.json).
 
 Background social polling remains **off**, and no X post or reply has been sent. Keep the verified connection and exercise the approved case flow below; do not import another session or create another account. Operator enablement does not establish external X approval, which has not been independently verified.
 

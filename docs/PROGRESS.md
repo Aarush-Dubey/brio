@@ -1,18 +1,20 @@
-# Mend implementation progress
+# brio implementation progress
 
 Last updated: 14 September 2026 (Asia/Kolkata)
 
 ## Current objective
 
-Finish the live Mend integration while preserving the populated local demo. Keep the final PRD, two-person delivery plan, setup guide and verification evidence current.
+Use brio as the product name while preserving the existing infrastructure and registered Slack identifiers. Finish the live brio integration while preserving the populated local demo. Keep the final PRD, two-person delivery plan, setup guide and verification evidence current.
 
 ## Completed and verified
+
+- The exact lowercase **brio** brand is deployed in the header and browser title; legacy fixture activity labels display the current name. Source `872c226` passed 530 tests, 22 production browser scenarios, lint, typecheck and the isolated build. Local browser/Next runtime checks passed.
 
 - PRD v1.3, reference-matched web interface, live Kanban/timeline, persona workflows and the separate intentionally buggy weather repository are implemented.
 - Local workspace contains 38 cases and 167 reports, including 36 additive curated examples. Persona replies and live transitions are visible; fixture provenance remains explicit.
 - Source `6981750` passed 530 tests in 37 files, all 22 production browser scenarios in 1.1 minutes, lint, TypeScript and the isolated production build. Final GitHub CI [34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`. Controller [PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged to protected `main` as `8a7636e2709d039773afa73857e6cb66f08a7d6f`.
 - Hosted production Convex `resilient-perch-131` runs functions from `6981750` in project `mend-hackathon`, team `vinay-chamola`. Slack, Linear, model, GitHub, Vercel and worker settings are imported. Local development targets remain separate.
-- [Mend](https://mend-hackathon.vercel.app) is deployed from `e8f2dd0` as `dpl_BXDqW34ib72uTQoTVsCCfbgXY3m4`. Hosted checks verified unauthenticated denial, wrong-code denial, secure HttpOnly admission and authenticated live Convex access. Hosted production is a separate empty workspace, not a copy of local fixtures.
+- [brio](https://mend-hackathon.vercel.app) is deployed from `872c226` as `dpl_3Ywkgbs9Q3afzFf2jH7acFkfm2Dd`. Hosted checks verified unauthenticated denial, wrong-code denial, secure HttpOnly admission and authenticated live Convex access. Hosted production is a separate empty workspace, not a copy of local fixtures.
 - [Weather](https://mend-weather.vercel.app) is deployed from merged main `161835dba251f9739d25194ec21db0f2461df989` as `dpl_2j3VMkCbdSJtAh565FdkXpu76PGK`. Both staged and production URLs passed exact SHA/tree checks and reproduced the intentional defect in 34 Chromium observations each. The real Vercel token was checked against the correct project and imported into production Convex. Automatic domain assignment is disabled for candidates; project settings contain only public weather identity values.
 - Cloud Build `569f3b8b-c458-490d-bf73-1d9775c4bc86` succeeded for source `6981750`; Cloud Run revisions `mend-social-worker-00004-77f` and `mend-weather-verifier-00003-s98` are active and healthy. The verifier ran real Chromium against the hosted weather revision, passed identity verification and reproduced the intentional conversion defect over 34 observations. The social worker uses always-allocated CPU and one minimum instance. Its latest revision includes the operator-authorized X enablement; background social polling remains off.
 - The immutable coding sandbox built successfully in Cloud Build. Chromium/Bun ran as UID 65532 with networking disabled and a read-only root. GitHub environment variables and narrowly scoped keyless registry access are configured. The actual GitHub OIDC pull and signed candidate Build remain unverified.
@@ -33,6 +35,7 @@ Finish the live Mend integration while preserving the populated local demo. Keep
 
 ## Change log
 
+- 2026-09-14: Renamed the product from Mend to brio at the user’s request. Updated product documentation; existing URLs, infrastructure identifiers, reference files and the legacy registered Slack app name are retained. UI and deployment verification are recorded separately. Earlier entries below retain the product name used at the time.
 
 - 2026-09-13T20:20:05+00:00: Recorded the user's Mend UI, live Kanban, progress-log and self-service setup-guide requests; updated PRD and assigned independent implementation/review work.
 

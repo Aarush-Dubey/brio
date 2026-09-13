@@ -1,4 +1,4 @@
-# Mend setup: GitHub jobs and the first weather deployment
+# brio setup: GitHub jobs and the first weather deployment
 
 This continues [Step 9 of the setup guide](SETUP-GUIDE.md#step-9). Complete the main guide's account steps first. Keep that guide open for your private file locations and deployment addresses.
 
@@ -14,8 +14,8 @@ Follow sections 1–6 in order. The existing signing keys and PR credential are 
 
 1. Sign in as `Aarush-Dubey` and open [GitHub Apps settings](https://github.com/settings/apps).
 2. Click **New GitHub App**.
-3. Enter a unique name, for example `Mend Weather Checks Aarush`. If the name is taken, add a suffix.
-4. In **Homepage URL**, enter `https://github.com/Aarush-Dubey/hackathon`. The Mend website does not have to be online yet.
+3. Enter a unique name, for example `brio Weather Checks Aarush`. If the name is taken, add a suffix.
+4. In **Homepage URL**, enter `https://github.com/Aarush-Dubey/hackathon`. The brio website does not have to be online yet.
 5. Under **Webhook**, uncheck **Active**. You do not need a webhook URL or an OAuth callback URL for this app.
 6. Expand **Repository permissions**. Find **Checks** and select **Read and write**. Leave other optional permissions at their defaults.
 7. Under **Where can this GitHub App be installed?**, choose **Only on this account**. Click **Create GitHub App**.
@@ -66,7 +66,7 @@ If someone changes weather PR #1's commit, this pinned bootstrap check should re
 
 ## 3. Build the environment that runs generated code
 
-This is a **Docker image**: a prepared runtime with Bun and browser-test dependencies. GitHub downloads it to run the candidate in isolation. It is not the Mend website or the weather website.
+This is a **Docker image**: a prepared runtime with Bun and browser-test dependencies. GitHub downloads it to run the candidate in isolation. It is not the brio website or the weather website.
 
 ### 3A. Make sure Docker works
 
@@ -78,7 +78,7 @@ This is a **Docker image**: a prepared runtime with Bun and browser-test depende
 
 1. Open [GitHub token settings](https://github.com/settings/tokens).
 2. Choose **Generate new token → Generate new token (classic)**.
-3. Name it `Mend image upload`, choose an expiry covering setup, and grant **write:packages**. This token is for uploading the image; it does not replace the app's existing GitHub credentials.
+3. Name it `brio image upload`, choose an expiry covering setup, and grant **write:packages**. This token is for uploading the image; it does not replace the app's existing GitHub credentials.
 4. Generate and copy the token.
 5. Run this in Terminal:
 
