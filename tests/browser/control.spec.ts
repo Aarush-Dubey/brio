@@ -32,7 +32,9 @@ async function command(
   );
 }
 async function identity(page: Page, role: "engineer" | "marketer" | "admin") {
-  await page.getByLabel("Demo identity").selectOption(role);
+  expect((await command(page, "demo_role", { role })).status).toBe(200);
+  await page.reload();
+  if (/\/cases\/[^/]+$/.test(new URL(page.url()).pathname)) await openOperations(page);
   await expect
     .poll(async () => (await snapshot(page)).actor.roles[0])
     .toBe(role);
@@ -101,19 +103,16 @@ async function approveAndVerify(page: Page, caseId: string) {
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/cases");
-  await expect(page.getByLabel("Demo mode")).toBeVisible();
+  await expect(page.getByLabel("Incident board", { exact: true })).toBeVisible();
 });
 
-test("clearly labels demo provenance, model and budget; connection imports stay disabled", async ({
+test("keeps the presentation free of operator metadata; connection imports stay disabled", async ({
   page,
 }) => {
-  await expect(
-    page.getByText("Demo data"),
-  ).toBeVisible();
-  await expect(page.getByLabel("Workspace status")).toContainText("gpt-5-mini");
-  await expect(page.getByLabel("Workspace status")).toContainText(
-    "$100.00 cap",
-  );
+  await expect(page.locator(".workspace-toolbar")).toHaveCount(0);
+  await expect(page.getByLabel("Demo identity")).toHaveCount(0);
+  await expect(page.getByText("Demo data", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("gpt-5-mini", { exact: true })).toHaveCount(0);
   await identity(page, "admin");
   await workspacePage(page, "Connections");
   await expect(
@@ -916,7 +915,7 @@ test("another tab receives persisted card movement through the event stream with
     await observer.goto("/cases");
     expect((await stream).headers()["content-type"]).toContain("text/event-stream");
     await expect(observer.getByLabel("Incident board", { exact: true })).toBeVisible();
-    await expect(observer.getByLabel("Workspace status")).toContainText("Live updates");
+    await expect(observer.locator(".board-heading .listening")).toContainText("listening");
     // Block this observer's snapshot/command endpoint after its initial load.
     // Persisted changes must arrive on its existing stream, not through polling.
     await observer.route("**/api/control", route => route.abort());
@@ -948,8 +947,8 @@ test("stream failure shows a degraded status, falls back to HTTP updates, and re
     await observer.route("**/api/control/stream", route => route.fulfill({ status: 503, contentType: "text/plain", body: "Fixture event stream temporarily unavailable" }));
     await observer.goto("/cases");
     await expect(observer.getByLabel("Incident board", { exact: true })).toBeVisible();
-    await expect(observer.getByLabel("Workspace status")).toContainText(/Reconnecting|Offline/);
-    await expect(observer.getByLabel("Workspace status")).not.toContainText("Live updates");
+    await expect(observer.locator(".board-heading .listening")).toContainText(/reconnecting|offline/);
+    await expect(observer.locator(".board-heading .listening")).not.toContainText("listening");
     const before = snapshotReads;
     const marker = `Fallback temperature conversion ${randomUUID()}`;
     const created = await command(page, "intake", { platform: "x", mode: "fixture", sourceUrl: `https://x.com/fallbackfixture/status/${Date.now()}`, text: `${marker}: the temperature toggle is broken.` });
@@ -957,11 +956,11 @@ test("stream failure shows a degraded status, falls back to HTTP updates, and re
     const record = (created.body as Snapshot).cases.find(item => item.text.includes(marker))!;
     await expect(observer.locator(`[data-case-id="${record.id}"]`)).toBeVisible();
     expect(snapshotReads).toBeGreaterThan(before);
-    await expect(observer.getByLabel("Workspace status")).not.toContainText("Live updates");
+    await expect(observer.locator(".board-heading .listening")).not.toContainText("listening");
     const reconnected = observer.waitForResponse(response => new URL(response.url()).pathname === "/api/control/stream" && response.status() === 200, { timeout: 15_000 });
     await observer.unroute("**/api/control/stream");
     expect((await reconnected).headers()["content-type"]).toContain("text/event-stream");
-    await expect(observer.getByLabel("Workspace status")).toContainText("Live updates");
+    await expect(observer.locator(".board-heading .listening")).toContainText("listening");
     await observer.route("**/api/control", route => route.abort());
     expect((await command(page, "demo_advance", { caseId: record.id })).status).toBe(200);
     await expect(observer.getByRole("region", { name: "Build approval", exact: true }).locator(`[data-case-id="${record.id}"]`)).toBeVisible();
@@ -997,7 +996,7 @@ test("simulated autoplay pauses, resumes, completes with fixture receipts, and r
   expect(result.publications[0]).toMatchObject({ mode: "fixture", status: "confirmed" });
   expect(result.approvals.every(item => item.simulated)).toBe(true);
   await expect(page.getByRole("region", { name: "Live event feed" })).toContainText("Reply confirmed");
-  await expect(page.getByText("Demo data", { exact: true })).toBeVisible();
+  await expect(page.getByText("Demo data", { exact: true })).toHaveCount(0);
   await controls.getByRole("button", { name: /Restart$/ }).click();
   await expect.poll(async () => (await snapshot(page)).demoRun?.runId).not.toBe(paused.runId);
   await controls.getByRole("button", { name: /Pause$/ }).click();
@@ -1015,7 +1014,7 @@ test("rich workspace seed streams into the board and exposes persona conversatio
   }));
   expect(result.added).toBe(36);
   await expect(page.locator('[data-case-id="MND-1041"]')).toBeAttached();
-  await expect(page.getByText("Demo data", { exact: true })).toBeVisible();
+  await expect(page.getByText("Demo data", { exact: true })).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Live demo controls" })).not.toContainText(/simulated/i);
   await page.getByRole("textbox", { name: "Search", exact: true }).fill("umbrella optimist");
   await expect(page.locator("[data-case-id]")).toHaveCount(1);

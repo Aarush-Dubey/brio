@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { CaseRecord, Snapshot, Tab } from "./types";
+import type { CaseRecord, Tab } from "./types";
 
 export const STAGES = ["Detected", "Triaged", "Build approval", "Fixing", "Verifying", "Reply approval", "Resolved"] as const;
 export function stageFor(record: CaseRecord): (typeof STAGES)[number] {
@@ -42,13 +42,4 @@ export function MendHeader({ tab = "landing" }: { tab?: Tab }) {
       {tab === "landing" && <Link className="button compact" href="/cases">Open the board</Link>}
     </div>
   </header>;
-}
-export function WorkspaceStrip({ snapshot, connection, lastSyncedAt }: { snapshot: Snapshot; connection: string; lastSyncedAt: number | null }) {
-  return <div className="mend-workspace-strip" aria-label="Workspace status">
-    <span className="connection-status" data-state={connection}><i className="status-dot" />{connection === "live" ? "Live updates" : connection === "connecting" ? "Connecting" : connection === "reconnecting" ? "Reconnecting" : "Offline"}</span>
-    {connection !== "live" && <span>{lastSyncedAt ? `Last synced ${formatTime(lastSyncedAt)}` : "No snapshot received yet"}</span>}
-    <span>Drizzle workspace</span>
-    <span>{snapshot.workspace.model}</span>
-    <span>${snapshot.workspace.spendUsd.toFixed(2)} spent + ${snapshot.workspace.reservedUsd.toFixed(2)} reserved / <b>${snapshot.workspace.capUsd.toFixed(2)} cap</b></span>
-  </div>;
 }

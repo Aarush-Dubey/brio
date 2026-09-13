@@ -72,13 +72,6 @@ summary { cursor: pointer; font-weight: 500; }
 .workspace-menu nav { position: absolute; top: 28px; right: 0; z-index: 20; display: grid; width: 170px; padding: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 7px; box-shadow: var(--shadow); }
 .workspace-menu nav a { padding: 9px 10px; border-radius: 4px; }
 .workspace-menu nav a:hover { background: var(--bg); color: var(--ink); }
-.workspace-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px 20px; padding: 8px 32px; border-bottom: 1px solid var(--line); min-height: 41px; color: var(--ink3); font-size: 10.5px; }
-.mend-workspace-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 15px; font-family: "Geist Mono", monospace; font-size: 10px; }
-.connection-status { display: inline-flex; align-items: center; gap: 6px; }
-.mend-workspace-strip b { font-weight: 500; }
-.demo-identity { display: flex; align-items: center; gap: 14px; }
-.demo-identity label { display: flex; flex-direction: row; align-items: center; gap: 7px; margin: 0; font-size: 10.5px; color: var(--ink2); }
-.demo-identity select { width: 123px; padding: 3px 6px; border-color: var(--line); background: transparent; font-size: 10.5px; }
 .action-message { margin: 0 0 16px; padding: 9px 12px; border-left: 2px solid var(--accent); background: var(--accent-soft); font-size: 12px; animation: fade-up .25s ease; }
 .loading-state { display: flex; gap: 10px; align-items: center; padding: 70px 0; color: var(--ink3); }
 .board-page { padding: 27px 32px 60px; }
@@ -384,7 +377,6 @@ progress { width: 100%; margin: 14px 0; accent-color: var(--accent); }
 @media (max-width: 1000px) {
   .header-actions { gap: 15px; }
   .brand-context { display: none; }
-  .demo-identity > span { display: none; }
   .ticket-grid { grid-template-columns: minmax(0,1fr) 280px; gap: 30px; }
   .ticket-heading { flex-wrap: wrap; }
   .ticket-summary { flex-direction: row; align-items: center; }
@@ -400,8 +392,6 @@ progress { width: 100%; margin: 14px 0; accent-color: var(--accent); }
   .mend-tabs a { padding: 6px 9px; font-size: 12px; }
   .workspace-menu { font-size: 11px; }
   .theme-toggle { font-size: 0; gap: 0; }
-  .workspace-toolbar { padding: 8px 18px; }
-  .mend-workspace-strip { font-size: 9px; gap: 5px 10px; }
   .board-page, .metrics-page, .settings-page { padding: 24px 18px 45px; }
   .ticket-workspace { padding: 22px 18px 45px; }
   .board-heading { align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
@@ -471,7 +461,6 @@ progress { width: 100%; margin: 14px 0; accent-color: var(--accent); }
 }
 
 /* Dense workspace presentation; provenance stays in the shared shell and audit. */
-.demo-data-badge { border: 1px solid var(--line2); border-radius: 4px; padding: 2px 6px; color: var(--ink2); font: 10px "Geist Mono", monospace; white-space: nowrap; }
 .card-excerpt { font-size: 11.5px; color: var(--ink2); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin: 0 0 14px; }
 .card-context { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: var(--ink3); font-size: 9px; border-top: 1px solid var(--line); margin-top: 12px; padding-top: 9px; }
 .card-context > span:last-child { font-size: 10px; }
