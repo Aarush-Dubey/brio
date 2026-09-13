@@ -1,5 +1,7 @@
 # brio
 
+[Watch the demo](https://drive.google.com/file/d/1r_ZpACtP0KhSlO39drxLUy0nQIcyJCd1/view?usp=sharing)
+
 brio is the product previously called Mend. Existing service URLs, project IDs and local paths retain their original names; the Slack app is still registered as `Mend`.
 
 A functional web control app for customer reports, engineering approvals, persona policies, and tracked public replies. The owned target is a separate weather repository with a deliberate Celsius/Fahrenheit conversion defect.
