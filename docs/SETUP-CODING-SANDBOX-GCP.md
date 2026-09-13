@@ -35,7 +35,7 @@ No service-account key was created, and the registry remains private. [Google's 
 
 ## Finish verification
 
-The workflow changes must first be reviewed and merged into the controller's `main` branch. A subsequent current, signed engineering Build must confirm GitHub's actual OIDC token exchange, authenticated image pull, and candidate checks. These live checks are pending; no merge or branch-protection change was made during setup.
+The workflow changes first merged into the controller's `main` branch at `8a7636e2709d039773afa73857e6cb66f08a7d6f`. Production `GITHUB_CONTROLLER_SHA` must track the latest reviewed controller `main` commit, synchronized after each merge; the historical first merge is not a permanent pin. The reviewed weather Bun bootstrap also passed and its PR merged normally; [baseline deployment evidence](../artifacts/weather-main-baseline-deployment.json) records the resulting weather main and production identity. A current, signed engineering Build must still confirm GitHub's actual OIDC token exchange, authenticated image pull, and complete candidate checks. Branch protection remains enabled.
 
 Local validation passed `actionlint` 1.7.12, workflow shell syntax checks, immutable-image validation, and simulated pull success/failure checks that verified temporary credential cleanup. The deployment record is [gcp-coding-sandbox-deployment.json](../artifacts/gcp-coding-sandbox-deployment.json).
 

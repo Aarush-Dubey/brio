@@ -6,11 +6,11 @@ The connector now includes OAuth authorization/callback, verified account readin
 
 Read the current [Reddit Data API Wiki](https://support.reddithelp.com/hc/en-us/articles/16160319875092-Reddit-Data-API-Wiki) and [Responsible Builder Policy](https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy). Reddit requires explicit API approval. A working login or OAuth app is not evidence of that approval. Follow the appropriate developer/Devvit or commercial-use request path and the approved account/community scope. No access request was submitted by this setup task.
 
-After approval, use [Reddit app preferences](https://www.reddit.com/prefs/apps) to register the permitted app type. A confidential web app matches Mend's server-side code flow, subject to Reddit's approval:
+After approval, use [Reddit app preferences](https://www.reddit.com/prefs/apps) to register the permitted app type. A confidential web app matches brio's server-side code flow, subject to Reddit's approval:
 
 | Setting | Value |
 | --- | --- |
-| Name | `Mend` |
+| Name | `brio` |
 | About URL | `https://mend-hackathon.vercel.app` |
 | Redirect URI | `https://mend-social-worker-ajmx2yigqq-uc.a.run.app/v1/oauth/reddit/callback` |
 | Authorization | `response_type=code`, `duration=permanent`, scopes `identity read submit` |
@@ -37,8 +37,8 @@ Set `REDDIT_API_APPROVED=true` on **both Convex and the worker only after approv
 
 ## Connect and verify the account
 
-1. Open Mend **Connections** as an administrator. Save the actual Reddit account identifier, currently intended to be `drizzle-123`.
-2. Select **Authorize Reddit account**. The UI requests a short-lived grant and submits it through a top-level form POST to the worker. The worker requires the exact Mend Origin and sets a Secure, HttpOnly, host-only, SameSite=Lax proof cookie before redirecting to Reddit.
+1. Open brio **Connections** as an administrator. Save the actual Reddit account identifier, currently intended to be `drizzle-123`.
+2. Select **Authorize Reddit account**. The UI requests a short-lived grant and submits it through a top-level form POST to the worker. The worker requires the exact brio Origin and sets a Secure, HttpOnly, host-only, SameSite=Lax proof cookie before redirecting to Reddit.
 3. Complete legitimate Reddit login/challenges and authorization in that browser. The callback requires one-use state and its browser proof, checks expiry and the current connection version, exchanges the code, then verifies scopes and the actual account with `/api/v1/me`.
 4. Return to Connections. Readiness appears only after the verified account matches the configured account and the controller atomically accepts the current encrypted credential. Denial, replay, missing proof, missing scopes, another account, expired state, or a reset/disabled connection cannot activate it.
 

@@ -1,4 +1,4 @@
-# Mend setup: GitHub jobs and the first weather deployment
+# brio setup: GitHub jobs and the first weather deployment
 
 This continues [Step 9 of the setup guide](SETUP-GUIDE.md#step-9). Complete the main guide's account steps first. Keep that guide open for your private file locations and deployment addresses.
 
@@ -6,7 +6,7 @@ This continues [Step 9 of the setup guide](SETUP-GUIDE.md#step-9). Complete the 
 
 Follow sections 1–6 in order. The existing signing keys and PR credential are already installed; leave them in place.
 
-**Existing installation update:** the sandbox image is already built and its GitHub variables/keyless pull identity are configured; use [GCP sandbox notes](SETUP-CODING-SANDBOX-GCP.md) instead of rebuilding locally. Weather is already deployed at https://mend-weather.vercel.app from `a96c50e`. Convex production and both GitHub callback variables are configured. Finish the Checks App, reviewed workflow merge and real signed Build. See [remaining checklist](SETUP-REMAINING.md).
+**Existing installation update:** Checks App `4934302` is configured, the first controller PR merged at `8a7636e2709d039773afa73857e6cb66f08a7d6f`, and the weather bootstrap passed before weather PR #1 merged normally. [Weather production](https://mend-weather.vercel.app) now serves weather main `161835dba251f9739d25194ec21db0f2461df989`, tree `2fc58d5c57da18d60ff7ece9952faf273117f22d`. Both staged and production identities were verified by `/api/version` and 34-check Cloud Run browser runs; the intentional `20°C → 20°F` defect remains. The sandbox image and GitHub keyless pull variables are configured; use [GCP sandbox notes](SETUP-CODING-SANDBOX-GCP.md). Production `GITHUB_CONTROLLER_SHA` tracks the latest reviewed controller `main` commit, synchronized after each merge. The brio rename is deployed, tested and pushed; its reviewed merge is pending. The real signed Build remains to be exercised. [Deployment evidence](../artifacts/weather-main-baseline-deployment.json) and [remaining checklist](SETUP-REMAINING.md) record the current state; sections below retain the setup procedure.
 
 ## 1. Create the GitHub App that reports test results
 
@@ -14,8 +14,8 @@ Follow sections 1–6 in order. The existing signing keys and PR credential are 
 
 1. Sign in as `Aarush-Dubey` and open [GitHub Apps settings](https://github.com/settings/apps).
 2. Click **New GitHub App**.
-3. Enter a unique name, for example `Mend Weather Checks Aarush`. If the name is taken, add a suffix.
-4. In **Homepage URL**, enter `https://github.com/Aarush-Dubey/hackathon`. The Mend website does not have to be online yet.
+3. Enter a unique name, for example `brio Weather Checks Aarush`. If the name is taken, add a suffix.
+4. In **Homepage URL**, enter `https://github.com/Aarush-Dubey/hackathon`. The brio website does not have to be online yet.
 5. Under **Webhook**, uncheck **Active**. You do not need a webhook URL or an OAuth callback URL for this app.
 6. Expand **Repository permissions**. Find **Checks** and select **Read and write**. Leave other optional permissions at their defaults.
 7. Under **Where can this GitHub App be installed?**, choose **Only on this account**. Click **Create GitHub App**.
@@ -58,7 +58,7 @@ The weather app starts with an intentional bug, so its initial setup needs a che
 6. Open [weather PR #1](https://github.com/Aarush-Dubey/hackathon-weather/pull/1). Confirm **Protected weather** passes for the PR's current commit. The check description should explicitly say the seeded defect remains.
 7. Review the PR, click **Ready for review** if needed, then merge it.
 
-**Current implementation status:** this bootstrap workflow has been added locally and is being verified. It cannot be run from GitHub until the reviewed controller changes containing it are published and merged. Creating the Checks App alone will not make weather PR #1 pass.
+**Current implementation status:** [bootstrap run 34786278162](https://github.com/Aarush-Dubey/hackathon/actions/runs/34786278162) passed on the merged controller. Checks App `4934302` attached `Protected weather` check `103802492064` to exact Bun PR head `a96c50ee70b0a97171b03cde8ea10df6a2f008c8`. Its receipt truthfully records the seeded defect and all 34 checks. Weather PR #1 then merged normally at `161835dba251f9739d25194ec21db0f2461df989`, with its reviewed tree unchanged. This bootstrap step is complete for the existing installation.
 
 If someone changes weather PR #1's commit, this pinned bootstrap check should refuse it. Have the changed baseline reviewed and the bootstrap pins updated; do not mark an unrelated commit as passed or remove branch protection.
 
@@ -66,7 +66,7 @@ If someone changes weather PR #1's commit, this pinned bootstrap check should re
 
 ## 3. Build the environment that runs generated code
 
-This is a **Docker image**: a prepared runtime with Bun and browser-test dependencies. GitHub downloads it to run the candidate in isolation. It is not the Mend website or the weather website.
+This is a **Docker image**: a prepared runtime with Bun and browser-test dependencies. GitHub downloads it to run the candidate in isolation. It is not the brio website or the weather website.
 
 ### 3A. Make sure Docker works
 
@@ -78,7 +78,7 @@ This is a **Docker image**: a prepared runtime with Bun and browser-test depende
 
 1. Open [GitHub token settings](https://github.com/settings/tokens).
 2. Choose **Generate new token → Generate new token (classic)**.
-3. Name it `Mend image upload`, choose an expiry covering setup, and grant **write:packages**. This token is for uploading the image; it does not replace the app's existing GitHub credentials.
+3. Name it `brio image upload`, choose an expiry covering setup, and grant **write:packages**. This token is for uploading the image; it does not replace the app's existing GitHub credentials.
 4. Generate and copy the token.
 5. Run this in Terminal:
 
@@ -212,7 +212,7 @@ Official reference: [Vercel staged deployment commands](https://vercel.com/docs/
 | --- | --- |
 | `GITHUB_CONTROLLER_REPOSITORY` | `Aarush-Dubey/hackathon` |
 | `GITHUB_CONTROLLER_BRANCH` | `main` |
-| `GITHUB_CONTROLLER_SHA` | Exact reviewed controller commit copied above. |
+| `GITHUB_CONTROLLER_SHA` | Latest reviewed controller `main` commit; synchronize production after each merge. |
 | `FDE_WEATHER_REPOSITORY` | `Aarush-Dubey/hackathon-weather` |
 | `GITHUB_DEFAULT_BRANCH` | `main` |
 | `GITHUB_REQUIRED_CHECKS` | `Protected weather` |
@@ -223,7 +223,7 @@ Official reference: [Vercel staged deployment commands](https://vercel.com/docs/
 
 The controller commit and weather commit are **two different values**. The separate GitHub repository variable `WEATHER_BASELINE_SHA` selects the CI fixture; it does not automatically update the live seed setting.
 
-If the reviewed controller branch advances later, update its pinned SHA deliberately before requesting a new Build. Existing approvals refer to their original scope and can become stale.
+After every reviewed merge into controller `main`, synchronize production `GITHUB_CONTROLLER_SHA` to the exact resulting commit before requesting a new Build. Existing approvals refer to their original scope and can become stale.
 
 ## 6. Final engineering checklist
 

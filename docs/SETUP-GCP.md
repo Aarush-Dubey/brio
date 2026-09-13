@@ -1,24 +1,24 @@
-# Mend setup: GCP instead of Render
+# brio setup: GCP instead of Render
 
-This replaces the Render step in [SETUP-GUIDE.md](SETUP-GUIDE.md#step-8). You will create **two Cloud Run services** using the Dockerfiles already in this repository. The Mend/weather websites remain on Vercel, and the database/workflows remain on Convex.
+This replaces the Render step in [SETUP-GUIDE.md](SETUP-GUIDE.md#step-8). The existing installation has **two Cloud Run services** built from the Dockerfiles in this repository. The brio/weather websites remain on Vercel, and the database/workflows remain on Convex.
 
-**Current project:** `mend-hackathon-260914`, region `us-central1`. Both services are active and configured with the hosted Mend, Convex and weather origins. The steps below document reproducible setup; do not create duplicate resources.
+**Current project:** `mend-hackathon-260914`, region `us-central1`. Both services are active and configured with the hosted brio, Convex and weather origins. The steps below document reproducible setup; do not create duplicate resources.
 
 | Service | Deployed URL | Verified state |
 | --- | --- | --- |
-| Weather verifier | https://mend-weather-verifier-ajmx2yigqq-uc.a.run.app | Real Chromium checked the exact hosted revision and reproduced the planted defect. |
-| Social worker | https://mend-social-worker-ajmx2yigqq-uc.a.run.app | Healthy; always-allocated CPU and minimum/maximum one instance. Social account permission gates remain closed. |
+| Weather verifier | https://mend-weather-verifier-ajmx2yigqq-uc.a.run.app | Revision `mend-weather-verifier-00003-s98` is healthy. Real Chromium verified merged weather main `161835dba251f9739d25194ec21db0f2461df989` and reproduced the planted defect at both staged and stable URLs. |
+| Social worker | https://mend-social-worker-ajmx2yigqq-uc.a.run.app | Revision `mend-social-worker-00005-6wc` is healthy; always-allocated CPU and minimum/maximum one instance. X reimport verified, connection ready and unpaused after operator enablement; background polling remains off. |
 
-The [worker evidence](../artifacts/gcp-worker-deployment.json) records current revisions and health checks. The [hosted weather evidence](../artifacts/hosted-weather-baseline.json) records 34 browser observations and expected revision matching. The baseline is intentionally failing conversion tests; this verifies reproduction, not a repaired release.
+Initial Cloud Build `569f3b8b-c458-490d-bf73-1d9775c4bc86` succeeded for source `6981750`. The verifier still uses that build. Social-only build `e31a15fd-5a36-4c02-903c-1ce57a415aa1` deployed brio source `872c226`; [latest social worker evidence](../artifacts/brio-social-worker-deployment.json) records its health and preserved configuration. [Initial worker evidence](../artifacts/gcp-worker-deployment.json) records the earlier rollout. The [merged weather evidence](../artifacts/weather-main-baseline-deployment.json) records 34 browser observations at each of the staged and stable URLs with exact revision matching. The baseline is intentionally failing conversion tests; this verifies reproduction, not a repaired release.
 
-The third image is the **coding sandbox**, pulled by GitHub Actions rather than run as a Cloud Run service. Its immutable image and restricted keyless pull identity are configured. See [sandbox setup and validation](SETUP-CODING-SANDBOX-GCP.md). Actual GitHub OIDC pull awaits the reviewed workflow on main and a valid signed Build.
+The third image is the **coding sandbox**, pulled by GitHub Actions rather than run as a Cloud Run service. Its immutable image and restricted keyless pull identity are configured. See [sandbox setup and validation](SETUP-CODING-SANDBOX-GCP.md). The reviewed controller workflow has merged to main. Production Convex is pinned to controller main `8a7636e`. The merged weather baseline is deployed and verified. Production `FDE_BASE_SHA` is pinned to `161835dba251f9739d25194ec21db0f2461df989`; actual GitHub OIDC pull awaits a valid signed Build.
 
-No additional GCP credentials are currently required from the user. Reddit API credentials and X session/permission are service-account setup outside GCP. No budget/alert policy was created. [Google's browser-automation guide](https://docs.cloud.google.com/run/docs/browser-automation).
+No additional GCP credentials are currently required from the user. The X session is ready after operator enablement; external X approval is not independently verified. Reddit is skipped, disabled and paused, with no setup action required. No budget/alert policy was created. [Google's browser-automation guide](https://docs.cloud.google.com/run/docs/browser-automation).
 
 ## 1. Create/select the Google Cloud project
 
 1. Open [Google Cloud Console](https://console.cloud.google.com/) and sign in.
-2. Use the project selector in the top bar → **New Project**. Name it `Mend Hackathon`, or select your existing hackathon project.
+2. Use the project selector in the top bar → **New Project**. Name it `brio Hackathon`, or select your existing hackathon project.
 3. Copy the **Project ID**, such as `mend-hackathon-123456`, into your private setup note. The Project ID is different from the display name and numeric project number.
 4. Open **Billing** and link the intended billing account to this project.
 5. No GCP budget or alert policy is being created, following the user’s latest instruction. Billing is enabled for the selected project; it does not add promotional credits.
@@ -29,7 +29,7 @@ Use the small instance settings below and complete the shutdown section when the
 
 **Cloud Shell** is a terminal provided by Google in your browser. It already has `gcloud`, so you do not need to install GCP tooling or fix Docker on this laptop to build these two workers.
 
-1. First ensure the reviewed Mend code, including `workers/gcp/cloudbuild.yaml`, has been committed. If it is still being finalized locally, wait to create the archive; `git archive` includes committed files only.
+1. First ensure the reviewed brio code, including `workers/gcp/cloudbuild.yaml`, has been committed. If it is still being finalized locally, wait to create the archive; `git archive` includes committed files only.
 2. On **this laptop**, run:
 
 ```sh
@@ -64,7 +64,7 @@ This guide uses `us-central1` consistently. If you choose a different supported 
 1. Still in Cloud Shell's `mend-cloud-source` directory, create a Docker image repository:
 
 ```sh
-gcloud artifacts repositories create mend-workers --repository-format=docker --location="$mend_gcp_region" --description="Mend browser worker images"
+gcloud artifacts repositories create mend-workers --repository-format=docker --location="$mend_gcp_region" --description="brio browser worker images"
 ```
 
 If it says this repository already exists in the selected project/region, reuse it.
@@ -72,7 +72,7 @@ If it says this repository already exists in the selected project/region, reuse 
 2. Create a dedicated **build service account** and a source-upload bucket. Run each command and wait for success. If a resource already exists in this project, reuse it.
 
 ```sh
-gcloud iam service-accounts create mend-build --display-name="Mend image builder"
+gcloud iam service-accounts create mend-build --display-name="brio image builder"
 mend_build_account="mend-build@$mend_gcp_project.iam.gserviceaccount.com"
 mend_source_bucket="gs://$mend_gcp_project-mend-build-source"
 gcloud storage buckets create "$mend_source_bucket" --location="$mend_gcp_region" --uniform-bucket-level-access
@@ -179,7 +179,7 @@ Add these environment variables:
 
 | Name | Value |
 | --- | --- |
-| `CONTROL_APP_ORIGIN` | Your exact hosted Mend URL. |
+| `CONTROL_APP_ORIGIN` | Your exact hosted brio URL. |
 | `CONVEX_SITE_URL` | Your actual Convex `.site` URL. |
 | `SESSION_KEY_VERSION` | `v1`, matching the prepared private social bundle. |
 | `X_PLATFORM_PERMISSION_APPROVED` | `false` until the X setup requirements are met. |
@@ -197,33 +197,33 @@ Deploy, copy its `run.app` URL, and check `/health`.
 
 If your organization prohibits public Cloud Run invocation, the current caller needs an additional Google IAM authentication integration. Do not disable the application's signatures or assume a private service will accept the current requests.
 
-## 7. Connect the service URLs to Mend
+## 7. Connect the service URLs to brio
 
 | Setting | Value | Where to save |
 | --- | --- | --- |
 | `ENGINEERING_WORKER_URL` | Verifier's HTTPS `run.app` URL | Convex Production and local `.env`. |
-| `SOCIAL_WORKER_URL` | Social worker's HTTPS `run.app` URL | Convex Production, Mend Vercel environment variables, and local `.env`. |
+| `SOCIAL_WORKER_URL` | Social worker's HTTPS `run.app` URL | Convex Production, brio Vercel environment variables, and local `.env`. |
 
-Use the service origins with no `/health` or endpoint path. Redeploy the Mend Vercel project after updating its environment.
+Use the service origins with no `/health` or endpoint path. Redeploy the brio Vercel project after updating its environment.
 
-**No GCP API key or downloaded service-account JSON key goes in Mend's `.env`.** Your Google login provisions the services; their runtime identities access Secret Manager. Mend calls the resulting URLs with its existing application signatures.
+**No GCP API key or downloaded service-account JSON key goes in brio's `.env`.** Your Google login provisions the services; their runtime identities access Secret Manager. brio calls the resulting URLs with its existing application signatures.
 
 ## 8. Verify, then shut down after the demo
 
 Use the application to perform the actual checks:
 
 1. Finish the identified weather seed deployment in [engineering setup section 4](SETUP-ENGINEERING.md#seed-deployment).
-2. Follow [main setup Step 11](SETUP-GUIDE.md#step-11): open hosted Mend → Board → Manual signal intake, enter the original owned test complaint URL/text, and store it. Open the created case and inspect its investigation/evidence timeline. The controller signs the weather request; you do not manually paste the signing secret into a request.
+2. Follow [main setup Step 11](SETUP-GUIDE.md#step-11): open hosted brio → Board → Manual signal intake, enter the original owned test complaint URL/text, and store it. Open the created case and inspect its investigation/evidence timeline. The controller signs the weather request; you do not manually paste the signing secret into a request.
 3. For the initial seed, expect identity matching the deployed seed and browser evidence of `20°C → 20°F`. The bug check must fail; it must not report the seed as fixed. A verified candidate later needs `68°F` and the remaining protected regression checks to pass.
-4. Follow [main setup Step 10](SETUP-GUIDE.md#step-10) for the authorized X session import. Observe its account/status without resetting the imported connection. The controlled job/reply check in Step 11 then proves the social worker can complete its background work and return a real receipt.
+4. The current X session for `Vinaychamoc5` was reimported after operator enablement and reports ready with verified identity. Keep that connection and leave background polling off for the controlled test. [Main setup Step 11](SETUP-GUIDE.md#step-11) must still prove background completion and a real receipt.
 
 Cloud Run reporting Ready or `/health` returning 200 alone does not prove Chromium or X works. Record the case's actual evidence and receipt links separately from the simulated local demo.
 
 After the presentation:
 
-1. Pause automatic intake/publication in Mend and wait for active jobs to finish or record their unresolved status.
+1. Pause automatic intake/publication in brio and wait for active jobs to finish or record their unresolved status.
 2. In **Cloud Run**, delete `mend-social-worker` and `mend-weather-verifier` if no longer needed. The one warm social instance costs money while it remains provisioned.
 3. Delete unused image versions from Artifact Registry and unneeded uploaded archives in the `PROJECT_ID-mend-build-source` bucket; those can have storage charges after the services are gone.
-4. Review Billing and revoke temporary permissions/secrets when finished. Update Mend's recorded infrastructure commitment once it actually ends.
+4. Review Billing and revoke temporary permissions/secrets when finished. Update brio's recorded infrastructure commitment once it actually ends.
 
 The dedicated project `mend-hackathon-260914` (project number `428020372764`) is linked to the authorized billing account. Build/runtime identities, source storage, image repository, four scoped secrets and both disabled worker services are configured. Build `b06bcb6d-1bcf-4958-b04b-4f5ecb516b56` succeeded. Deployed browser execution remains unverified. No GCP budget policy was created.

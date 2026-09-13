@@ -1,6 +1,6 @@
 # Control UI verification
 
-## Mend interface runtime verification — 2026-09-14
+## brio interface runtime verification — 2026-09-14
 
 The landing (`/`), live board (`/cases`), metrics (`/dashboard`), and ticket pages now follow the supplied `Mend.html` reference: Hanken Grotesk and Geist Mono fonts extracted from that file, warm light/dark colors, editorial hero, seven Kanban columns, nine-step ticket timeline, original-signal sidebar, and compact charts. The reference was opened in Chromium and its board and ticket screens inspected before implementation. Counts, routes, approvals, and receipts come from persisted snapshots; the original mock's invented incidents, customer counts, timing claims, and Swift source path were not copied as live facts. The working weather defect is 20°C → 20°F, with 68°F expected, scoped to `lib/temperature.ts` in the separate weather repository.
 
@@ -18,7 +18,7 @@ Official `next-dev-loop` verification used Next.js **16.3.5 / Turbopack** and **
 | Responsive views | Landing, board, metrics, and ticket inspected at a 390 × 844 CSS viewport. Board scroll stays inside its container. A long-signal ticket overflow was found, corrected with zero-minimum grid tracks, and rechecked: document width 375 ≤ viewport 390. |
 | Visual comparison | [Landing](../artifacts/ui/mend-landing-desktop.png), [board pause](../artifacts/ui/mend-board-paused.png), [ticket](../artifacts/ui/mend-ticket-complete-dev.png), [metrics](../artifacts/ui/mend-metrics-desktop.png), [dark metrics](../artifacts/ui/mend-metrics-dark.png), and [mobile ticket](../artifacts/ui/mend-ticket-mobile.png). These are visual/runtime evidence, not external-provider receipts or pixel-perfect proof. |
 
-Final global lint and TypeScript checks passed. Generated `.next-e2e` files are excluded from source lint, and the isolated production build preserves the user’s development server. The 17-test baseline below predates Mend; the updated 21-scenario production browser results are recorded at the end of this document.
+Final global lint and TypeScript checks passed. Generated `.next-e2e` files are excluded from source lint, and the isolated production build preserves the user’s development server. The 17-test baseline below predates the reference-based interface; the updated 21-scenario production browser results are recorded at the end of this document.
 
 ## Prior operational baseline
 
@@ -81,7 +81,7 @@ Six updated preflight black-box checks passed: demo readiness without credential
 
 ## Visual inspection
 
-Final production preview pages were inspected in Chromium at desktop 1365 × 900 and mobile 390 × 844. No `pageerror` events occurred, and case/controls pages had no document-level mobile overflow; wide tables scroll inside their containers. Case, persona, connection, and controls screenshots were refreshed after the access change. That prior preview used explicit demo mode at `http://127.0.0.1:3000`; the current Mend development verification uses the preserved server at `http://127.0.0.1:3002`. Screenshots under `artifacts/ui/` supplement browser assertions and are not external-provider evidence.
+Final production preview pages were inspected in Chromium at desktop 1365 × 900 and mobile 390 × 844. No `pageerror` events occurred, and case/controls pages had no document-level mobile overflow; wide tables scroll inside their containers. Case, persona, connection, and controls screenshots were refreshed after the access change. That prior preview used explicit demo mode at `http://127.0.0.1:3000`; the current brio development verification uses the preserved server at `http://127.0.0.1:3002`. Screenshots under `artifacts/ui/` supplement browser assertions and are not external-provider evidence.
 
 ## Remaining live and runtime evidence
 
@@ -98,7 +98,7 @@ Final production preview pages were inspected in Chromium at desktop 1365 × 900
 
 The standalone protected baseline correctly reproduces the deliberate 20°C→20°F defect. The bounded OpenAI smoke records a real model output, not approval or publication. See [acceptance matrix](ACCEPTANCE-MATRIX.md) and the smoke artifacts for precise evidence and remaining gates. Finite tests do not establish universal correctness.
 
-## Final Mend production browser coverage
+## Final brio production browser coverage
 
 The production build at `.next-e2e` preserves the user’s running `.next` dev server. The 21-scenario suite passed 19 initially. Both new cross-tab/fallback tests initially searched for a separate case after submitting a complaint deliberately grouped into an existing canonical incident. Unique non-canonical complaint fixtures corrected that test assumption; both then passed in 12.7 seconds. The observer receives card movement with its HTTP snapshot endpoint blocked; a 503 stream failure recovers through polling and then native EventSource without reload. The 13-step autoplay/pause/resume/restart scenario passed in 29.7 seconds. All 21 scenarios have passing evidence across those runs; no complete 21-pass single rerun is claimed.
 

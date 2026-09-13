@@ -1,4 +1,4 @@
-# Execution services
+# brio execution services
 
 The Convex controller owns approvals, budgets, job claims, retries, encrypted-session storage, publication records, and release locks. These processes execute bounded effects. Missing credentials produce `configuration_required`; fixture receipts never represent live provider success.
 

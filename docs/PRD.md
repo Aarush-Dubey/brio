@@ -1,9 +1,9 @@
-# PRD — FDE for B2C Apps
+# brio — Product requirements
 
 **Status:** Final implementation baseline, v1.3\
 **Finalized:** 2026-09-14\
 **Scope:** Two-person hackathon MVP\
-**Product:** A customer-to-engineering system with a configurable brand persona\
+**Product:** brio, a customer-to-engineering system with a configurable brand persona\
 **Decision basis:** The supplied discussion's final architecture, plus the user's confirmed automatic posting, basic web UI, and automatic low-risk replies under an approved persona policy, a separate weather repository, and removal of Clerk for the hackathon.
 
 ## 1. Product outcome and binding decisions
@@ -384,6 +384,8 @@ Allow browser navigation only to approved social hosts or owned weather deployme
 
 ### WK-03 — External readiness and limitations
 
+**Current operator decision — 14 September 2026:** the account owner explicitly requested X enablement. brio’s existing worker/controller switches are enabled, and a fresh import verified `Vinaychamoc5`; the connection reports ready and unpaused. These configuration flags record operator authorization and do not establish independent approval from X. Background social polling remains off. Exact marketer approval or a current marketer-approved persona policy is still required for the applicable reply path, and no live public send has been verified.
+
 The selected X browser adapter remains in implementation scope. X explicitly prohibits website scripting, warns of suspension, requires prior written approval for AI reply bots, and restricts automated replies to eligible opted-in interactions with opt-out support and one automated reply per interaction. Marketer Go or persona activation does not override those restrictions. Treat live X browser operation as an experimental dependency with unresolved platform permission risk, not a supported integration guarantee. [X automation rules](https://help.x.com/en/rules-and-policies/x-automation).
 
 Reddit live use remains conditional on approved API access, permitted use, and community requirements. Until available, expose access_pending and support labeled manual/fixture intake. [Reddit Responsible Builder Policy](https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy).
@@ -428,7 +430,7 @@ Only authoritative case transitions increment case stateVersion; heartbeats, log
 
 External effects use persisted intents and provider receipts. Reconcile ticket/PR creation using stored correlation markers if the response is lost. Do not promise universal exactly-once effects merely because an idempotency key exists.
 
-## 13. Mend interface and live Kanban requirements
+## 13. brio interface and live Kanban requirements
 
 Use existing components and plain layouts. The following functions must work without a terminal:
 
@@ -453,7 +455,7 @@ The reference is a visual and interaction specification. Its sample metrics, Swi
 
 ### UI-02 — Committed transitions on the Kanban board
 
-Map authoritative case phases into readable Mend board columns, including triage, investigation, Build approval, building, verification, reply/release approval, and resolution. Represent paused, blocked, failed, canceled, and unknown-send conditions explicitly; retain the precise workflow state on each card/detail view. Filter by source, state, and search without losing the current selection when an update arrives.
+Map authoritative case phases into readable brio board columns, including triage, investigation, Build approval, building, verification, reply/release approval, and resolution. Represent paused, blocked, failed, canceled, and unknown-send conditions explicitly; retain the precise workflow state on each card/detail view. Filter by source, state, and search without losing the current selection when an update arrives.
 
 Relay native Convex reactive query updates through an authenticated server-sent event stream, keeping server credentials off the browser. Local presentation mode advances its persisted fixture clock once per second under a file lock. Target visible updates within two seconds on a healthy connection, including another browser tab and changes originating from Slack or a worker. Cards animate their arrival/change and the activity timeline records the transition. Counts, dashboard metrics, evidence, approval status, and publication receipts update from the same snapshot. Card movement never grants approval or changes workflow authority.
 
@@ -465,7 +467,7 @@ In explicit local demo mode, provide Run workflow, Pause, Resume, and Restart. S
 
 Persist run identity, case identity, step index, status, next-step time, and event IDs. Advance at most one step per tick under the same state lock so simultaneous viewers or reconnection cannot duplicate a step. Pause stops progression; resuming or refreshing continues the current run. Restart creates a new run without deleting unrelated cases or receipts. Canceling the current case stops its demo progression. The presentation advances while the local demo is observed; it is not a substitute for durable live workflows.
 
-Keep one compact “Demo data” indicator in the shared workspace shell. Retain fixture provenance, simulated decision actors, and non-live receipts in stored records and the operational audit. Do not repeat simulation banners on cards, timelines, metrics, or activity. Demo actions are rejected in live mode and never call paid models, public social APIs, Slack, GitHub, Linear, Vercel, or the coding sandbox. Real mode displays actual workflow events and still waits for the engineer's Build and marketer's Go in Slack. The Mend tutorial may illustrate the sequence but must not be mistaken for live evidence.
+Keep one compact “Demo data” indicator in the shared workspace shell. Retain fixture provenance, simulated decision actors, and non-live receipts in stored records and the operational audit. Do not repeat simulation banners on cards, timelines, metrics, or activity. Demo actions are rejected in live mode and never call paid models, public social APIs, Slack, GitHub, Linear, Vercel, or the coding sandbox. Real mode displays actual workflow events and still waits for the engineer's Build and marketer's Go in Slack. The brio tutorial may illustrate the sequence but must not be mistaken for live evidence.
 
 ### UI-04 — Living delivery documents
 
@@ -590,7 +592,7 @@ Tests below are release requirements, not a claim that implementation tests have
 | A29 | Concurrent model requests reserve worst-case cost atomically; unknown-charge requests retain reservations and retries reserve separately. Near-cap or unbounded cost blocks paid work. No automatic model upgrade or unbudgeted renewal occurs. |
 | A30 | Credential preflight verifies access configuration and Slack roles, app-scoped API access, and each enabled integration without leaking secret values; missing credentials are explicitly blocked. |
 | A31 | Full lint/type/build, unit, integration, persona, and browser suites run on the final implementation revision. Evidence records pass/fail/blocked; an unrun or access-blocked live test is never called passed. |
-| A32 | Landing, Kanban, dashboard, and incident pages match the supplied Mend design in both themes and at desktop/mobile widths; required operating flows remain usable. |
+| A32 | Landing, Kanban, dashboard, and incident pages match the supplied reference design in both themes and at desktop/mobile widths; required operating flows remain usable. |
 | A33 | A committed case transition appears on the board and detail page in two open sessions without refresh; stage counts and timeline agree with the authoritative state. |
 | A34 | Run/Pause/Resume/Restart drives a labeled persisted demo through the full weather resolution sequence without provider/model calls; two observers do not duplicate steps; live mode rejects demo commands. |
 | A35 | Stream interruption reconnects or falls back to polling, displays stale status, preserves filters, and does not regress to an older snapshot or bypass access checks. |
@@ -609,7 +611,7 @@ Use stable module ownership rather than a frontend/backend handoff. Every bounda
 | Work package | Builder A — product/workflow | Builder B — execution/integrations | Completion evidence |
 |---|---|---|---|
 | Contracts and state | Own schemas, state transitions, approval/policy bindings, typed job contracts | Review; implement executable adapters/stubs | Shared contract fixtures validate on both sides |
-| Basic app and identity | Own Mend UI, live snapshot stream, board/timeline state mapping, control-app Vercel deployment, Convex deployment, access gate, server credentials, Slack role IDs | Review security boundaries and cross-service grants; provide evidence shapes | Required UI flows work without CLI |
+| Basic app and identity | Own brio UI, live snapshot stream, board/timeline state mapping, control-app Vercel deployment, Convex deployment, access gate, server credentials, Slack role IDs | Review security boundaries and cross-service grants; provide evidence shapes | Required UI flows work without CLI |
 | Triage and knowledge | Own normalization, routing, grouping, known-remedy lookup | Own executable reproduction/applicability checks | Correct routing with evidence |
 | Persona | Own strategy editor, policy activation, drafting, validator, budgets and suppression | Review adversarial/positive cases; enforce final publisher bindings | Persona evaluation gate passes |
 | Slack and Linear | Own app/workspace setup, signatures, rapid acknowledgements, cards, ticket synchronization | Review replay and identity checks | Real approval and canonical ticket receipts |
@@ -663,7 +665,7 @@ Allow approximately 8–12 minutes for a presentation with selected completed ev
 - Real Slack, Linear, GitHub, and Vercel checks demonstrate the engineering path.
 - The X adapter exists and its actual capability is documented. Reddit status is explicit.
 - A live automatic publication requirement passes only with a real confirmed receipt. Simulation/manual operation demonstrates fallback, not live automation.
-- The Mend reference design covers all required workflows, with live Kanban transitions and a repeatable labeled demo; the product has no CLI-only dependency.
+- The reference design for brio covers all required workflows, with live Kanban transitions and a repeatable labeled demo; the product has no CLI-only dependency.
 - Both builders can run the demo, explain the other person's interface contracts, and recover a blocked case.
 - Setup notes list required credentials/permissions, supported model configuration, limits, and recovery procedures without secret values.
 - Unresolved external restrictions are recorded as release/readiness limitations rather than hidden as “done.”

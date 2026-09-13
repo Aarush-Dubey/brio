@@ -4,7 +4,7 @@ Final PRD: [PRD.md](PRD.md)\
 Reviewed: 2026-09-14\
 SHA-256: bc66dd5bf0e5bb829a767d6d527a18a678e17c8814aaca189e85195fac7c338f
 
-The final baseline incorporates the user's confirmed Mend reference UI, persona-policy autonomy, Slack engineer/marketer decisions, separate weather repository, and removal of Clerk. No specification can prove live behavior when provider access is unavailable.
+The final baseline incorporates the user's confirmed reference UI, persona-policy autonomy, Slack engineer/marketer decisions, separate weather repository, and removal of Clerk. No specification can prove live behavior when provider access is unavailable.
 
 ## Independent review
 
@@ -22,7 +22,7 @@ An implementation now exists. Real OpenAI writer and durable-triage smoke calls 
 
 See [TEST-REPORT.md](TEST-REPORT.md), [UI-VERIFICATION.md](UI-VERIFICATION.md), and [ACCEPTANCE-MATRIX.md](ACCEPTANCE-MATRIX.md) for concrete results and remaining evidence gaps. GitHub setup and account-dependent blockers are recorded in [SETUP-REMAINING.md](SETUP-REMAINING.md). Secret values are never included in these records.
 
-The Mend visual reference, live Kanban, controllable local presentation, and living setup/progress documents were added to the final baseline in v1.2. Their implementation now has native Convex revision evidence, Next.js runtime inspection, responsive visual checks, and passing evidence for all 21 production browser scenarios across the recorded runs. Provider-dependent behavior remains subject to the gaps in the acceptance matrix.
+The supplied visual reference, live Kanban, controllable local presentation, and living setup/progress documents were added to the final baseline in v1.2. Their implementation now has native Convex revision evidence, Next.js runtime inspection, responsive visual checks, and passing evidence for all 21 production browser scenarios across the recorded runs. Provider-dependent behavior remains subject to the gaps in the acceptance matrix.
 
 Worker hosting now uses Google Cloud Run in place of Render. The setup documents account for the social worker’s asynchronous post-response work and separate runtime secret access; both worker images have built and Cloud Run services are deployed in explicit setup-pending mode. Actual browser execution and provider callbacks remain unverified.
 

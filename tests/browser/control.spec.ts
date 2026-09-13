@@ -890,8 +890,10 @@ test("case cancellation distinguishes before-dispatch from an unresolved publica
   ).toHaveCount(0);
 });
 
-test("Mend landing opens the board and preserves the selected theme", async ({ page }) => {
+test("brio landing opens the board and preserves the selected theme", async ({ page }) => {
   await page.goto("/");
+  await expect(page).toHaveTitle("brio · Customer to Engineering");
+  await expect(page.getByRole("link", { name: "brio drizzle · weather" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Open the board", exact: true }).first()).toBeVisible();
   await page.getByRole("button", { name: "Switch to dark theme" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
