@@ -335,7 +335,9 @@ export function ControlsView({
                       <DateText value={item.at} />
                     </td>
                     <td>
-                      {item.actor}
+                      {item.actor === "Mend · sample data"
+                        ? "brio · sample data"
+                        : item.actor}
                       <div className="small muted">{item.role}</div>
                     </td>
                     <td>{humanize(item.action)}</td>

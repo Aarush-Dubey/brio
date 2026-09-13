@@ -79,6 +79,6 @@ export async function handleRedditOAuth(request: IncomingMessage, response: Serv
     if (claimedState) await bridge?.fail(claimedState).catch(() => {});
     // Provider bodies, codes, cookies, access tokens, and refresh tokens never reach logs or responses.
     response.writeHead(400, { "content-type": "text/plain; charset=utf-8", "x-content-type-options": "nosniff" });
-    response.end("Reddit connection was not completed. Return to Mend Connections, check approved API access and configuration, and start a new authorization attempt."); return true;
+    response.end("Reddit connection was not completed. Return to brio Connections, check approved API access and configuration, and start a new authorization attempt."); return true;
   }
 }

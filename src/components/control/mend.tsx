@@ -31,7 +31,7 @@ export function MendHeader({ tab = "landing" }: { tab?: Tab }) {
     return () => clearTimeout(timer);
   }, []);
   return <header className="mend-header">
-    <Link href="/" className="mend-brand"><span className="brand-square" /><strong>Mend</strong><span className="mono brand-context">drizzle · weather</span></Link>
+    <Link href="/" className="mend-brand"><span className="brand-square" /><strong>brio</strong><span className="mono brand-context">drizzle · weather</span></Link>
     <div className="header-actions">
       {tab !== "landing" && <nav className="mend-tabs" aria-label="Main navigation">
         <Link href="/cases" aria-current={tab === "cases" ? "page" : undefined}>Board</Link>

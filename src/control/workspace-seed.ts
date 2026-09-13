@@ -135,7 +135,7 @@ export function seedWorkspace(input: ControlState, now = Date.now()): { state: C
     if (!["RECEIVED", "TRIAGING"].includes(record.phase)) events.push({ action: "Triage completed", detail: `${scenario.title} · ${route === "engineering_resolution" ? "engineering investigation" : route === "known_remedy" ? "known remedy" : "persona reply"}`, at: created + 3 * 60_000 });
     if (scenario.finding) events.push({ action: "Investigation updated", detail: scenario.finding, at: created + 9 * 60_000 });
     if (late) events.push({ action: complete ? "Reply confirmed" : scenario.phase === "AWAITING_GO" ? "Reply ready for review" : "Reply approved", detail: scenario.reply ?? scenario.title, at: complete ? created + 37 * 60_000 : now - (index + 1) * 60_000 });
-    for (const [n, event] of events.entries()) state.audit.push({ id: `seed-case:${id}:${n}`, at: new Date(event.at).toISOString(), actor: "Mend · sample data", role: "demo", action: event.action, detail: event.detail });
+    for (const [n, event] of events.entries()) state.audit.push({ id: `seed-case:${id}:${n}`, at: new Date(event.at).toISOString(), actor: "brio · sample data", role: "demo", action: event.action, detail: event.detail });
     added++;
   });
   if (added) {

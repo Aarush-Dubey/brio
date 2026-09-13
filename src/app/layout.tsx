@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 export const metadata: Metadata = {
-  title: "Mend · Customer to Engineering",
+  title: "brio · Customer to Engineering",
   description:
     "Customer cases, persona policy, approvals, and verified reply outcomes.",
 };
