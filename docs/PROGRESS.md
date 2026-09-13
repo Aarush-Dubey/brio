@@ -1,6 +1,6 @@
 # Mend implementation progress
 
-Last updated: 2026-09-13T21:22:09.315302+00:00
+Last updated: 2026-09-13T21:23:35.522220+00:00
 
 ## Current objective
 
@@ -23,14 +23,14 @@ Deliver the Mend interface, live Kanban/timeline, persona workflows and Slack ap
 
 | Work | Status |
 | --- | --- |
-| Slack account configuration | Local browser access succeeded; Mend app created in BitsUp with chat:write. First exposed token was revoked. Replacement token authenticated successfully; bot token, signing secret and workspace ID are saved in .env, private Convex bundle and local Convex. Mend joined #mend-approvals; its channel ID and Elen’s engineer ID are saved in .env/private bundle/local Convex. User deferred the marketer ID. Hosted callback and actual approval test remain pending. |
+| Slack account configuration | Local browser access succeeded; Mend app created in BitsUp with chat:write. First exposed token was revoked. Replacement token authenticated successfully; bot token, signing secret and workspace ID are saved in .env, private Convex bundle and local Convex. Mend joined #mend-approvals; its channel ID, Elen’s engineer ID and David’s marketer ID are saved in .env/private bundle/local Convex. All six Slack settings are configured locally. Hosted callback and actual approval test remain pending. |
 | Activate hosted worker execution | Needs real hosted Mend, Convex and weather URLs; social live mode also needs always-allocated CPU and minimum 1 instance. Current deployed services intentionally remain disabled. |
 | Controller draft PR | Created as PR #1; inspect GitHub checks and keep provider setup gates explicit. |
 | Full live customer-to-reply run | Blocked by remaining provider setup; local simulations and health checks do not establish live completion. |
 
 ## Remaining external setup
 
-Hosted Convex, Slack settings on hosted Convex, its callback URL and the deferred marketer ID, Linear settings on hosted Convex, Vercel projects, the reviewed immutable coding-sandbox image and a check-writing GitHub App remain prerequisites. The local Docker daemon is inaccessible, so generated candidate execution is unverified. Selected live social platforms additionally require an authorized account and capability. No weather API or Clerk account is needed. See [remaining settings](SETUP-REMAINING.md) and the [beginner guide](SETUP-GUIDE.md).
+Hosted Convex, Slack settings on hosted Convex, its callback URL and live approval verification, Linear settings on hosted Convex, Vercel projects, the reviewed immutable coding-sandbox image and a check-writing GitHub App remain prerequisites. The local Docker daemon is inaccessible, so generated candidate execution is unverified. Selected live social platforms additionally require an authorized account and capability. No weather API or Clerk account is needed. See [remaining settings](SETUP-REMAINING.md) and the [beginner guide](SETUP-GUIDE.md).
 
 ## Change log
 
@@ -61,3 +61,5 @@ Hosted Convex, Slack settings on hosted Convex, its callback URL and the deferre
 - 2026-09-13T21:17:05.628508+00:00: GitHub CI passed 490 tests/31 files, all 21 browser scenarios together, lint/types and both builds. GPT-5.5 subagent installed Vercel CLI 59.16.0 globally via Bun and verified version/help; executable is /home/big-daddy/.bun/bin/vercel. Replacement Slack token passed auth.test and three Slack settings are configured locally; no messages were sent.
 
 - 2026-09-13T21:22:09.315302+00:00: Completed Slack channel creation and verified Mend joined it. Saved all five available Slack settings in .env, private Convex bundle and local Convex; corrected engineer to Elen using the user-supplied ID. User explicitly deferred marketer configuration. Slack remains partially configured until the hosted callback and real approval test exist. Updated the guide with exact remaining steps.
+
+- 2026-09-13T21:23:35.522220+00:00: User supplied David’s marketer ID after the temporary deferral. Saved it in .env/private Convex bundle and verified the exact value in local Convex. All six Slack settings are now configured locally. Hosted Convex environment import, Interactivity callback and live approval test are the remaining Slack steps.

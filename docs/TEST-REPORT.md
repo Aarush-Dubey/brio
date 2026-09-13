@@ -44,4 +44,4 @@ The user’s real metadata request returned HTTP 400 with “Query too complex.�
 
 ## Slack configuration evidence
 
-The replacement bot token passed Slack auth.test for BitsUp; Mend is installed with chat:write and joined the created mend-approvals channel. Five settings, including the user-supplied Elen engineer ID, are saved in .env/private bundle/local Convex. The first exposed token was revoked. The user deferred the marketer ID; the public Convex callback is missing and no live approval message/test was sent. [Configuration record](../artifacts/slack-setup.json).
+The replacement bot token passed Slack auth.test for BitsUp; Mend is installed with chat:write and joined the created mend-approvals channel. All six settings, including the user-supplied Elen engineer ID and David marketer ID, are saved in .env/private bundle/local Convex. The first exposed token was revoked. Hosted Convex environment import and the public callback remain pending; no live approval message/test was sent. [Configuration record](../artifacts/slack-setup.json).

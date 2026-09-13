@@ -229,13 +229,13 @@ Official reference: [Vercel environment settings](https://vercel.com/docs/enviro
 <a id="step-5"></a>
 ## Step 5 — Set up Slack decisions
 
-**Current setup:** the `Mend` app is installed in `BitsUp` with `chat:write` and has joined `#mend-approvals`. The replacement bot token passed Slack’s `auth.test`. These five settings are saved in local `.env`, the private Convex bundle and the running local Convex backend: `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_TEAM_ID`, `SLACK_CHANNEL_ID`, and `SLACK_ENGINEER_USER_IDS` (Elen, using the ID supplied by the user).
+**Current setup:** the `Mend` app is installed in `BitsUp` with `chat:write` and has joined `#mend-approvals`. The replacement bot token passed Slack’s `auth.test`. These six settings are saved in local `.env`, the private Convex bundle and the running local Convex backend: `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_TEAM_ID`, `SLACK_CHANNEL_ID`, `SLACK_ENGINEER_USER_IDS` (Elen), and `SLACK_MARKETER_USER_IDS` (David), using the IDs supplied by the user.
 
-**Still required:** the public Convex HTTP-action URL and a marketer member ID. The user asked to skip the marketer ID for now, so `SLACK_MARKETER_USER_IDS` remains blank and marketer approval stays unavailable. No live Slack approval test has run.
+**Still required:** the public Convex HTTP-action URL, importing these six settings into that hosted deployment, and a live Slack approval test. Elen and David are both configured locally; no member ID is missing. No live Slack approval test has run.
 
 To finish the callback after completing Step 4, open the existing [Mend Slack app](https://api.slack.com/apps/A0C1N1T82UU/general) → **Interactivity & Shortcuts** → turn **Interactivity** on → set **Request URL** to the actual hosted Convex `.site` URL followed by `/slack/interactions` → **Save Changes**. The local `127.0.0.1:3211` URL cannot receive Slack callbacks. Copy all configured Slack settings into that hosted Convex deployment too.
 
-When ready to configure a marketer, open that person’s Slack profile → **More (⋯) → Copy member ID**. Save the resulting `U…` ID as `SLACK_MARKETER_USER_IDS` in `.env` and the matching Convex deployment. The live check is in Step 11; credentials alone do not establish successful button delivery.
+To change the marketer later, open that person’s Slack profile → **More (⋯) → Copy member ID**. Save the resulting `U…` ID as `SLACK_MARKETER_USER_IDS` in `.env` and the matching Convex deployment. The live check is in Step 11; credentials alone do not establish successful button delivery.
 
 
 **Purpose:** the engineer approves **Build** in Slack. The marketer approves **Go**, exact replies and persona activation in Slack. A button in the Mend website does not replace those live decisions.
