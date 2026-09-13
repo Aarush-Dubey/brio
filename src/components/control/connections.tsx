@@ -125,6 +125,9 @@ export function ConnectionsView({
   const [uploadError, setUploadError] = useState("");
   const [uploadMessage, setUploadMessage] = useState("");
   const [method, setMethod] = useState("file");
+  const [redditConnecting, setRedditConnecting] = useState(false);
+  const [redditError, setRedditError] = useState("");
+  const redditAccount = snapshot.connections.find(connection => connection.platform === "reddit")?.account;
   return (
     <>
       <div className="section-header">
@@ -177,6 +180,36 @@ export function ConnectionsView({
           />
         ))}
       </div>
+      <section className="panel">
+        <h2>Connect Reddit</h2>
+        <p className="muted">
+          Save the dedicated account identifier above, then authorize that same
+          Reddit account. Approved API access and an explicitly permitted
+          community list are required. Connecting does not approve a reply.
+        </p>
+        <form onSubmit={async event => {
+          event.preventDefault(); setRedditConnecting(true); setRedditError("");
+          try {
+            const response = await fetch("/api/connections/reddit/start", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ accountId: redditAccount }) });
+            if (!response.ok) throw new Error("Reddit authorization is unavailable. Check approved API access, worker setup, and the saved account identifier.");
+            const result = await response.json() as { url: string; grant: string };
+            const destination = new URL(result.url);
+            if (destination.protocol !== "https:" || destination.pathname !== "/v1/oauth/reddit/start" || typeof result.grant !== "string") throw new Error("The Reddit authorization destination is invalid.");
+            const form = document.createElement("form"), grant = document.createElement("input");
+            form.method = "POST"; form.action = destination.href;
+            grant.type = "hidden"; grant.name = "grant"; grant.value = result.grant;
+            form.append(grant); document.body.append(form); form.submit(); form.remove();
+          } catch (cause) {
+            setRedditError(cause instanceof Error ? cause.message : "Reddit authorization failed."); setRedditConnecting(false);
+          }
+        }}>
+          <button type="submit" disabled={!admin || snapshot.mode === "demo" || !redditAccount || busy || redditConnecting}>
+            {redditConnecting ? "Opening Reddit…" : "Authorize Reddit account"}
+          </button>
+        </form>
+        {snapshot.mode === "demo" && <p className="notice demo">Reddit authorization is available in a configured live workspace.</p>}
+        {redditError && <p role="alert" className="notice error">{redditError}</p>}
+      </section>
       <section className="panel">
         <h2>Import X session</h2>
         <p className="muted">

@@ -14,6 +14,7 @@ import type * as controlActions from "../controlActions.js";
 import type * as crons from "../crons.js";
 import type * as execution from "../execution.js";
 import type * as http from "../http.js";
+import type * as redditControl from "../redditControl.js";
 import type * as releaseActions from "../releaseActions.js";
 import type * as releaseControl from "../releaseControl.js";
 import type * as sessionActions from "../sessionActions.js";
@@ -35,6 +36,7 @@ declare const fullApi: ApiFromModules<{
   crons: typeof crons;
   execution: typeof execution;
   http: typeof http;
+  redditControl: typeof redditControl;
   releaseActions: typeof releaseActions;
   releaseControl: typeof releaseControl;
   sessionActions: typeof sessionActions;

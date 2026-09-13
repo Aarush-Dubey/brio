@@ -6,6 +6,8 @@ import { type ClaimedJob, type WorkerBridge } from "./bridge";
 import { SimulatorPublisher } from "./simulator";
 import { readXMentions, verifyXAccount, XPublisher } from "./x-adapter";
 import { RedditPublisher, type RedditConfig } from "./reddit-adapter";
+import { decryptRedditCredential } from "./reddit-credentials";
+import { handleRedditOAuth } from "./reddit-oauth";
 
 export type WorkerConfig = { grantSecret: string; allowedOrigin: string; encryptionKeys: Record<string, string>; currentKeyVersion: string; xPermissionApproved: boolean; reddit?: RedditConfig };
 export type WorkerDependencies = {
@@ -36,6 +38,15 @@ const importSchema = z.object({ grant: z.string(), storageState: storageStateSch
 export function createWorkerServer(config: WorkerConfig, dependencies: WorkerDependencies) {
   const { bridge } = dependencies, activeAccounts = new Set<string>(), simulator = new SimulatorPublisher();
   const accountKey = (grant: WorkerGrant) => `${grant.workspaceId}:${grant.connectionId}:${grant.accountId}`;
+  function redditConfig(claim: ClaimedJob, grant: WorkerGrant): RedditConfig {
+    const reddit = config.reddit ?? { permissionApproved: false, allowedSubreddits: [] };
+    if (!reddit.permissionApproved) return reddit;
+    // A process-wide legacy refresh token cannot bypass version-bound account onboarding.
+    if (!claim.redditCredential) return { ...reddit, refreshToken: undefined };
+    const credential = decryptRedditCredential(claim.redditCredential, grant, config.encryptionKeys);
+    if (credential.clientId !== reddit.clientId) throw new Error("reddit_client_changed");
+    return { ...reddit, refreshToken: credential.refreshToken, allowedSubreddits: credential.allowedSubreddits.filter(name => reddit.allowedSubreddits.some(allowed => allowed.toLowerCase() === name)) };
+  }
   async function execute(claim: ClaimedJob, grant: WorkerGrant): Promise<void> {
     const { job, leaseId } = claim;
     let leaseHealthy = true;
@@ -51,16 +62,17 @@ export function createWorkerServer(config: WorkerConfig, dependencies: WorkerDep
       else if (job.operation === "publish_reply" || job.operation === "reconcile_publication") {
         const payload = publishSchema.parse(job.payload);
         if (payload.accountId !== job.accountId) throw new Error("account_mismatch");
-        const adapter = payload.platform === "simulator" ? simulator : payload.platform === "reddit" ? new RedditPublisher(config.reddit ?? { permissionApproved: false, allowedSubreddits: [] }, dependencies.redditTransport) : new XPublisher(decryptSession(claim.session!, grant, config.encryptionKeys), config.xPermissionApproved);
+        const adapter = payload.platform === "simulator" ? simulator : payload.platform === "reddit" ? new RedditPublisher(redditConfig(claim, grant), dependencies.redditTransport) : new XPublisher(decryptSession(claim.session!, grant, config.encryptionKeys), config.xPermissionApproved);
         output = job.operation === "publish_reply" ? await adapter.publish(payload, () => authorize(payload.publicationId)) : await adapter.reconcile(payload);
       } else {
-        const { cursor } = z.object({ cursor: z.string().regex(/^\d+$/).optional() }).strict().parse(job.payload);
-        output = await readXMentions(decryptSession(claim.session!, grant, config.encryptionKeys), job.accountId, config.xPermissionApproved, cursor);
+        const { cursor, platform } = z.object({ cursor: z.string().regex(/^\d+$/).optional(), platform: z.enum(["x", "reddit"]).default("x") }).strict().parse(job.payload);
+        output = platform === "reddit" ? await new RedditPublisher(redditConfig(claim, grant), dependencies.redditTransport).readMentions(job.accountId, cursor ?? "") : await readXMentions(decryptSession(claim.session!, grant, config.encryptionKeys), job.accountId, config.xPermissionApproved, cursor);
       }
       const publication = z.object({ status: z.string() }).safeParse(output);
       result = { schemaVersion: 1, jobId: job.jobId, attemptId: job.attemptId, inputRevision: job.inputRevision, status: publication.success && publication.data.status === "unknown" ? "unknown" : publication.success && publication.data.status === "definitely_not_sent" ? "failed" : "succeeded", evidenceRefs: [], output, completedAt: Date.now() };
-    } catch {
-      result = { schemaVersion: 1, jobId: job.jobId, attemptId: job.attemptId, inputRevision: job.inputRevision, status: job.operation === "publish_reply" ? "unknown" : "failed", evidenceRefs: [], completedAt: Date.now(), error: { class: job.operation === "publish_reply" ? "publication_unknown" : "execution_failed", message: "Execution did not produce a verified result; inspect connection and controller state.", retryable: job.operation === "ingest_social" } };
+    } catch (error) {
+      const safeReason = error instanceof Error && /^reddit_(rate_limited|cursor_gap|intake_batch_limit|listing_limit|parent_mismatch|cursor_invalid)$/.test(error.message) ? error.message : "Execution did not produce a verified result; inspect connection and controller state.";
+      result = { schemaVersion: 1, jobId: job.jobId, attemptId: job.attemptId, inputRevision: job.inputRevision, status: job.operation === "publish_reply" ? "unknown" : "failed", evidenceRefs: [], completedAt: Date.now(), error: { class: job.operation === "publish_reply" ? "publication_unknown" : "execution_failed", message: safeReason, retryable: job.operation === "ingest_social" } };
     } finally { clearInterval(heartbeat); }
     try { await bridge.result(grant, leaseId, result); }
     finally { activeAccounts.delete(accountKey(grant)); }
@@ -75,6 +87,7 @@ export function createWorkerServer(config: WorkerConfig, dependencies: WorkerDep
     }
     if (request.method === "GET" && request.url === "/health") return send(response, 200, { status: "ok", implementation: "experimental", queue: "convex", livePermission: config.xPermissionApproved ? "configured_unverified" : "access_pending" });
     if (request.method === "OPTIONS") return send(response, origin === config.allowedOrigin ? 204 : 403, {});
+    if (await handleRedditOAuth(request, response, config, bridge.reddit, dependencies.redditTransport)) return;
     try {
       if (request.method !== "POST") return send(response, 405, { error: "method_not_allowed" });
       if (!(request.headers["content-type"] ?? "").startsWith("application/json")) return send(response, 415, { error: "json_required" });
@@ -102,7 +115,7 @@ export function createWorkerServer(config: WorkerConfig, dependencies: WorkerDep
       }
       if (request.url === "/v1/jobs") {
         const token = request.headers.authorization?.replace(/^Bearer /, "") ?? "", grant = verifyGrant(token, config.grantSecret);
-        if (grant.operation === "session_import") throw new Error("invalid_job_grant");
+        if (grant.operation === "session_import" || grant.operation === "reddit_oauth") throw new Error("invalid_job_grant");
         const input = dispatchSchema.parse(await readJson(request));
         if (grant.jobId !== input.jobId || grant.attemptId !== input.attemptId) throw new Error("job_binding_mismatch");
         const key = accountKey(grant);

@@ -8,6 +8,7 @@ import { approvalBinding, validateApproval } from "../src/core/approvals";
 import { canonicalJson, hashText } from "../src/core/domain";
 import { parseSocialTarget } from "../src/core/signals";
 import { grantSchema, encryptedSessionSchema, socialJobSchema } from "../workers/shared/contracts";
+import { redditIngestionSchema } from "../workers/shared/reddit-contracts";
 import { applyTaskResult } from "../src/control/events";
 import type { ControlState } from "../src/control/types";
 const bounded = (data: unknown, bytes = 80_000) => { if (new TextEncoder().encode(JSON.stringify(data)).length > bytes) throw new Error("payload_too_large"); };
@@ -69,11 +70,12 @@ export const createSocial = internalMutation({ args: { taskId: v.string(), attem
   const s = await readState(ctx), task = s.tasks.find(t => t.id === a.taskId && t.attemptId === a.attemptId);
   if (!task || task.status !== "running" || !["publish_reply", "reconcile_publication", "ingest_social"].includes(task.kind)) throw new Error("stale_job");
   if (task.kind === "ingest_social") {
-    const connection = s.connections.find(connection => connection.id === task.payload.connectionId && connection.platform === "x");
+    const connection = s.connections.find(connection => connection.id === task.payload.connectionId && ["x", "reddit"].includes(connection.platform));
     if (!connection?.account || connection.status !== "ready" || connection.permission !== "granted" || connection.paused || s.paused) throw new Error("ingestion_connection_not_ready");
+    if (connection.platform === "reddit" && process.env.REDDIT_API_APPROVED !== "true") throw new Error("reddit_access_pending");
     if (task.payload.grantJti) throw new Error("social_dispatch_already_bound");
     const grant = { schemaVersion: 1 as const, jti: crypto.randomUUID(), workspaceId: s.workspaceId, connectionId: connection.id, connectionVersion: connection.version, accountId: connection.account, operation: "ingest_social" as const, jobId: task.id, attemptId: task.attemptId, exp: Date.now() + 120_000 };
-    const payload = connection.cursor ? { cursor: connection.cursor } : {};
+    const payload = { platform: connection.platform, ...(connection.cursor ? { cursor: connection.cursor } : {}) };
     task.payload.socialJob = socialJobSchema.parse({ schemaVersion: 1, jobId: task.id, workspaceId: s.workspaceId, operation: "ingest_social", attemptId: task.attemptId, inputRevision: task.inputRevision, idempotencyKey: task.id, createdAt: Date.now(), expiresAt: grant.exp, connectionId: connection.id, accountId: connection.account, connectionVersion: connection.version, payload });
     task.payload.grantJti = grant.jti;
     await ctx.db.insert("workerGrants", { jti: grant.jti, grant, consumed: false }); await writeState(ctx, s); return grant;
@@ -138,6 +140,8 @@ export const callback = internalMutation({ args: { path: v.string(), data: v.any
     if (!connectionCurrent || saved.consumed || grant.exp <= Date.now() || raw.jobId !== task.id || raw.attemptId !== task.attemptId || task.status !== "running") throw new Error("claim_denied");
     if (task.kind === "publish_reply") assertCanPublish(s, c!, p!, Date.now(), { requireImmediateIdentity: false });
     if (task.kind === "ingest_social" && (s.paused || connection!.paused || connection!.permission !== "granted" || connection!.status !== "ready")) throw new Error("ingestion_connection_not_ready");
+    const redditCredential = connection!.platform === "reddit" ? await ctx.db.query("redditCredentials").withIndex("by_connection", q => q.eq("connectionId", grant.connectionId)).unique() : null;
+    if (connection!.platform === "reddit" && (process.env.REDDIT_API_APPROVED !== "true" || !redditCredential || redditCredential.connectionVersion !== grant.connectionVersion)) throw new Error("reddit_connection_not_ready");
     const previous = await ctx.db.query("workerLeases").withIndex("by_job", q => q.eq("jobId", task.id)).unique(); if (previous) throw new Error("job_already_claimed");
     const activeAccount = (await ctx.db.query("workerLeases").withIndex("by_connection", q => q.eq("connectionId", grant.connectionId)).collect()).find(lease => !lease.completed && lease.expiresAt > Date.now());
     if (activeAccount) throw new Error("account_job_already_running");
@@ -145,7 +149,7 @@ export const callback = internalMutation({ args: { path: v.string(), data: v.any
     await ctx.db.insert("workerLeases", { jobId: task.id, attemptId: task.attemptId, grantJti: grant.jti, leaseId, expiresAt: Math.min(Date.now() + 60_000, grant.exp), sendAuthorized: false, completed: false, connectionId: grant.connectionId, accountId: grant.accountId, workspaceId: grant.workspaceId });
     await ctx.db.patch(saved._id, { consumed: true });
     const session = (await ctx.db.query("socialSessions").withIndex("by_connection", q => q.eq("connectionId", grant.connectionId)).collect()).find(x => x.status === "active" && x.connectionVersion === grant.connectionVersion);
-    return { job: task.payload.socialJob, leaseId, ...(session ? { session: session.encrypted } : {}) };
+    return { job: task.payload.socialJob, leaseId, ...(session ? { session: session.encrypted } : {}), ...(redditCredential ? { redditCredential: redditCredential.encrypted } : {}) };
   }
   const lease = await ctx.db.query("workerLeases").withIndex("by_lease", q => q.eq("leaseId", String(raw.leaseId))).unique();
   if (!lease || lease.jobId !== task.id || lease.attemptId !== task.attemptId || lease.grantJti !== grant.jti) throw new Error("lease_mismatch");
@@ -167,16 +171,27 @@ export const callback = internalMutation({ args: { path: v.string(), data: v.any
         task.status = "failed"; task.error = "stale_ingestion_result";
       } else if (r.status !== "succeeded") {
         task.status = "failed"; task.error = "ingestion_requires_connection_review"; connection!.status = "reconnect_required";
+        if (connection!.platform === "reddit") {
+          const reason = z.object({ message: z.enum(["reddit_rate_limited", "reddit_cursor_gap", "reddit_intake_batch_limit"]) }).safeParse(r.error);
+          connection!.detail = reason.success && reason.data.message === "reddit_rate_limited" ? "Reddit rate-limited intake. Automatic polling stopped; the cursor was preserved. Review before reconnecting." : "Reddit intake stopped without advancing its cursor. Review access and any backlog before reconnecting; manual intake remains available.";
+        }
       } else {
-        const batch = z.object({ mode: z.literal("live"), cursorCommitRequired: z.literal(true), nextCursor: z.string().regex(/^\d*$/), items: z.array(z.object({ platform: z.literal("x"), sourceMode: z.literal("live"), externalId: z.string().regex(/^\d+$/), originalUrl: z.string().url(), author: z.string().regex(/^[A-Za-z0-9_]{1,15}$/), text: z.string().min(1).max(20_000), observedAt: z.number().finite() }).strict()).max(20) }).strict().parse(r.output);
+        const batch = connection!.platform === "reddit" ? redditIngestionSchema.parse(r.output) : z.object({ mode: z.literal("live"), cursorCommitRequired: z.literal(true), nextCursor: z.string().regex(/^\d*$/), items: z.array(z.object({ platform: z.literal("x"), sourceMode: z.literal("live"), externalId: z.string().regex(/^\d+$/), originalUrl: z.string().url(), author: z.string().regex(/^[A-Za-z0-9_]{1,15}$/), text: z.string().min(1).max(20_000), observedAt: z.number().finite() }).strict()).max(20) }).strict().parse(r.output);
         const priorCursor = connection!.cursor ?? "";
-        const latest = batch.items.reduce((current, item) => !current || BigInt(item.externalId) > BigInt(current) ? item.externalId : current, priorCursor);
-        if (batch.nextCursor !== latest) throw new Error("ingestion_cursor_mismatch");
+        const credential = connection!.platform === "reddit" ? await ctx.db.query("redditCredentials").withIndex("by_connection", q => q.eq("connectionId", grant.connectionId)).unique() : null;
+        if (connection!.platform === "reddit") {
+          if (process.env.REDDIT_API_APPROVED !== "true" || !credential || credential.connectionVersion !== grant.connectionVersion || s.paused || connection!.paused || connection!.permission !== "granted") throw new Error("reddit_connection_not_ready");
+          if (!priorCursor || !Number.isSafeInteger(Number(batch.nextCursor)) || Number(batch.nextCursor) < Number(priorCursor) || Number(batch.nextCursor) > Date.now() || new Set(batch.items.map(item => item.externalId)).size !== batch.items.length) throw new Error("ingestion_cursor_mismatch");
+        } else {
+          const latest = batch.items.reduce((current, item) => !current || BigInt(item.externalId) > BigInt(current) ? item.externalId : current, priorCursor);
+          if (batch.nextCursor !== latest) throw new Error("ingestion_cursor_mismatch");
+        }
         let next = s;
         for (const item of batch.items) {
-          const target = parseSocialTarget("x", item.originalUrl);
-          if (!target || target.interactionId !== item.externalId || new URL(item.originalUrl).pathname.split("/")[1].toLowerCase() !== item.author.toLowerCase() || item.observedAt > Date.now()) throw new Error("ingestion_source_mismatch");
-          next = applyCommand(next, { action: "intake", platform: "x", mode: "live", sourceUrl: item.originalUrl, text: item.text, authorId: item.author, observedAt: item.observedAt }, { id: "social-ingestion", name: "Social ingestion worker", roles: [] }, config(), Date.now(), true);
+          const target = parseSocialTarget(item.platform, item.originalUrl), path = new URL(item.originalUrl).pathname.split("/");
+          if (!target || item.platform !== connection!.platform || target.interactionId !== item.externalId || item.observedAt > Date.now()) throw new Error("ingestion_source_mismatch");
+          if (item.platform === "x" ? path[1].toLowerCase() !== item.author.toLowerCase() : path[1] !== "r" || path[2].toLowerCase() !== item.subreddit.toLowerCase() || !credential!.allowedSubreddits.includes(item.subreddit.toLowerCase()) || item.observedAt <= Number(priorCursor) || item.observedAt > Number(batch.nextCursor)) throw new Error("ingestion_source_mismatch");
+          next = applyCommand(next, { action: "intake", platform: item.platform, mode: "live", sourceUrl: item.originalUrl, text: item.text, authorId: item.author, observedAt: item.observedAt }, { id: "social-ingestion", name: "Social ingestion worker", roles: [] }, config(), Date.now(), true);
         }
         Object.assign(s, next);
         const updated = s.connections.find(item => item.id === grant.connectionId)!; updated.cursor = batch.nextCursor; updated.lastPolledAt = Date.now(); updated.lastCheckedAt = new Date().toISOString();
@@ -191,6 +206,7 @@ export const callback = internalMutation({ args: { path: v.string(), data: v.any
     await ctx.db.patch(lease._id, { completed: true, resultHash }); await writeState(ctx, s); await ctx.scheduler.runAfter(0, internal.control.pump, {}); return { received: true };
   }
   if (!connectionCurrent || lease.completed || lease.expiresAt <= Date.now() || grant.exp <= Date.now() || task.status !== "running") throw new Error("lease_expired_or_revoked");
+  if (connection!.platform === "reddit" && process.env.REDDIT_API_APPROVED !== "true") throw new Error("reddit_access_pending");
   if (path === "heartbeat") { await ctx.db.patch(lease._id, { expiresAt: Math.min(Date.now() + 60_000, grant.exp) }); return { alive: true }; }
   if (path !== "authorize-send" || task.kind !== "publish_reply" || raw.publicationId !== p!.id || lease.sendAuthorized) throw new Error("send_authorization_denied");
   if (verifiedIdentity && c!.candidate) {

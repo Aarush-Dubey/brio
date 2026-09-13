@@ -27,7 +27,7 @@ services:
         sync: false
       - key: REDDIT_CLIENT_SECRET
         sync: false
-      - key: REDDIT_REFRESH_TOKEN
+      - key: REDDIT_REDIRECT_URI
         sync: false
       - key: REDDIT_USER_AGENT
         sync: false

@@ -1,10 +1,18 @@
 import { z } from "zod";
-import { encryptedSessionSchema, socialJobSchema, type EncryptedSession, type JobResult, type WorkerGrant } from "../shared/contracts";
+import { encryptedSessionSchema, grantSchema, socialJobSchema, type EncryptedSession, type JobResult, type WorkerGrant } from "../shared/contracts";
+import { encryptedRedditCredentialSchema, type EncryptedRedditCredential } from "../shared/reddit-contracts";
 import { callbackSignature, requireSecret } from "../shared/security";
 
-export const claimSchema = z.object({ job: socialJobSchema, leaseId: z.string().min(1), session: encryptedSessionSchema.optional() });
+export const claimSchema = z.object({ job: socialJobSchema, leaseId: z.string().min(1), session: encryptedSessionSchema.optional(), redditCredential: encryptedRedditCredentialSchema.optional() });
 export type ClaimedJob = z.infer<typeof claimSchema>;
+export interface RedditOAuthBridge {
+  start(grant: WorkerGrant, browserHash: string): Promise<void>;
+  claim(state: string, browserHash: string): Promise<WorkerGrant>;
+  activate(grant: WorkerGrant, verifiedAccountId: string, encrypted: EncryptedRedditCredential, allowedSubreddits: string[]): Promise<void>;
+  fail(state: string): Promise<void>;
+}
 export interface WorkerBridge {
+  reddit?: RedditOAuthBridge;
   claim(grant: WorkerGrant, jobId: string, attemptId: string): Promise<ClaimedJob>;
   heartbeat(grant: WorkerGrant, leaseId: string): Promise<void>;
   result(grant: WorkerGrant, leaseId: string, result: JobResult): Promise<void>;
@@ -15,6 +23,12 @@ export interface WorkerBridge {
 }
 
 export class HttpWorkerBridge implements WorkerBridge {
+  readonly reddit: RedditOAuthBridge = {
+    start: async (grant, browserHash) => { z.object({ started: z.literal(true) }).parse(await this.send("reddit/start", { state: grant.jti, grant, browserHash })); },
+    claim: async (state, browserHash) => z.object({ grant: grantSchema }).parse(await this.send("reddit/claim", { state, browserHash })).grant,
+    activate: async (grant, verifiedAccountId, encrypted, allowedSubreddits) => { z.object({ activated: z.literal(true) }).parse(await this.send("reddit/activate", { state: grant.jti, verifiedAccountId, encrypted, allowedSubreddits })); },
+    fail: async state => { await this.send("reddit/fail", { state }); },
+  };
   constructor(private readonly baseUrl: string, private readonly callbackSecret: string) {
     const url = new URL(baseUrl);
     if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/") throw new Error("configuration_required:CONVEX_SITE_URL");

@@ -16,6 +16,10 @@ export const dispatch = mutation({ args: { command: v.any(), serviceKey: v.strin
   if (["connection_disable", "connection_configure"].includes(command.action)) {
     for (const session of await ctx.db.query("socialSessions").withIndex("by_connection", q => q.eq("connectionId", String(command.connectionId))).collect()) await ctx.db.delete(session._id);
   }
+  if (["connection_disable", "connection_configure", "reconnect"].includes(command.action)) {
+    for (const credential of await ctx.db.query("redditCredentials").withIndex("by_connection", q => q.eq("connectionId", String(command.connectionId))).take(10)) await ctx.db.delete(credential._id);
+    for (const pending of await ctx.db.query("redditOAuthStates").withIndex("by_connection", q => q.eq("connectionId", String(command.connectionId))).take(10)) await ctx.db.delete(pending._id);
+  }
   await writeState(ctx, next); await ctx.scheduler.runAfter(0, internal.control.pump, {});
   return snapshot(next, actor, config());
 } });
@@ -69,7 +73,8 @@ export const maintain = internalMutation({ args: {}, handler: async ctx => {
     if (a.request.expiresAt <= now) { const c = s.cases.find(c => c.id === a.caseId); if (c && c.blockingReason !== "approval_expired") { c.blockingReason = "approval_expired"; changed = true; } }
     else if (now - a.request.createdAt >= 15 * 60_000 && !s.tasks.some(t => t.kind === "slack_reminder" && t.payload.authorityId === a.request.requestId)) { createTask(s, "slack_reminder", a.caseId, { authorityId: a.request.requestId }, now); changed = true; }
   }
-  if (!s.paused && process.env.FDE_SOCIAL_POLLING_ENABLED === "true" && s.cases.length < 95) for (const connection of s.connections.filter(c => c.platform === "x" && c.status === "ready" && c.permission === "granted" && !c.paused)) {
+  for (const pending of await ctx.db.query("redditOAuthStates").withIndex("by_expiry", q => q.lte("expiresAt", now)).take(100)) await ctx.db.delete(pending._id);
+  if (!s.paused && process.env.FDE_SOCIAL_POLLING_ENABLED === "true" && s.cases.length < 95) for (const connection of s.connections.filter(c => (c.platform === "x" || c.platform === "reddit" && process.env.REDDIT_API_APPROVED === "true") && c.status === "ready" && c.permission === "granted" && !c.paused)) {
     if (!connection.lastPolledAt || now - connection.lastPolledAt >= 5 * 60_000) { createTask(s, "ingest_social", undefined, { connectionId: connection.id }, now); changed = true; }
   }
   if (changed) { await writeState(ctx, s); await ctx.scheduler.runAfter(0, internal.control.pump, {}); }

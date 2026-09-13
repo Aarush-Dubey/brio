@@ -287,13 +287,13 @@ function catalog(includeReddit: boolean): Check[] {
       keys: [
         "REDDIT_CLIENT_ID",
         "REDDIT_CLIENT_SECRET",
-        "REDDIT_REFRESH_TOKEN",
+        "REDDIT_REDIRECT_URI",
         "REDDIT_USER_AGENT",
         "REDDIT_ALLOWED_SUBREDDITS",
       ],
       required: includeReddit,
       detail:
-        "Worker-only conditional OAuth publisher; credentials do not establish official API/community approval. Intake is controlled manual URL entry.",
+        "Worker-only OAuth, account verification and allowlisted polling; credentials do not establish official API or community approval.",
     },
     {
       id: "reddit_worker_permission",

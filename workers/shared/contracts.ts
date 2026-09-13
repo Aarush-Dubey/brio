@@ -7,7 +7,7 @@ export const grantSchema = z.object({
   accountId: z.string().min(1),
   connectionId: z.string().min(1),
   connectionVersion: z.number().int().nonnegative(),
-  operation: z.enum(["session_import", "ingest_social", "publish_reply", "reconcile_publication"]),
+  operation: z.enum(["session_import", "reddit_oauth", "ingest_social", "publish_reply", "reconcile_publication"]),
   jobId: z.string().optional(),
   attemptId: z.string().optional(),
   exp: z.number().int(),

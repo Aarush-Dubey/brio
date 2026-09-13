@@ -9,7 +9,7 @@ const server = process.env.WORKER_SETUP_PENDING === "true" ? createSetupPendingS
   allowedOrigin: new URL(process.env.CONTROL_APP_ORIGIN ?? "configuration_required").origin,
   encryptionKeys: { ...JSON.parse(process.env.SESSION_PREVIOUS_KEYS_JSON ?? "{}"), [keyVersion]: requireSecret(process.env.SESSION_ENCRYPTION_KEY, "SESSION_ENCRYPTION_KEY") },
   currentKeyVersion: keyVersion, xPermissionApproved: process.env.X_PLATFORM_PERMISSION_APPROVED === "true",
-  reddit: { permissionApproved: process.env.REDDIT_API_APPROVED === "true", clientId: process.env.REDDIT_CLIENT_ID, clientSecret: process.env.REDDIT_CLIENT_SECRET, refreshToken: process.env.REDDIT_REFRESH_TOKEN, userAgent: process.env.REDDIT_USER_AGENT, allowedSubreddits: (process.env.REDDIT_ALLOWED_SUBREDDITS ?? "").split(",").map(value => value.trim()).filter(Boolean) },
+  reddit: { permissionApproved: process.env.REDDIT_API_APPROVED === "true", clientId: process.env.REDDIT_CLIENT_ID, clientSecret: process.env.REDDIT_CLIENT_SECRET, userAgent: process.env.REDDIT_USER_AGENT, redirectUri: process.env.REDDIT_REDIRECT_URI, allowedSubreddits: (process.env.REDDIT_ALLOWED_SUBREDDITS ?? "").split(",").map(value => value.trim()).filter(Boolean) },
 }, { bridge: new HttpWorkerBridge(process.env.CONVEX_SITE_URL ?? "configuration_required", requireSecret(process.env.SOCIAL_CALLBACK_SECRET, "SOCIAL_CALLBACK_SECRET")) });
 server.requestTimeout = 125_000;
 server.headersTimeout = 10_000;

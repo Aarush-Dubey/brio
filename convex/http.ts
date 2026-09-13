@@ -24,10 +24,11 @@ const worker = httpAction(async (ctx, req) => {
     }
     if (path.startsWith("engineering-") || path === "model-proposal") return response({ error: "wrong_worker_audience" }, 403);
     if (path === "authorize-send") return response(await ctx.runAction(internal.execution.authorizeSocialSend, { data }));
+    if (path.startsWith("reddit/")) return response(await ctx.runMutation(internal.redditControl.callback, { path: path.slice("reddit/".length), data }));
     return response(await ctx.runMutation(internal.workerControl.callback, { path, data }));
   } catch { return response({ error: "worker_request_rejected" }, 409); }
 });
-for (const path of ["claim", "heartbeat", "result", "authorize-send", "session/quarantine", "session/activate", "session/reject", "engineering-authorize", "model-proposal", "engineering-result"]) http.route({ path: "/worker/" + path, method: "POST", handler: worker });
+for (const path of ["claim", "heartbeat", "result", "authorize-send", "session/quarantine", "session/activate", "session/reject", "reddit/start", "reddit/claim", "reddit/activate", "reddit/fail", "engineering-authorize", "model-proposal", "engineering-result"]) http.route({ path: "/worker/" + path, method: "POST", handler: worker });
 http.route({ path: "/slack/interactions", method: "POST", handler: httpAction(async (ctx, req) => {
   try {
     const raw = await req.text(); if (encoder.encode(raw).length > 100_000) return response({ error: "payload_too_large" }, 413);
