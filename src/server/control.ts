@@ -5,7 +5,7 @@ import { makeFunctionReference, type FunctionReference } from "convex/server";
 import { applyCommand, snapshot } from "../control/reducer";
 import { initialState } from "../control/seed";
 import type { Actor, Command } from "../control/types";
-import { runtimeConfig } from "./config";
+import { hostedDemoEnabled, runtimeConfig } from "./config";
 import { assertLocalDemo } from "./http";
 import { withLocalState } from "./persistence";
 import { advanceDemoRun } from "../control/demo-run";
@@ -24,6 +24,10 @@ export async function liveClient(request: Request) {
 }
 export async function readControl(request: Request) {
   const config = runtimeConfig();
+  if (hostedDemoEnabled()) {
+    const client = await liveClient(request);
+    return client.query(makeFunctionReference<"query">("demoControl:getSnapshot"), {});
+  }
   if (config.mode === "demo") {
     assertLocalDemo(request, config);
     return withLocalState(config, (state) => {
@@ -40,6 +44,10 @@ export async function readControl(request: Request) {
 }
 export async function mutateControl(request: Request, command: Command) {
   const config = runtimeConfig();
+  if (hostedDemoEnabled()) {
+    const client = await liveClient(request);
+    return client.mutation(makeFunctionReference<"mutation">("demoControl:dispatch"), { command });
+  }
   if (config.mode === "demo") {
     assertLocalDemo(request, config);
     return withLocalState(config, (state) => {
@@ -56,9 +64,12 @@ export async function mutateControl(request: Request, command: Command) {
 /** Keep the Convex credential on the server while relaying native reactive query updates. */
 export function subscribeControl(request: Request, receive: (value: Snapshot) => void, failed: () => void) {
   assertControlAccess(request);
+  if (!runtimeConfig().convexConfigured) throw new Error("configuration_required");
+  const serviceKey = serviceSecret();
   const client = new ConvexClient(process.env.NEXT_PUBLIC_CONVEX_URL!, { logger: false });
   try {
-    const unsubscribe = client.onUpdate(makeFunctionReference<"query">("control:getSnapshot"), { serviceKey: serviceSecret() }, value => receive(value as Snapshot), failed);
+    const namespace = hostedDemoEnabled() ? "demoControl" : "control";
+    const unsubscribe = client.onUpdate(makeFunctionReference<"query">(`${namespace}:getSnapshot`), { serviceKey }, value => receive(value as Snapshot), failed);
     return { close: () => { unsubscribe(); void client.close(); }, connected: () => client.connectionState().isWebSocketConnected };
   } catch (error) { void client.close(); throw error; }
 }

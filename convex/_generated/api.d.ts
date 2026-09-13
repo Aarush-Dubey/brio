@@ -12,6 +12,7 @@ import type * as agents from "../agents.js";
 import type * as control from "../control.js";
 import type * as controlActions from "../controlActions.js";
 import type * as crons from "../crons.js";
+import type * as demoControl from "../demoControl.js";
 import type * as execution from "../execution.js";
 import type * as http from "../http.js";
 import type * as redditControl from "../redditControl.js";
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   control: typeof control;
   controlActions: typeof controlActions;
   crons: typeof crons;
+  demoControl: typeof demoControl;
   execution: typeof execution;
   http: typeof http;
   redditControl: typeof redditControl;

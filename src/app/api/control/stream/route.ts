@@ -1,7 +1,7 @@
 import { readControl, subscribeControl } from "@/server/control";
 import { errorResponse } from "@/server/http";
 import { snapshotStream } from "@/server/stream";
-import { runtimeConfig } from "@/server/config";
+import { hostedDemoEnabled, runtimeConfig } from "@/server/config";
 import { assertControlAccess } from "@/server/access";
 import type { Snapshot } from "@/shared/control-contract";
 export const runtime = "nodejs";
@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     // Authorize before opening the stream, including the local demo boundary.
     const initial = await readControl(request) as Snapshot;
     const config = runtimeConfig();
-    const reactive = config.mode === "live" && config.accessConfigured && config.convexConfigured;
+    const reactive = (hostedDemoEnabled() || config.mode === "live") && config.accessConfigured && config.convexConfigured;
     return new Response(snapshotStream(initial, () => readControl(request), request.signal, reactive ? { validate: () => assertControlAccess(request), subscribe: (receive, failed) => subscribeControl(request, receive, failed) } : {}), { headers: {
       "Content-Type": "text/event-stream; charset=utf-8",
       "Cache-Control": "no-store, no-transform",
