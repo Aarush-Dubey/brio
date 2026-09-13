@@ -1,6 +1,6 @@
 # Mend implementation progress
 
-Last updated: 2026-09-13T21:58:24.289105+00:00
+Last updated: 2026-09-13T22:10:08.037667+00:00
 
 ## Current objective
 
@@ -10,7 +10,7 @@ Finish the live Mend integration while preserving the populated local demo. Keep
 
 - PRD v1.3, reference-matched web interface, live Kanban/timeline, persona workflows and the separate intentionally buggy weather repository are implemented.
 - Local workspace contains 38 cases and 167 reports, including 36 additive curated examples. Persona replies and live transitions are visible; fixture provenance remains explicit.
-- Source `296f8d4` passed GitHub CI run [34784514320](https://github.com/Aarush-Dubey/hackathon/actions/runs/34784514320). Local verification passed 493 tests in 32 files, 22 production browser scenarios, lint, TypeScript, production build and Next.js runtime checks.
+- Source `296f8d4` passed GitHub CI run [34784514320](https://github.com/Aarush-Dubey/hackathon/actions/runs/34784514320). Latest source 6981750 passed 530 tests in 37 files, all 22 production browser scenarios in 1.1 minutes, lint, TypeScript and the isolated production build.
 - Hosted production Convex `resilient-perch-131` is deployed in project `mend-hackathon`, team `vinay-chamola`. Slack, Linear, model, GitHub, Vercel and worker settings are imported. Local development targets remain separate.
 - [Mend](https://mend-hackathon.vercel.app) is deployed. Hosted checks verified unauthenticated denial, wrong-code denial, secure HttpOnly admission and authenticated live Convex access. Hosted production is a separate empty workspace, not a copy of local fixtures.
 - [Weather](https://mend-weather.vercel.app) is deployed from `a96c50ee70b0a97171b03cde8ea10df6a2f008c8`. The real Vercel token was checked against the correct project and imported into production Convex. Automatic domain assignment is disabled for candidates; project settings contain only public weather identity values.
@@ -25,9 +25,9 @@ Finish the live Mend integration while preserving the populated local demo. Keep
 | --- | --- |
 | Slack callback | Bot, channel and identities configured on hosted Convex. Socket Mode disabled. Interactivity enabled and callback URL saved/verified after reload; unsigned callback correctly rejects with HTTP 403. No live approval decision is claimed. |
 | GitHub Checks App | App brio-mkc (4934302) key verified; installed only on hackathon-weather with Checks write. ID and private key saved in engineering-pr-writer. Scoped token mint and revocation verified. |
-| Reviewed workflows | Sandbox workflow changes await atomic commit and reviewed merge to protected main. The subsequent signed Build must prove registry pull and candidate execution. |
+| Reviewed workflows | Sandbox workflow and Build hash fix are committed. Final CI and reviewed publication to protected main remain. The subsequent signed Build must prove registry pull and candidate execution. |
 | X | Vinaychamoc5 imported from the normal browser and worker identity verified (HTTP 200). Status access_pending: platform automation approval remains unverified; no posts sent. |
-| Reddit | Username drizzle-123 supplied. Network/human-verification block, approved API access, OAuth app and permitted subreddit names remain external requirements. OAuth/readiness/polling implementation passed focused tests; full verification and deployment remain. |
+| Reddit | Deferred by user. Connector code and tests are complete; both API approval flags remain false. No further Reddit account setup is being pursued. |
 | Complete live flow | A real engineer Build, marketer Go, verified repair, approved publication and receipt reconciliation remain to be exercised. |
 
 ## Change log
@@ -72,3 +72,5 @@ Finish the live Mend integration while preserving the populated local demo. Keep
 - 2026-09-13T21:39:43.691140+00:00: Final local Next.js MCP checks report no compilation or runtime errors. React introspection confirms the populated CasesView, and the 390×844 persona incident view has no horizontal overflow. Saved the seed/UI verification record and desktop/mobile screenshots. GitHub CLI has write access to the existing controller repository; preparing separate seed, presentation, and documentation commits for PR #1. Convex/Vercel cloud login still reports not authenticated.
 
 - Hosted setup: Convex and both Vercel sites deployed; Vercel token verified/imported; Cloud Run activated; exact-revision weather browser baseline reproduced; immutable offline sandbox built and keyless GitHub pull configuration prepared. X corrected to drizzle123 without retaining the mismatched personal session.
+
+- Latest verification: 530 tests across 37 files and all 22 production browser scenarios passed. Fixed mismatched Build approval hashes with a regression test that failed before the fix. GitHub Checks App configured; X account Vinaychamoc5 imported and verified. Reddit deferred by user after its connector implementation was completed. Production deployment is in progress.

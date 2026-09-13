@@ -63,3 +63,7 @@ No live public message or complete engineer-to-marketer approval flow is claimed
 
 - GitHub Checks App 4934302: matching private key verified, selected weather-only installation confirmed, writer environment saved, repository-scoped token mint succeeded and probe token revoked. [Evidence](../artifacts/github-checks-app-setup.json).
 - X: normal-browser identity and hosted worker import both verified Vinaychamoc5. Platform automation permission remains unverified; no public send. [Evidence](../artifacts/x-connection-verification.json).
+
+## Complete connector and dispatch verification
+
+Source 6981750 passed 530 automated tests across 37 files, all 22 production browser scenarios in 1.1 minutes, lint, TypeScript and an isolated `.next-e2e` production build. The new dispatch test reproduces the previous engineering_scope_denied failure and verifies that a bound Build passes the same scope check used by the runner. Reddit tests cover OAuth browser proof, replay/expiry, exact account and scope checks, encrypted credential binding, disconnect, bounded intake and API admission. Reddit remains deferred and disabled; these tests do not establish live provider access.

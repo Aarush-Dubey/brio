@@ -29,7 +29,7 @@ The remaining work is source publication and execution verification:
 5. Pin the actual reviewed controller-main commit in Convex as `GITHUB_CONTROLLER_SHA`.
 6. Exercise a current signed engineer Build to verify GitHub OIDC image pull and restricted candidate execution.
 
-The immutable sandbox is built and its private registry access is configured. [Sandbox evidence](../artifacts/gcp-coding-sandbox-deployment.json). The independent audit also found an approval-hash mismatch in dispatch; its fix and regression test are in progress before the first live Build.
+The immutable sandbox is built and its private registry access is configured. [Sandbox evidence](../artifacts/gcp-coding-sandbox-deployment.json). The independent audit found and fixed a Build approval-hash mismatch; the regression tests passed.
 
 ## 2. Verify Slack decisions
 
@@ -50,9 +50,9 @@ The latest intended X account is **@Vinaychamoc5**. Its normal Chrome login was 
 
 Mend reports `access_pending` because platform automation permission is not yet verified. Establish that capability before enabling `X_PLATFORM_PERMISSION_APPROVED` on the worker and `X_AUTOMATION_PERMISSION_CONFIRMED` on the controller, or enabling polling. A valid login alone does not approve automated posting. No X post/reply was sent; the manual workflow remains available.
 
-## 4. Reddit is optional for the first demo
+## 4. Reddit is deferred
 
-The intended Reddit account is **u/drizzle-123**. Provide the subreddit names that Mend is allowed to monitor. No permitted community has been supplied yet.
+The user chose to skip Reddit for now. Both approval flags remain false. The connector is implemented and tested; the following steps are only for a future opt-in. The intended account is **u/drizzle-123**; no community has been selected.
 
 1. Log in through your normal browser and complete Reddit's human-verification challenge. Current automated login/app settings are blocked by network security.
 2. Obtain approved API access for this use and create the OAuth app following [Reddit setup](SETUP-REDDIT.md).
