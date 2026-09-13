@@ -22,6 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: engineering-controller
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -58,10 +61,44 @@ jobs:
           ssh-key: ${{ secrets.WEATHER_REPO_READ_SSH_KEY }}
           token: ${{ secrets.WEATHER_REPO_READ_TOKEN || github.token }}
           persist-credentials: false
-      - name: Load the reviewed immutable sandbox image
-        run: docker pull "$CODING_SANDBOX_IMAGE"
+      - name: Validate immutable sandbox image and registry configuration
         env:
           CODING_SANDBOX_IMAGE: ${{ vars.CODING_SANDBOX_IMAGE }}
+          CODING_SANDBOX_WIF_PROVIDER: ${{ vars.CODING_SANDBOX_WIF_PROVIDER }}
+          CODING_SANDBOX_READER_SERVICE_ACCOUNT: ${{ vars.CODING_SANDBOX_READER_SERVICE_ACCOUNT }}
+        run: |
+          if ! [[ "$CODING_SANDBOX_IMAGE" =~ ^[-a-zA-Z0-9_./:]+@sha256:[a-f0-9]{64}$ ]]; then
+            echo '::error::CODING_SANDBOX_IMAGE must contain a reviewed immutable sha256 digest.'
+            exit 1
+          fi
+          if [[ "$CODING_SANDBOX_IMAGE" == *-docker.pkg.dev/* ]] && { [ -z "$CODING_SANDBOX_WIF_PROVIDER" ] || [ -z "$CODING_SANDBOX_READER_SERVICE_ACCOUNT" ]; }; then
+            echo '::error::Private Artifact Registry images require the scoped workload identity provider and reader service account variables.'
+            exit 1
+          fi
+      - name: Authenticate only the reviewed sandbox image pull
+        id: sandbox-registry-auth
+        if: contains(vars.CODING_SANDBOX_IMAGE, '-docker.pkg.dev/')
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3
+        with:
+          workload_identity_provider: ${{ vars.CODING_SANDBOX_WIF_PROVIDER }}
+          service_account: ${{ vars.CODING_SANDBOX_READER_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_lifetime: 600s
+          create_credentials_file: false
+          export_environment_variables: false
+      - name: Load the reviewed immutable sandbox image
+        env:
+          CODING_SANDBOX_IMAGE: ${{ vars.CODING_SANDBOX_IMAGE }}
+          REGISTRY_ACCESS_TOKEN: ${{ steps.sandbox-registry-auth.outputs.access_token }}
+        run: |
+          set -euo pipefail
+          mend_docker_config="$(mktemp -d "$RUNNER_TEMP/mend-sandbox-docker.XXXXXX")"
+          trap 'rm -rf "$mend_docker_config"' EXIT
+          if [[ "$CODING_SANDBOX_IMAGE" == *-docker.pkg.dev/* ]]; then
+            printf '%s' "$REGISTRY_ACCESS_TOKEN" | docker --config "$mend_docker_config" login --username oauth2accesstoken --password-stdin "https://${CODING_SANDBOX_IMAGE%%/*}"
+          fi
+          docker --config "$mend_docker_config" pull "$CODING_SANDBOX_IMAGE"
+          # The EXIT trap removes registry credentials before candidate code runs.
       - name: Propose and verify through the budgeted controller
         run: node --import tsx workers/engineering/run-build-cli.ts
         env:
