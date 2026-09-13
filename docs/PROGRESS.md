@@ -8,6 +8,10 @@ Use brio as the product name while preserving the existing infrastructure and re
 
 ## Completed and verified
 
+- [brio PR #2](https://github.com/Aarush-Dubey/hackathon/pull/2) passed required GitHub CI and merged normally into main `4c1279c8ed9a165319b28fad01aea0f2d1ce55e0`. Production Convex and private configuration bundles are synchronized to this controller revision. [Evidence](../artifacts/brio-reviewed-main.json).
+
+- Recording handoff delivered: exact accounts, hosted/local links, staged/live boundaries, release approval order, a 100-second storyboard, 100 one-second voice-over slots and 12 subtitle cues. Independent review confirmed the details and timing; the three-report intake shot is explicitly staged because autoplay creates one report. [Handoff](brio-RECORDING-HANDOFF.md).
+
 - The social worker connection error copy also uses lowercase brio. Social-only Cloud Build `e31a15fd-5a36-4c02-903c-1ce57a415aa1` passed and revision `mend-social-worker-00005-6wc` is serving all traffic. Health passed; environment values, secret references, scaling and enabled X automation were preserved. [Evidence](../artifacts/brio-social-worker-deployment.json).
 
 - The exact lowercase **brio** brand is deployed in the header and browser title; legacy fixture activity labels display the current name. Source `872c226` passed 530 tests, 22 production browser scenarios, lint, typecheck and the isolated build. Local browser/Next runtime checks passed. The brio updates are pushed to GitHub; publication to protected `main` through the reviewed rebrand PR is pending.
