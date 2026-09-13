@@ -17,7 +17,7 @@ This is the handoff for the person recording and editing the demo. The brand is 
 | Controller repository | https://github.com/Aarush-Dubey/hackathon | brio application, backend, workers and docs. |
 | Separate weather repository | https://github.com/Aarush-Dubey/hackathon-weather | Intentionally buggy target application. |
 
-**Remote recorder:** use the hosted board above. The local demo dataset has now been imported into a separate persistent Convex demo workspace. Run workflow, Pause, Resume, Restart, role switching and persona screens work there. `127.0.0.1` remains a backup available only on the development machine. The hosted and local copies evolve independently; new verification or recording runs add cases.
+**Remote recorder:** use the hosted board above. The local demo dataset has now been imported into a separate persistent Convex demo workspace. Run workflow, Pause, Resume, Restart and persona screens work there. The global model/budget strip, Demo data badge and View as selector have been removed for the public presentation. `127.0.0.1` remains a backup available only on the development machine. The hosted and local copies evolve independently; new verification or recording runs add cases.
 
 The hosted access code is the value of `CONTROL_ACCESS_PASSWORD` in the private `/home/big-daddy/Desktop/hackathon/.env` file. The project owner should share that code privately if needed. Never film this file, tokens, cookies, CLI login pages or service configuration screens.
 
@@ -85,7 +85,7 @@ The full live route still needs a controlled engineer Build, GitHub OIDC/candida
 
 This is a backup persona shot, not the exact “make it rain” example. Use the scripted scene for that exact example and **bruh 💀** response.
 
-**If manual approval controls are needed:** create a different fresh fixture via **+ Add signal → Source mode: Labeled fixture → Customer text → Store signal**. Open its **Operational controls**. With **View as: Engineer**, use **Advance demo workflow → Simulate Build → Advance demo workflow**. Switch **View as: Marketer**, then **Simulate Go → Advance demo workflow → Advance demo workflow**. These controls use the demo workspace only and do not post to actual Slack or X.
+**For approval shots:** use Run workflow with Pause/Resume and the matching Slack scenes described above. The presentation no longer exposes a View as role selector. Live engineer and marketer authority remains attached to their Slack identities.
 
 **Only if the local server is not running:**
 

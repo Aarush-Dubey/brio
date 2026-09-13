@@ -461,6 +461,8 @@ Relay native Convex reactive query updates through an authenticated server-sent 
 
 Show connecting, live, reconnecting, and offline/stale states with a last-update time. Reconnect automatically; use bounded polling as fallback. A later response must not overwrite a newer snapshot. Streams and fallback APIs enforce the same access controls, recheck expiring access, and close cleanly when the page is left. Reduced-motion users receive the same state updates without movement animation.
 
+Public presentation pages go directly from navigation to content. Omit the global connection/workspace/model/budget strip, Demo data badge and View as role selector; keep fixture provenance and approval records in the underlying case data.
+
 ### UI-03 — Repeatable presentation demo
 
 In explicit local or hosted demo mode, provide Run workflow, Pause, Resume, and Restart. Start one new weather incident with fixture provenance and advance it through persisted fixture transitions: intake, triage, reproduction, waiting for engineer Build, simulated Build, candidate work and verification, waiting for marketer Go, simulated Go, release/live verification, and a confirmed simulated reply. Show the active stage and a running event timeline; the same record remains visible on the board and incident page.
