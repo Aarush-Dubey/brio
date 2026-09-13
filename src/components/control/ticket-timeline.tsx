@@ -1,0 +1,37 @@
+"use client";
+import Link from "next/link";
+import type { CaseRecord, Snapshot } from "./types";
+import { ExternalLink, humanize } from "./common";
+import { caseKind, formatTime, reportCount, shortId, stageFor } from "./mend";
+
+export function TicketTimeline({record,snapshot}:{record:CaseRecord;snapshot:Snapshot}) {
+  const build=[...record.approvals].reverse().find(item=>item.kind==="build");
+  const go=[...record.approvals].reverse().find(item=>item.kind==="candidate_go" || item.kind==="reply_approval");
+  const receipt=record.publications.find(item=>["confirmed","manually_attested"].includes(item.status));
+  const reproduction=record.evidence.find(item=>/reproduc/i.test(item.label));
+  const run=snapshot.demoRun?.caseId===record.id ? snapshot.demoRun : undefined;
+  const steps=[
+    {title:"Discover",app:record.sourcePlatform.toUpperCase(),done:true,detail:`${reportCount(record)} original report${reportCount(record)===1?"":"s"} retained. ${record.sourceMode === "fixture" ? "Labeled fixture; no live social ingestion is claimed.":"The source interaction is preserved for this case."}`},
+    {title:"Triage",app:"QA agent",done:!['RECEIVED','TRIAGING'].includes(record.phase),detail:record.classification ? `${humanize(record.classification.category)}. Confidence ${Math.round(record.classification.confidence*100)}%. ${record.classification.riskFlags.map(humanize).join("; ")}.`:`Route: ${humanize(record.route)}.`},
+    {title:"Memory",app:"Known remedies",done:!['RECEIVED','TRIAGING'].includes(record.phase),detail:record.route==="known_remedy" ? "Routed to known-remedy verification. Current evidence and exact approval are still required.":"The recorded route requires independent case evidence. Prior answers cannot establish a current fix."},
+    {title:"Investigate",app:"Protected checks",done:!!reproduction,detail:reproduction?.detail},
+    {title:"Approve build",app:"Slack",done:build?.status==="approved",detail:build ? `Build request ${build.status}. Authority binds the current repository and change scope.`:undefined,approval:build},
+    {title:"Fix",app:"GitHub · weather",done:!!record.candidate,detail:record.candidate ? `Recorded candidate ${record.candidate.headSha.slice(0,12)}. Allowed scope: ${record.scope?.join(", ") || "lib/temperature.ts"}.`:undefined},
+    {title:"Verify",app:"Independent verifier",done:!!record.candidate?.checksPassed,detail:record.candidate ? `Candidate checks ${record.candidate.checksPassed ? "passed":"not passed"}. Production ${record.productionVerified ? "verified":"not verified"}. ${snapshot.mode==="demo" ? "Evidence is explicitly simulated.":"Exact deployment identity is retained."}`:undefined},
+    {title:"Approve reply",app:"Slack",done:go?.status==="approved",detail:go ? `${humanize(go.kind)} ${go.status}. Candidate and exact reply wording stay bound to the decision.`:undefined,approval:go},
+    {title:"Close loop",app:record.sourcePlatform.toUpperCase(),done:!!receipt,detail:receipt ? `${snapshot.mode==="demo" ? "Simulated":"Recorded"} ${humanize(receipt.status)} receipt. ${record.outcome ? humanize(record.outcome):"Communication outcome retained."}`:undefined,code:receipt?.draftText,href:receipt?.receiptUrl},
+  ];
+  const active=record.phase==="COMPLETED" ? -1 : Math.max(0,steps.findIndex(item=>!item.done));
+  const links=record.evidence.filter(item=>item.url).map(item=>({title:item.label,url:item.url!})).concat(record.approvals.filter(item=>item.slackUrl).map(item=>({title:humanize(item.kind),url:item.slackUrl!})));
+  return <section className="ticket-view">
+    <Link href="/cases" className="back-link">← Board</Link>
+    <div className="ticket-heading"><div><div className="ticket-meta mono"><span title={record.id}>{shortId(record.id)}</span><span>{caseKind(record)}</span><span>{record.scope?.join(" · ") || "weather / conversion"}</span><span>{record.sourceMode}</span></div><h1>{record.title}</h1></div><div className="ticket-summary"><span className="mono">{reportCount(record)} report{reportCount(record)===1?"":"s"} · opened {formatTime(record.createdAt)}</span><span className={`stage-pill ${stageFor(record).includes("approval") ? "hot":""}`}>{record.canceledAt ? "Canceled":stageFor(record)}</span></div></div>
+    <div className="ticket-progress" aria-label="Case progress">{steps.map((step,index)=><div key={step.title} className={step.done ? "done":index===active?"active":"pending"}><i/><span>{step.title}</span></div>)}</div>
+    <div className="ticket-grid"><div className="ticket-timeline">{steps.map((step,index)=>{const event=run?.events.find(item=>item.title.toLowerCase().includes(step.title.toLowerCase().split(" ")[0]));return <article className={`timeline-step ${step.done ? "done":index===active ? "active":"pending"}`} key={step.title}><div className="timeline-rail"><i/><span/></div><div><div className="timeline-title"><h2>{step.title}<span> · {step.app}</span></h2><time className="mono">{index===0 ? formatTime(record.createdAt):event ? formatTime(event.at):"—"}</time></div>{step.detail && <p>{step.detail}</p>}{index===active && <span className="active-stage"><i className="status-dot"/>{record.blockingReason ? humanize(record.blockingReason):`Awaiting ${step.title.toLowerCase()}`}</span>}{step.approval && <div className="timeline-approval"><span className={`stage-pill ${step.approval.status==="approved"?"":"muted-pill"}`}>{index===4?"Build":"Go"}</span><span className="button secondary compact">{index===4?"No build":"No go"}</span><span className="mono muted">{humanize(step.approval.status)}{snapshot.mode==="demo"?" · simulated":""}</span></div>}{step.code && <pre className="code-example">{step.code}</pre>}{step.href&&<ExternalLink href={step.href}>View reply receipt</ExternalLink>}</div></article>;})}</div>
+    <aside className="ticket-sidebar"><section><h2>ORIGINAL SIGNAL</h2><div className="original-signal"><div className="signal-meta"><span><i className={`source-dot ${record.sourcePlatform==="reddit"?"reddit":""}`}/>{record.signals?.[0]?.authorId || "Customer"} · {record.sourcePlatform.toUpperCase()}</span><span className="mono">{formatTime(record.createdAt)}</span></div><blockquote>{record.text}</blockquote>{record.sourceUrl&&<ExternalLink href={record.sourceUrl}>Open on {record.sourcePlatform.toUpperCase()}</ExternalLink>}</div></section>
+      <section><h2>SAME ISSUE · {reportCount(record)} REPORT{reportCount(record)===1?"":"S"}</h2>{record.signals?.map((signal,index)=><div className="related-signal" key={`${signal.originalUrl}:${index}`}><span><i className={`source-dot ${signal.platform==="reddit"?"reddit":""}`}/>{signal.authorId} · {signal.text}</span><span className="mono">1</span></div>) || <p className="muted">Original source attached to this case.</p>}</section>
+      <section><h2>TRIAGE</h2><dl className="triage-facts"><div><dt>Class</dt><dd>{caseKind(record)}</dd></div><div><dt>Confidence</dt><dd>{record.classification?.confidence ?? "Not recorded"}</dd></div><div><dt>Production</dt><dd>{record.productionVerified?"Verified":"Not verified"}</dd></div><div><dt>Communication</dt><dd>{humanize(record.communicationStatus)}</dd></div></dl></section>
+      <section><h2>LINKED</h2>{links.length?links.map((link,index)=><ExternalLink key={`${link.url}:${index}`} href={link.url}>{link.title}</ExternalLink>):<div className="column-empty">Nothing linked yet. Slack, Linear and GitHub evidence appears here when recorded.</div>}</section>
+    </aside></div>
+  </section>;
+}

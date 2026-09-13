@@ -1,0 +1,100 @@
+{
+  "verifiedAt": "2026-09-13T21:00:01.893859+00:00",
+  "projectId": "mend-hackathon-260914",
+  "projectNumber": "428020372764",
+  "region": "us-central1",
+  "cloudBuildId": "b06bcb6d-1bcf-4958-b04b-4f5ecb516b56",
+  "cloudBuildStatus": "SUCCESS",
+  "budgetPolicyCreated": false,
+  "secretNames": [
+    "mend-social-grant",
+    "mend-social-callback",
+    "mend-social-encryption",
+    "mend-verifier-signing"
+  ],
+  "services": [
+    {
+      "service": "mend-weather-verifier",
+      "origin": "https://mend-weather-verifier-ajmx2yigqq-uc.a.run.app",
+      "worker": "verifier",
+      "revision": "mend-weather-verifier-00001-csq",
+      "imageDigest": "sha256:ae5de1e9cb4f6064ed1eb9201f99b80b58fe040a516abbc1db5f31d96c6d98df",
+      "serviceAccount": "mend-verifier-runtime@mend-hackathon-260914.iam.gserviceaccount.com",
+      "containerConcurrency": 1,
+      "timeoutSeconds": 180,
+      "resources": {
+        "limits": {
+          "cpu": "1",
+          "memory": "2Gi"
+        }
+      },
+      "setupPending": true,
+      "readyForJobs": false,
+      "probes": [
+        {
+          "method": "GET",
+          "path": "/health",
+          "status": 200,
+          "body": {
+            "status": "setup_pending",
+            "ready": false,
+            "worker": "verifier"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/v1/weather/verify",
+          "status": 503,
+          "body": {
+            "error": "worker_setup_pending"
+          }
+        }
+      ]
+    },
+    {
+      "service": "mend-social-worker",
+      "origin": "https://mend-social-worker-ajmx2yigqq-uc.a.run.app",
+      "worker": "social",
+      "revision": "mend-social-worker-00001-gnd",
+      "imageDigest": "sha256:5a2d8d8604bb47df5e7f368624ec3a9188eb0837779412c09494b70074230513",
+      "serviceAccount": "mend-social-runtime@mend-hackathon-260914.iam.gserviceaccount.com",
+      "containerConcurrency": 1,
+      "timeoutSeconds": 180,
+      "resources": {
+        "limits": {
+          "cpu": "1",
+          "memory": "2Gi"
+        }
+      },
+      "setupPending": true,
+      "readyForJobs": false,
+      "probes": [
+        {
+          "method": "GET",
+          "path": "/health",
+          "status": 200,
+          "body": {
+            "status": "setup_pending",
+            "ready": false,
+            "worker": "social"
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/v1/jobs",
+          "status": 503,
+          "body": {
+            "error": "worker_setup_pending"
+          }
+        }
+      ]
+    }
+  ],
+  "remaining": [
+    "Hosted Mend CONTROL_APP_ORIGIN",
+    "Hosted Convex CONVEX_SITE_URL",
+    "Weather WEATHER_ALLOWED_HOSTS",
+    "Social instance-based CPU and minimum one instance before enabling jobs",
+    "Actual signed browser verification and permitted social connection"
+  ]
+}
