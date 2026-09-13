@@ -16,6 +16,14 @@ For live configuration, use the actual owned weather `owner/repository` as `FDE_
 
 Demo mode uses labeled local identities without a login and performs fixture work only. It does not accept real session imports or perform provider side effects. Do not expose the demo server as a public application.
 
+## Hosted demo workspace
+
+The existing hosted site uses `FDE_HOSTED_DEMO=true` on **Vercel only**. Keep `FDE_DEMO_MODE=false` and `FDE_LOCAL_ACCESS=false` there: the normal workspace access code and server service secret remain required. `NEXT_PUBLIC_CONVEX_URL` points to production `resilient-perch-131`.
+
+Demo data lives in Convex `demoControlStates`, separately from live `controlStates`. The authenticated `demoControl:seed` mutation imported the existing 39-case/168-report local dataset once; calling seed again returns the saved workspace without replacement. Queries and commands use `demoControl:getSnapshot` and `demoControl:dispatch`; only internal demo timers advance playback. Native Convex subscriptions relay updates to browsers. No real provider jobs are dispatched by this namespace.
+
+To show live integration state again, set Vercel **Production → Environment Variables → FDE_HOSTED_DEMO** to `false` and redeploy the same source. This preserves both datasets. Do not set the hosted flag in the local root `.env`, or set the loopback demo flag on Vercel. Keep service secrets private and unchanged. Changing modes does not enable social polling or verify a real repair.
+
 ## Next.js control app
 
 Next.js reads `.env` from the repository root; the current `.env.local` intentionally contains no overrides. Existing process variables take precedence. The browser calls only same-origin Next.js APIs; the server forwards authorized requests to Convex. Never put the service secret or access code in public variables.
@@ -24,6 +32,7 @@ Next.js reads `.env` from the repository root; the current `.env.local` intentio
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | `CONTROL_SERVICE_SECRET`          | Random server-only secret of at least 32 characters, identical on Next.js and Convex. |
 | `CONTROL_ACCESS_PASSWORD`         | Shared hosted-workspace access code; keep private. Required on hosted deployments. |
+| `FDE_HOSTED_DEMO`               | `true` selects the isolated persistent Convex demo workspace; Vercel server setting only. Requires normal hosted access. |
 | `FDE_LOCAL_ACCESS`                | `true` permits direct access only when the request Host is loopback. Never use it as a hosted access grant. |
 | `NEXT_PUBLIC_CONVEX_URL`           | Convex function endpoint used by the Next.js server; the URL itself grants no access. |
 | `CONTROL_APP_ORIGIN`                | Exact control app origin, including the local port if applicable. Must match the session worker's allowed origin.        |

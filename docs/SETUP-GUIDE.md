@@ -26,10 +26,11 @@ brio is the website with the Kanban board. It receives a complaint, asks an engi
 
 ### Choose how far to go
 
+- **See the seeded hosted demo:** open [the brio board](https://mend-hackathon.vercel.app/cases), enter the privately shared workspace access code, and click **Run workflow**. No new service setup is required.
 - **See the demo on this laptop:** do Step 1 only. It simulates the external services and clearly labels that fact.
 - **Finish this existing installation:** use the [remaining checklist](SETUP-REMAINING.md), then the live checks in Step 11.
 - **Create a new installation:** Steps 2–11 provide the full reference procedure; completed account steps do not need repeating here.
-- **Reddit and demo video:** both are deferred by the user. No action is needed now.
+- **Reddit:** deferred by the user. For the requested demo recording, use the [recording handoff](brio-RECORDING-HANDOFF.md).
 
 ### Jump to a step
 

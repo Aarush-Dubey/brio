@@ -8,8 +8,8 @@ This is the handoff for the person recording and editing the demo. The brand is 
 
 | Purpose | Link / location | What to expect |
 | --- | --- | --- |
-| Hosted brio | https://mend-hackathon.vercel.app | Live deployment. Enter the existing workspace access code if prompted. |
-| Local brio — recommended for recording | http://127.0.0.1:3002/cases | Populated demo board, deterministic playback, no provider delays. Already running on the development machine. |
+| Hosted brio — recommended for remote recording | https://mend-hackathon.vercel.app/cases | Persistent demo workspace: 39 imported cases, 168 reports, 3 personas, and workflow playback. Enter the existing workspace access code if prompted. |
+| Local brio — recording backup | http://127.0.0.1:3002/cases | Populated demo board, deterministic playback, no provider delays. Already running on the development machine. |
 | Hosted Drizzle weather app | https://mend-weather.vercel.app | Real deployed baseline. The conversion bug is deliberately still present. |
 | Local persona example | http://127.0.0.1:3002/cases/MND-1071 | Existing completed fixture with Playful Challenger and a “bruh” reply. |
 | Local persona policy | http://127.0.0.1:3002/persona | Persona editor and examples. |
@@ -17,7 +17,7 @@ This is the handoff for the person recording and editing the demo. The brand is 
 | Controller repository | https://github.com/Aarush-Dubey/hackathon | brio application, backend, workers and docs. |
 | Separate weather repository | https://github.com/Aarush-Dubey/hackathon-weather | Intentionally buggy target application. |
 
-**Remote recorder:** `127.0.0.1` works only on the development machine. Use screen sharing on that machine or the hosted site. The hosted workspace is separate from local fixtures; do not expect its board to contain the local 38-case dataset.
+**Remote recorder:** use the hosted board above. The local demo dataset has now been imported into a separate persistent Convex demo workspace. Run workflow, Pause, Resume, Restart, role switching and persona screens work there. `127.0.0.1` remains a backup available only on the development machine. The hosted and local copies evolve independently; new verification or recording runs add cases.
 
 The hosted access code is the value of `CONTROL_ACCESS_PASSWORD` in the private `/home/big-daddy/Desktop/hackathon/.env` file. The project owner should share that code privately if needed. Never film this file, tokens, cookies, CLI login pages or service configuration screens.
 
@@ -52,24 +52,24 @@ The X session is verified, the connection is ready, and posting capability is en
 
 ## 4. Choose the recording mode before starting
 
-**Recommended for this deadline: a staged product walkthrough.** Record the real brio interface and its deterministic local workflow, with scripted X and Slack scenes for the same fictional customer story. The user explicitly authorized a staged/hardcoded recording path. These scenes demonstrate the intended experience; they do not prove live provider execution.
+**Recommended for this deadline: a staged product walkthrough.** Record the real brio interface and its deterministic hosted or local workflow, with scripted X and Slack scenes for the same fictional customer story. The user explicitly authorized a staged/hardcoded recording path. These scenes demonstrate the intended experience; they do not prove live provider execution.
 
-Keep the staging description in the handoff and export metadata, and include a discreet “Staged product walkthrough” caption at the beginning or end of the film. The UI can otherwise remain clean. Never enter fake successful receipts or approval events into the real hosted workspace to manufacture evidence.
+Keep the staging description in the handoff and export metadata, and include a discreet “Staged product walkthrough” caption at the beginning or end of the film. The UI can otherwise remain clean. Hosted demo records are isolated from the live integration workspace and retain fixture provenance. Never present those receipts or approval events as proof of actual Slack, GitHub, weather deployment or X execution.
 
 | Shot | Reliable source now | Live limitation |
 | --- | --- | --- |
 | X notification, three complaints, final reply | Scripted local X scene with fictional customers | No real customer complaint/reply sequence has been verified. |
 | brio grouped-intake shot | Scripted scene with three fictional reports attached | **Run workflow creates one report, not three.** This shot must be staged explicitly. |
-| brio card transitions | Local **Run workflow** playback, or the same scripted three-report board throughout | Its approvals, checks and publication receipts are fixtures. Keep report count and case identity consistent across cuts. |
-| Ellen / David Slack decisions | Scripted Slack scene, or actual Slack only after a controlled live run exists | Local autoplay does not send Slack cards. |
+| brio card transitions | Hosted or local **Run workflow** playback, or the same scripted three-report board throughout | Its approvals, checks and publication receipts are fixtures. Keep report count and case identity consistent across cuts. |
+| Ellen / David Slack decisions | Scripted Slack scene, or actual Slack only after a controlled live run exists | Demo autoplay does not send Slack cards. |
 | Corrected weather behavior | Staged **candidate preview**, followed by staged approved-release verification | The actual hosted weather baseline still intentionally has the bug. |
 | Persona reply “bruh 💀” | Scripted scene using the approved-policy concept | Existing seeded persona case has a longer “bruh” reply; do not claim it already contains the exact shorter text. |
 
 The full live route still needs a controlled engineer Build, GitHub OIDC/candidate execution, David’s Go, verified release and real X receipt. It is not the dependable one-take recording route today.
 
-## 5. Run the real local board footage
+## 5. Record the hosted board (local backup available)
 
-1. Open **http://127.0.0.1:3002/cases**. Keep the running server alive. Do not reset `.data/demo-state.json`.
+1. Open **https://mend-hackathon.vercel.app/cases** and enter the privately shared workspace access code. The local backup is **http://127.0.0.1:3002/cases**; keep that server alive and do not reset `.data/demo-state.json`.
 2. Click **▶ Run workflow**. If an earlier run exists, use **↻ Restart** to create a fresh case.
 3. Follow the new card titled **Weather conversion: 20°C → 20°F**. Use the same new case throughout your shots. **This playback creates one source report.** For the three-complaint story, use the scripted three-report incident consistently for the grouped-intake and board shots; raw autoplay alone does not demonstrate that grouping. Treat autoplay as a motion/control reference or backup, and never cut between mismatched report counts or case IDs.
 4. The card traverses **Detected → Triaged → Build approval → Fixing → Verifying → Reply approval → Resolved**. There are 13 events, roughly 24–26 seconds total, with later events two seconds apart.
@@ -79,13 +79,13 @@ The full live route still needs a controlled engineer Build, GitHub OIDC/candida
 
 > Our calculator needed coffee. Fixed: 20°C now correctly shows 68°F. Thanks for catching it.
 
-8. For personality footage, open **http://127.0.0.1:3002/cases/MND-1071**. Its existing response is:
+8. For personality footage, open **https://mend-hackathon.vercel.app/cases/MND-1071**. Its existing response is:
 
 > 90% chance of rain. 100% commitment to the outfit. Respectfully: bruh.
 
 This is a backup persona shot, not the exact “make it rain” example. Use the scripted scene for that exact example and **bruh 💀** response.
 
-**If manual approval controls are needed:** create a different fresh fixture via **+ Add signal → Source mode: Labeled fixture → Customer text → Store signal**. Open its **Operational controls**. With **View as: Engineer**, use **Advance demo workflow → Simulate Build → Advance demo workflow**. Switch **View as: Marketer**, then **Simulate Go → Advance demo workflow → Advance demo workflow**. These controls stay local and do not post to actual Slack or X.
+**If manual approval controls are needed:** create a different fresh fixture via **+ Add signal → Source mode: Labeled fixture → Customer text → Store signal**. Open its **Operational controls**. With **View as: Engineer**, use **Advance demo workflow → Simulate Build → Advance demo workflow**. Switch **View as: Marketer**, then **Simulate Go → Advance demo workflow → Advance demo workflow**. These controls use the demo workspace only and do not post to actual Slack or X.
 
 **Only if the local server is not running:**
 

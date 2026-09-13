@@ -1,5 +1,7 @@
 # Implementation verification
 
+Latest hosted demo verification (14 September 2026): source `e6ff0e1` passed **558 tests in 39 files**, all **22 browser regression scenarios**, typecheck and production build. ESLint passed with one nonblocking unused test-helper warning. Independent review found no blocker. Production `dpl_6mZYMxb27ZEciWRYN5nvpVKQ4w1B` was tested through the actual hosted browser: 39 imported cases became 40 after a complete 13-step fixture run; a second tab received phase movement without reload, pause/resume and reload persistence passed, page errors were zero, and the live workspace stayed unchanged. [Evidence](../artifacts/brio-hosted-demo-verification.json).
+
 Latest rebrand verification (14 September 2026): source `872c226` passed all 530 tests in 37 files, 22 production browser scenarios (including lowercase `brio` header/title), lint, typecheck, and the isolated production build. Local browser and Next.js runtime checks found no errors. The hosted rebrand is deployed as `dpl_3Ywkgbs9Q3afzFf2jH7acFkfm2Dd`. See [hosted branding evidence](../artifacts/brio-browser-verification.json).
 
 
@@ -57,7 +59,7 @@ Local verification on the complete seeded-workspace change passed 493 tests in 3
 
 ## Hosted verification — 14 September 2026
 
-Hosted brio deployment `dpl_3Ywkgbs9Q3afzFf2jH7acFkfm2Dd` and the social worker run lowercase-brand source `872c226`; production Convex `resilient-perch-131` and the verifier run source `6981750`. These deployment identities do not prove a completed customer repair.
+Hosted brio deployment `dpl_6mZYMxb27ZEciWRYN5nvpVKQ4w1B` and production Convex `resilient-perch-131` run hosted demo source `e6ff0e1`; the social worker retains lowercase-brand source `872c226` and the verifier retains source `6981750`. These deployment identities do not prove a completed customer repair.
 
 - [Hosted brio admission](../artifacts/hosted-mend-verification.json): unauthenticated page redirect, API denial, wrong-code denial, secure HttpOnly cookie and authenticated live Convex state all verified.
 - [Vercel and callback checks](../artifacts/hosted-provider-verification.json): token accesses the expected weather project, production alias resolves to the recorded deployment, candidate auto-assignment is disabled, only public identity settings exist, and unsigned Slack callback is refused.

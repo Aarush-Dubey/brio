@@ -4,9 +4,11 @@ Last updated: 14 September 2026 (Asia/Kolkata)
 
 ## Current objective
 
-Use brio as the product name while preserving the existing infrastructure and registered Slack identifiers. Finish the live brio integration while preserving the populated local demo. Keep the final PRD, two-person delivery plan, setup guide and verification evidence current.
+Highest priority completed: the hosted brio board now contains our persistent demo dataset and playable transitions. Keep the recording handoff, PRD, setup guide and progress evidence current; the real customer repair flow remains a separate integration verification task.
 
 ## Completed and verified
+
+- Hosted seed deployed from `e6ff0e1` as `dpl_6mZYMxb27ZEciWRYN5nvpVKQ4w1B`: imported 39 cases, 168 reports and 3 personas into isolated Convex `demoControlStates`. A real hosted browser test completed all 13 fixture steps, verified second-tab reactive movement, pause/resume and reload persistence. The board now has 40 cases / 169 reports including that verification case. Live state stayed unchanged, and no provider jobs/posts were sent. All 558 tests and 22 browser scenarios passed; typecheck, build and lint passed (one nonblocking test-helper warning). [Hosted evidence](../artifacts/brio-hosted-demo-verification.json).
 
 - [brio PR #2](https://github.com/Aarush-Dubey/hackathon/pull/2) passed required GitHub CI and merged normally into main `4c1279c8ed9a165319b28fad01aea0f2d1ce55e0`. Production Convex and private configuration bundles are synchronized to this controller revision. [Evidence](../artifacts/brio-reviewed-main.json).
 
@@ -14,13 +16,13 @@ Use brio as the product name while preserving the existing infrastructure and re
 
 - The social worker connection error copy also uses lowercase brio. Social-only Cloud Build `e31a15fd-5a36-4c02-903c-1ce57a415aa1` passed and revision `mend-social-worker-00005-6wc` is serving all traffic. Health passed; environment values, secret references, scaling and enabled X automation were preserved. [Evidence](../artifacts/brio-social-worker-deployment.json).
 
-- The exact lowercase **brio** brand is deployed in the header and browser title; legacy fixture activity labels display the current name. Source `872c226` passed 530 tests, 22 production browser scenarios, lint, typecheck and the isolated build. Local browser/Next runtime checks passed. The brio updates are pushed to GitHub; publication to protected `main` through the reviewed rebrand PR is pending.
+- The exact lowercase **brio** brand is deployed in the header and browser title; legacy fixture activity labels display the current name. Source `872c226` passed 530 tests, 22 production browser scenarios, lint, typecheck and the isolated build. Local browser/Next runtime checks passed. The rebrand merged normally through PR #2; the subsequent hosted demo source is pushed on `codex/hackathon-mvp`.
 
 - PRD v1.3, reference-matched web interface, live Kanban/timeline, persona workflows and the separate intentionally buggy weather repository are implemented.
-- Local workspace contains 38 cases and 167 reports, including 36 additive curated examples. Persona replies and live transitions are visible; fixture provenance remains explicit.
+- Local workspace contained 39 cases and 168 reports at hosted import, including 36 additive curated examples. Persona replies and live transitions are visible; fixture provenance remains explicit.
 - Source `6981750` passed 530 tests in 37 files, all 22 production browser scenarios in 1.1 minutes, lint, TypeScript and the isolated production build. Final GitHub CI [34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`. Controller [PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged to protected `main` as `8a7636e2709d039773afa73857e6cb66f08a7d6f`.
-- Hosted production Convex `resilient-perch-131` runs functions from `6981750` in project `mend-hackathon`, team `vinay-chamola`. Slack, Linear, model, GitHub, Vercel and worker settings are imported. Local development targets remain separate.
-- [brio](https://mend-hackathon.vercel.app) is deployed from `872c226` as `dpl_3Ywkgbs9Q3afzFf2jH7acFkfm2Dd`. Hosted checks verified unauthenticated denial, wrong-code denial, secure HttpOnly admission and authenticated live Convex access. Hosted production is a separate empty workspace, not a copy of local fixtures.
+- Hosted production Convex `resilient-perch-131` runs functions from `e6ff0e1` in project `mend-hackathon`, team `vinay-chamola`. Slack, Linear, model, GitHub, Vercel and worker settings are imported. Local development targets remain separate.
+- [brio](https://mend-hackathon.vercel.app/cases) is deployed from `e6ff0e1` as `dpl_6mZYMxb27ZEciWRYN5nvpVKQ4w1B`. `FDE_HOSTED_DEMO=true` selects the populated isolated Convex demo workspace behind normal shared-code admission. The live aggregate remains unchanged with zero live cases; local files remain independent.
 - [Weather](https://mend-weather.vercel.app) is deployed from merged main `161835dba251f9739d25194ec21db0f2461df989` as `dpl_2j3VMkCbdSJtAh565FdkXpu76PGK`. Both staged and production URLs passed exact SHA/tree checks and reproduced the intentional defect in 34 Chromium observations each. The real Vercel token was checked against the correct project and imported into production Convex. Automatic domain assignment is disabled for candidates; project settings contain only public weather identity values.
 - Initial worker build `569f3b8b-c458-490d-bf73-1d9775c4bc86` used source `6981750`; the later social-only build above uses `872c226`. Cloud Run revisions `mend-social-worker-00005-6wc` and `mend-weather-verifier-00003-s98` are active and healthy. The verifier ran real Chromium against the hosted weather revision, passed identity verification and reproduced the intentional conversion defect over 34 observations. The social worker uses always-allocated CPU and one minimum instance. Its latest revision includes the operator-authorized X enablement; background social polling remains off.
 - The immutable coding sandbox built successfully in Cloud Build. Chromium/Bun ran as UID 65532 with networking disabled and a read-only root. GitHub environment variables and narrowly scoped keyless registry access are configured. The actual GitHub OIDC pull and signed candidate Build remain unverified.
@@ -37,9 +39,11 @@ Use brio as the product name while preserving the existing infrastructure and re
 | X | Vinaychamoc5 reimported with HTTP 200; worker identity verified, status ready, paused false. Both X switches enabled at the operator’s request; polling remains off and no posts sent. External X approval is not independently verified. |
 | Reddit | Skipped by user. Connection disabled and paused; both approval flags remain false. Implemented connector is deployed, but live API access is unverified. No Reddit action is required. |
 | Complete live flow | A real engineer Build, marketer Go, verified repair, approved publication and receipt reconciliation remain to be exercised. |
-| Demo video | Deferred by user; no recording is required now. |
+| Demo video | Requested recording handoff, 100-second dialogue and subtitles delivered and updated for the hosted seeded board. Final video has not been rendered. |
 
 ## Change log
+
+- 2026-09-13T22:53:58Z: Prioritized hosted demo seeding, deployed isolated Convex functions and Vercel routing, imported the current local dataset, and verified all 13 playback steps in the actual hosted browser. A second tab saw 12 phase changes without reload; pause/resume and persisted completion passed. Updated recording handoff and hosted mode configuration.
 
 - 2026-09-14: Renamed the product from Mend to brio at the user’s request. Updated product documentation; existing URLs, infrastructure identifiers, reference files and the legacy registered Slack app name are retained. UI and deployment verification are recorded separately. Earlier entries below retain the product name used at the time.
 
