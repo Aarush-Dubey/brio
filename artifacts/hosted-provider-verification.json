@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-09-13T21:56:15.105Z",
+  "production": {
+    "projectId": "prj_JMcbLuRjEldJZrJCyIi1c4mhV1tg",
+    "domain": "mend-weather.vercel.app",
+    "deploymentId": "dpl_6H4azf4uUDKVUAetoQeGtfFyp6YK"
+  },
+  "deployment": {
+    "id": "dpl_6H4azf4uUDKVUAetoQeGtfFyp6YK",
+    "projectId": "prj_JMcbLuRjEldJZrJCyIi1c4mhV1tg",
+    "url": "mend-weather-5mxcbbyyl-avichal-dwivedis-projects.vercel.app",
+    "target": "production",
+    "readyState": "READY",
+    "meta": {
+      "githubCommitAuthorName": "Aarush Dubey",
+      "githubCommitAuthorEmail": "185852550+Aarush-Dubey@users.noreply.github.com",
+      "githubCommitMessage": "Document populated workspace and record verification evidence",
+      "githubCommitOrg": "Aarush-Dubey",
+      "githubCommitRef": "codex/hackathon-mvp",
+      "githubCommitRepo": "hackathon",
+      "githubCommitSha": "296f8d477b55c3c7233324b467d74f599727bb24",
+      "githubDeployment": "1",
+      "githubOrg": "Aarush-Dubey",
+      "githubRepo": "hackathon",
+      "gitRootDirectory": ".data/deploy/weather-a96c50e",
+      "runId": "seed-2026-09-14",
+      "candidateId": "seed-baseline",
+      "headSha": "a96c50ee70b0a97171b03cde8ea10df6a2f008c8",
+      "treeDigest": "2fc58d5c57da18d60ff7ece9952faf273117f22d",
+      "trustedTestRevision": "weather-protected-v1",
+      "buildConfigRevision": "weather-build-v1",
+      "actor": "codex",
+      "lambdaRuntimeStats": "{\"nodejs\":2}"
+    }
+  },
+  "staging": {
+    "automaticDomainAssignmentDisabled": true,
+    "weatherProjectContainsNoSecrets": true,
+    "verifiedAt": 1789336574436
+  },
+  "slackUnsignedCallback": {
+    "status": 403,
+    "body": {
+      "error": "invalid_signature"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-09-13T21:00:01.893859+00:00",
+  "verifiedAt": "2026-09-13T21:57:38.704761+00:00",
   "projectId": "mend-hackathon-260914",
   "projectNumber": "428020372764",
   "region": "us-central1",
@@ -17,7 +17,7 @@
       "service": "mend-weather-verifier",
       "origin": "https://mend-weather-verifier-ajmx2yigqq-uc.a.run.app",
       "worker": "verifier",
-      "revision": "mend-weather-verifier-00001-csq",
+      "revision": "mend-weather-verifier-00002-lfc",
       "imageDigest": "sha256:ae5de1e9cb4f6064ed1eb9201f99b80b58fe040a516abbc1db5f31d96c6d98df",
       "serviceAccount": "mend-verifier-runtime@mend-hackathon-260914.iam.gserviceaccount.com",
       "containerConcurrency": 1,
@@ -28,34 +28,38 @@
           "memory": "2Gi"
         }
       },
-      "setupPending": true,
-      "readyForJobs": false,
+      "setupPending": false,
+      "readyForJobs": true,
       "probes": [
         {
           "method": "GET",
           "path": "/health",
           "status": 200,
           "body": {
-            "status": "setup_pending",
-            "ready": false,
-            "worker": "verifier"
-          }
-        },
-        {
-          "method": "POST",
-          "path": "/v1/weather/verify",
-          "status": 503,
-          "body": {
-            "error": "worker_setup_pending"
+            "status": "ok",
+            "implementation": "protected-weather-v1",
+            "configuredHosts": 1,
+            "busy": false
           }
         }
-      ]
+      ],
+      "scaling": {
+        "autoscaling.knative.dev/maxScale": "100",
+        "run.googleapis.com/client-name": "gcloud",
+        "run.googleapis.com/client-version": "584.0.0",
+        "run.googleapis.com/cpu-throttling": "true",
+        "run.googleapis.com/execution-environment": "gen2",
+        "run.googleapis.com/startup-cpu-boost": "true"
+      },
+      "image": "us-central1-docker.pkg.dev/mend-hackathon-260914/mend-workers/verifier@sha256:ae5de1e9cb4f6064ed1eb9201f99b80b58fe040a516abbc1db5f31d96c6d98df",
+      "browserVerified": true,
+      "note": "Cloud Chromium reproduced exact-revision seeded defect."
     },
     {
       "service": "mend-social-worker",
       "origin": "https://mend-social-worker-ajmx2yigqq-uc.a.run.app",
       "worker": "social",
-      "revision": "mend-social-worker-00001-gnd",
+      "revision": "mend-social-worker-00002-9kc",
       "imageDigest": "sha256:5a2d8d8604bb47df5e7f368624ec3a9188eb0837779412c09494b70074230513",
       "serviceAccount": "mend-social-runtime@mend-hackathon-260914.iam.gserviceaccount.com",
       "containerConcurrency": 1,
@@ -66,7 +70,7 @@
           "memory": "2Gi"
         }
       },
-      "setupPending": true,
+      "setupPending": false,
       "readyForJobs": false,
       "probes": [
         {
@@ -74,27 +78,30 @@
           "path": "/health",
           "status": 200,
           "body": {
-            "status": "setup_pending",
-            "ready": false,
-            "worker": "social"
-          }
-        },
-        {
-          "method": "POST",
-          "path": "/v1/jobs",
-          "status": 503,
-          "body": {
-            "error": "worker_setup_pending"
+            "status": "ok",
+            "implementation": "experimental",
+            "queue": "convex",
+            "livePermission": "access_pending"
           }
         }
-      ]
+      ],
+      "scaling": {
+        "autoscaling.knative.dev/maxScale": "1",
+        "autoscaling.knative.dev/minScale": "1",
+        "run.googleapis.com/client-name": "gcloud",
+        "run.googleapis.com/client-version": "584.0.0",
+        "run.googleapis.com/cpu-throttling": "false",
+        "run.googleapis.com/execution-environment": "gen2",
+        "run.googleapis.com/startup-cpu-boost": "true"
+      },
+      "image": "us-central1-docker.pkg.dev/mend-hackathon-260914/mend-workers/social@sha256:5a2d8d8604bb47df5e7f368624ec3a9188eb0837779412c09494b70074230513",
+      "browserVerified": false,
+      "note": "Execution enabled; social accounts and platform permission remain gated."
     }
   ],
   "remaining": [
-    "Hosted Mend CONTROL_APP_ORIGIN",
-    "Hosted Convex CONVEX_SITE_URL",
-    "Weather WEATHER_ALLOWED_HOSTS",
-    "Social instance-based CPU and minimum one instance before enabling jobs",
-    "Actual signed browser verification and permitted social connection"
+    "Exact drizzle123 X session and verified platform permission",
+    "Approved Reddit API access, OAuth application and permitted subreddits",
+    "GitHub signed Build after reviewed controller workflow merge"
   ]
 }

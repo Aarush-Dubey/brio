@@ -2,7 +2,7 @@
 
 Updated: **14 September 2026**. Written for the person setting up the accounts, even if you have never configured an API before.
 
-**Start with Step 1. Then follow the numbered steps in order.** Each step tells you what to open, what to enter, where to save it, and how to check it. You do not need to read the PRD or understand the code first.
+**For this existing installation, start with the [remaining setup checklist](SETUP-REMAINING.md). Do not recreate the completed projects.** For a new installation, start with Step 1 and follow the numbered steps in order. Each step tells you what to open, what to enter, where to save it, and how to check it. You do not need to read the PRD or understand the code first.
 
 ## What you are setting up
 
@@ -10,17 +10,17 @@ Mend is the website with the Kanban board. It receives a complaint, asks an engi
 
 | Service | Plain-English job | Do you need to create anything? |
 | --- | --- | --- |
-| GitHub | Stores both apps and runs the code-fixing jobs | Repositories already exist. One GitHub App and a runtime image are still needed. |
+| GitHub | Stores both apps and runs the code-fixing jobs | Repositories, Checks App and sandbox image exist. Finish reviewed workflow publication and execution verification. |
 | OpenAI | Generates classifications, patches and persona replies | Your key is already saved and tested. Reuse it. |
-| Convex | Stores cases and runs Mend's background work | Create one hosted project. |
-| Vercel | Makes the two websites available on the internet | Create two projects: Mend and weather. |
-| Slack | Where the engineer clicks Build and marketer clicks Go | Create a Slack app in your workspace. |
-| Linear | Stores the engineering ticket | Create an API key and select a team. |
-| Google Cloud (GCP) | Runs the two automated browsers on Cloud Run | Project and services created; add the remaining public URLs and enable workers. |
+| Convex | Stores cases and runs Mend's background work | Done: mend-hackathon / resilient-perch-131. |
+| Vercel | Makes the two websites available on the internet | Done: mend-hackathon and mend-weather; API token verified. |
+| Slack | Where the engineer clicks Build and marketer clicks Go | Existing Mend app in BitsUp; finish callback verification. |
+| Linear | Stores the engineering ticket | Key and Drizzle/Done IDs configured; live issue write still unverified. |
+| Google Cloud (GCP) | Runs the two automated browsers on Cloud Run | Workers active; weather browser baseline and sandbox runtime verified. |
 | X | The brand account that receives and sends replies | Connect your own dedicated account if using live X. |
 | Reddit | An additional reply destination | Optional. Skip for the first demo. |
 
-**No Clerk account, weather API key, or ChatGPT connector installation is needed.** The weather readings are fixed test data. Application model calls use `gpt-5-mini`. Keep combined model, hosting and build spend under **$100**.
+**No Clerk account, weather API key, or ChatGPT connector installation is needed.** The weather readings are fixed test data. Application model calls use `gpt-5-mini`. The existing application model ledger retains its configured limit. Per the later instruction, no GCP budget or alert policy was created.
 
 ### Choose how far to go
 
@@ -103,8 +103,8 @@ In a website's environment-variable form, enter `CONTROL_APP_ORIGIN` in **Name/K
 
 | File in that folder | What to do with it |
 | --- | --- |
-| `next.env` | Copy its settings into the **Mend Vercel project** in Step 4. |
-| `convex.env` | Copy its settings into **Convex Production** in Step 3. This bundle contains the initial prepared values; new credentials are entered in `.env` as explained below. |
+| `next-hosted.env` | Current hosted Mend settings; already installed in Vercel. |
+| `convex-hosted.env` | Hosted production settings; already imported. Keep later targeted credential updates synchronized before reimporting. `convex.env` is the older preparation bundle. |
 | `social.env` | Import into the **Cloud Run social worker** in Step 8. |
 | `verifier.env` | Import into the **Cloud Run weather verifier** in Step 8. |
 | `engineering.env` | Signing keys already installed in GitHub. Keep them; do not replace them with new random values. |
@@ -113,7 +113,7 @@ The generated passwords already match across these files. Copy them exactly. The
 
 ### Your main file for entering new values
 
-Open `/home/big-daddy/Desktop/hackathon/.env` in your text editor. It now contains clearly labeled sections and blank fields for the missing Slack, Linear, Vercel and worker settings. **Fill these blanks in this one file.** Your OpenAI key and existing settings have been preserved. `.env.local` no longer overrides those values.
+Open `/home/big-daddy/Desktop/hackathon/.env` in your text editor. It now contains clearly labeled sections and blank fields for the missing Slack, Linear, Vercel and worker settings. **Fill these blanks in this one file.** Your OpenAI key and existing settings have been preserved. Vercel linking added an OIDC value to `.env.local`; it does not replace the application settings. Keep both files private.
 
 The private service bundles above are starting values for hosting. When you add a new value to `.env`, also copy it into the particular online service named in its step. Nothing synchronizes these files automatically. Do not import all of `.env` into a provider: it contains settings for several different services and local URLs.
 

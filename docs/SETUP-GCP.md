@@ -2,18 +2,18 @@
 
 This replaces the Render step in [SETUP-GUIDE.md](SETUP-GUIDE.md#step-8). You will create **two Cloud Run services** using the Dockerfiles already in this repository. The Mend/weather websites remain on Vercel, and the database/workflows remain on Convex.
 
-Google documents Playwright/Chromium as a supported Cloud Run browser-automation approach. Our existing workers already listen on `0.0.0.0` and use the hosting service's `PORT`. Actual browser execution on your GCP deployment still needs the final verification below. [Google's browser-automation guide](https://docs.cloud.google.com/run/docs/browser-automation)
+**Current project:** `mend-hackathon-260914`, region `us-central1`. Both services are active and configured with the hosted Mend, Convex and weather origins. The steps below document reproducible setup; do not create duplicate resources.
 
-**Current project:** `mend-hackathon-260914`, region `us-central1`. Both images built successfully and both services are deployed. Already completed provisioning steps below are retained so another person can reproduce the setup.
-
-| Service | Deployed URL | Current state |
+| Service | Deployed URL | Verified state |
 | --- | --- | --- |
-| Weather verifier | https://mend-weather-verifier-ajmx2yigqq-uc.a.run.app | Setup pending; work requests return HTTP 503. |
-| Social worker | https://mend-social-worker-ajmx2yigqq-uc.a.run.app | Setup pending; work requests return HTTP 503. |
+| Weather verifier | https://mend-weather-verifier-ajmx2yigqq-uc.a.run.app | Real Chromium checked the exact hosted revision and reproduced the planted defect. |
+| Social worker | https://mend-social-worker-ajmx2yigqq-uc.a.run.app | Healthy; always-allocated CPU and minimum/maximum one instance. Social account permission gates remain closed. |
 
-The URLs are already saved in local `.env` and the appropriate private deployment bundles. Both `/health` responses were checked and explicitly report `ready: false`. [Deployment evidence](../artifacts/gcp-worker-deployment.json) records the revisions, image digests and HTTP probes. Neither service has performed a browser job yet.
+The [worker evidence](../artifacts/gcp-worker-deployment.json) records current revisions and health checks. The [hosted weather evidence](../artifacts/hosted-weather-baseline.json) records 34 browser observations and expected revision matching. The baseline is intentionally failing conversion tests; this verifies reproduction, not a repaired release.
 
-**To finish these existing services:** follow the configuration in sections 5–7 once the real public weather, Mend and Convex URLs exist. Open each service → Edit & deploy new revision → Variables & Secrets, fill the actual settings, and remove `WORKER_SETUP_PENDING` (or set it to `false`). Before enabling the social worker, also change it to instance-based billing / CPU always allocated and minimum 1 instance. The current disabled services use request-based billing and minimum 0. A successful deployment with `WORKER_SETUP_PENDING=true` is only infrastructure preparation.
+The third image is the **coding sandbox**, pulled by GitHub Actions rather than run as a Cloud Run service. Its immutable image and restricted keyless pull identity are configured. See [sandbox setup and validation](SETUP-CODING-SANDBOX-GCP.md). Actual GitHub OIDC pull awaits the reviewed workflow on main and a valid signed Build.
+
+No additional GCP credentials are currently required from the user. Reddit API credentials and X session/permission are service-account setup outside GCP. No budget/alert policy was created. [Google's browser-automation guide](https://docs.cloud.google.com/run/docs/browser-automation).
 
 ## 1. Create/select the Google Cloud project
 

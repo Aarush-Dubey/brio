@@ -1,38 +1,37 @@
 # Mend implementation progress
 
-Last updated: 2026-09-13T21:39:43.691140+00:00
+Last updated: 2026-09-13T21:58:24.289105+00:00
 
 ## Current objective
 
-Deliver the Mend interface, live Kanban/timeline, persona workflows and Slack approvals with a separate seeded weather repository. Keep the final PRD, two-builder plan and followable setup instructions current. Complete account configuration wherever existing access permits it.
+Finish the live Mend integration while preserving the populated local demo. Keep the final PRD, two-person delivery plan, setup guide and verification evidence current.
 
 ## Completed and verified
 
-- PRD v1.3 includes the supplied Mend design, live updates, presentation controls, persona rules and 36 acceptance scenarios with an integrated two-person ownership plan.
-- Mend pages and persistent 13-step demo are implemented. Next.js runtime/MCP inspection and desktop/mobile visual checks passed. Native Convex revision delivery and 10 stream tests passed.
-- GitHub CI on source commit `9da2b61` passed all 490 automated tests across 31 files, all 21 production browser tests together in 1.4 minutes, lint, TypeScript and both application builds. See [test report](TEST-REPORT.md).
-- Controller and separate weather target use Bun 1.4.2. Weather's intentional 20°C → 20°F defect is retained and reproduced by the protected baseline checks.
-- Real gpt-5-mini writer and durable triage succeeded. The live 60-case persona evaluation accepted all 20 eligible examples and none of the 40 excluded, ambiguous or factual examples for autonomous replies. Policy remains unapproved; nothing was posted.
-- Recorded pre-GCP model usage is $0.013440, unknown reservations $0.009157 and infrastructure allowance $1. The $1.022597 recorded exposure does not yet include reconciled GCP charges. No GCP budget/alert policy was created, following the latest instruction.
-- Clerk removed. Local loopback and hosted shared-code admission work; real approval authority remains configured Slack member IDs.
-- Private weather repository, protected branches, read-only checkout key, engineering environments, signatures and PR credentials configured. Weather Bun migration is draft PR #1. Controller commit `90dd60f` is pushed on `codex/hackathon-mvp` in [draft PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1); GitHub run 34782975073 passed after the checkout input correction.
-- Grouped root `.env` preserves existing secrets; `.env.local` has no overrides. Beginner setup, engineering, GCP and optional Reddit guides are complete. Reddit's automatic identity/readiness gap is explicit.
-- GCP project/billing, image repository, source bucket, builder/runtime identities and four scoped secrets configured. Both images built and both Cloud Run services deployed. Health reports ready=false and actual work routes reject with HTTP 503. Worker URLs are saved in `.env` and private bundles. [Deployment evidence](../artifacts/gcp-worker-deployment.json).
+- PRD v1.3, reference-matched web interface, live Kanban/timeline, persona workflows and the separate intentionally buggy weather repository are implemented.
+- Local workspace contains 38 cases and 167 reports, including 36 additive curated examples. Persona replies and live transitions are visible; fixture provenance remains explicit.
+- Source `296f8d4` passed GitHub CI run [34784514320](https://github.com/Aarush-Dubey/hackathon/actions/runs/34784514320). Local verification passed 493 tests in 32 files, 22 production browser scenarios, lint, TypeScript, production build and Next.js runtime checks.
+- Hosted production Convex `resilient-perch-131` is deployed in project `mend-hackathon`, team `vinay-chamola`. Slack, Linear, model, GitHub, Vercel and worker settings are imported. Local development targets remain separate.
+- [Mend](https://mend-hackathon.vercel.app) is deployed. Hosted checks verified unauthenticated denial, wrong-code denial, secure HttpOnly admission and authenticated live Convex access. Hosted production is a separate empty workspace, not a copy of local fixtures.
+- [Weather](https://mend-weather.vercel.app) is deployed from `a96c50ee70b0a97171b03cde8ea10df6a2f008c8`. The real Vercel token was checked against the correct project and imported into production Convex. Automatic domain assignment is disabled for candidates; project settings contain only public weather identity values.
+- Both Cloud Run services are active. The verifier ran real Chromium against the hosted weather revision, passed identity verification and reproduced the intentional conversion defect over 34 observations. The social worker uses always-allocated CPU and one minimum instance; platform permission gates remain off.
+- The immutable coding sandbox built successfully in Cloud Build. Chromium/Bun ran as UID 65532 with networking disabled and a read-only root. GitHub environment variables and narrowly scoped keyless registry access are configured. The actual GitHub OIDC pull and signed candidate Build remain unverified.
+- Clerk is removed. Engineer Elen and marketer David are mapped to the supplied Slack member IDs. GitHub callback variables point at hosted Convex.
+- No GCP budget or alert policy was created, as requested. The existing model cost ledger is separate; GCP charges are not yet reconciled into it.
 
-## In progress and next steps
+## In progress and remaining
 
-| Work | Status |
+| Work | Current state |
 | --- | --- |
-| Slack account configuration | Local browser access succeeded; Mend app created in BitsUp with chat:write. First exposed token was revoked. Replacement token authenticated successfully; bot token, signing secret and workspace ID are saved in .env, private Convex bundle and local Convex. Mend joined #mend-approvals; its channel ID, Elen’s engineer ID and David’s marketer ID are saved in .env/private bundle/local Convex. All six Slack settings are configured locally. Hosted callback and actual approval test remain pending. |
-| Activate hosted worker execution | Needs real hosted Mend, Convex and weather URLs; social live mode also needs always-allocated CPU and minimum 1 instance. Current deployed services intentionally remain disabled. |
-| Controller draft PR | Created as PR #1; inspect GitHub checks and keep provider setup gates explicit. |
-| Full live customer-to-reply run | Blocked by remaining provider setup; local simulations and health checks do not establish live completion. |
-
-## Remaining external setup
-
-Hosted Convex, Slack settings on hosted Convex, its callback URL and live approval verification, Linear settings on hosted Convex, Vercel projects, the reviewed immutable coding-sandbox image and a check-writing GitHub App remain prerequisites. The local Docker daemon is inaccessible, so generated candidate execution is unverified. Selected live social platforms additionally require an authorized account and capability. No weather API or Clerk account is needed. See [remaining settings](SETUP-REMAINING.md) and the [beginner guide](SETUP-GUIDE.md).
+| Slack callback | Bot, channel and identities configured on hosted Convex. Socket Mode disabled. Interactivity enabled and callback URL saved/verified after reload; unsigned callback correctly rejects with HTTP 403. No live approval decision is claimed. |
+| GitHub Checks App | App brio-mkc (4934302) key verified; installed only on hackathon-weather with Checks write. ID and private key saved in engineering-pr-writer. Scoped token mint and revocation verified. |
+| Reviewed workflows | Sandbox workflow changes await atomic commit and reviewed merge to protected main. The subsequent signed Build must prove registry pull and candidate execution. |
+| X | Vinaychamoc5 imported from the normal browser and worker identity verified (HTTP 200). Status access_pending: platform automation approval remains unverified; no posts sent. |
+| Reddit | Username drizzle-123 supplied. Network/human-verification block, approved API access, OAuth app and permitted subreddit names remain external requirements. OAuth/readiness/polling implementation passed focused tests; full verification and deployment remain. |
+| Complete live flow | A real engineer Build, marketer Go, verified repair, approved publication and receipt reconciliation remain to be exercised. |
 
 ## Change log
+
 
 - 2026-09-13T20:20:05+00:00: Recorded the user's Mend UI, live Kanban, progress-log and self-service setup-guide requests; updated PRD and assigned independent implementation/review work.
 
@@ -71,3 +70,5 @@ Hosted Convex, Slack settings on hosted Convex, its callback URL and live approv
 - 2026-09-13T21:37:59.974216+00:00: User requested remaining CLI account setup. Convex CLI 1.45.0 and Vercel CLI 59.16.0 are installed, but both report logged out for cloud access. Started browser device sign-in for both; hosted project creation cannot proceed before authentication completes. Existing anonymous local Convex backend remains intact. No public deployment or temporary unauthenticated Vercel site was created.
 
 - 2026-09-13T21:39:43.691140+00:00: Final local Next.js MCP checks report no compilation or runtime errors. React introspection confirms the populated CasesView, and the 390×844 persona incident view has no horizontal overflow. Saved the seed/UI verification record and desktop/mobile screenshots. GitHub CLI has write access to the existing controller repository; preparing separate seed, presentation, and documentation commits for PR #1. Convex/Vercel cloud login still reports not authenticated.
+
+- Hosted setup: Convex and both Vercel sites deployed; Vercel token verified/imported; Cloud Run activated; exact-revision weather browser baseline reproduced; immutable offline sandbox built and keyless GitHub pull configuration prepared. X corrected to drizzle123 without retaining the mismatched personal session.

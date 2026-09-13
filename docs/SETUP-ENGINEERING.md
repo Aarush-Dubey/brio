@@ -6,6 +6,8 @@ This continues [Step 9 of the setup guide](SETUP-GUIDE.md#step-9). Complete the 
 
 Follow sections 1–6 in order. The existing signing keys and PR credential are already installed; leave them in place.
 
+**Existing installation update:** the sandbox image is already built and its GitHub variables/keyless pull identity are configured; use [GCP sandbox notes](SETUP-CODING-SANDBOX-GCP.md) instead of rebuilding locally. Weather is already deployed at https://mend-weather.vercel.app from `a96c50e`. Convex production and both GitHub callback variables are configured. Finish the Checks App, reviewed workflow merge and real signed Build. See [remaining checklist](SETUP-REMAINING.md).
+
 ## 1. Create the GitHub App that reports test results
 
 **This is a GitHub App, not a new repository.** It only reports checks on the weather repository.

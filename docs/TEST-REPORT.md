@@ -1,6 +1,8 @@
 # Implementation verification
 
-Verified 2026-09-14. [GitHub CI run 34782975073](https://github.com/Aarush-Dubey/hackathon/actions/runs/34782975073) passed on source commit `9da2b61`: 490 automated tests across 31 files, all 21 browser scenarios in one run, lint, TypeScript, and both application builds. Cloud integration and generated-code execution remain separate readiness gates.
+Verified 2026-09-14. **Latest source CI:** [34784514320](https://github.com/Aarush-Dubey/hackathon/actions/runs/34784514320) succeeded on `296f8d4`; the populated workspace passed 493 tests/32 files and 22 browser scenarios locally. The earlier counts below describe prior runs.
+
+[GitHub CI run 34782975073](https://github.com/Aarush-Dubey/hackathon/actions/runs/34782975073) passed on source commit `9da2b61`: 490 automated tests across 31 files, all 21 browser scenarios in one run, lint, TypeScript, and both application builds. Cloud integration and generated-code execution remain separate readiness gates.
 
 | Check | Result |
 |---|---|
@@ -28,7 +30,7 @@ The tests cover revision-bound approvals, role and service-key checks, signed Sl
 
 ## Remaining live evidence
 
-No full customer-to-fix-to-public-reply run is claimed. The current user cannot access the local Docker daemon, so generated candidate execution has not run. Slack, Linear, hosted Convex, Vercel, the check-writing GitHub App, and the chosen social accounts require the account setup in [SETUP-REMAINING.md](SETUP-REMAINING.md). There has been no live PR-based weather repair, staging/promotion, X send, or Reddit send. Manual fallback and provider behavior have local automated coverage.
+No full customer-to-fix-to-public-reply run is claimed. The current user cannot access the local Docker daemon, so generated candidate execution has not run. Hosted Convex, Vercel, Linear settings and the GCP workers are now configured; remaining account and flow checks are listed in [SETUP-REMAINING.md](SETUP-REMAINING.md). The initial weather baseline has been deployed and promoted; no PR-based weather repair or candidate release, X send, or Reddit send has occurred. Manual fallback and provider behavior have local automated coverage.
 
 GitHub Actions results are separate from local checks. The [controller draft PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) is open. Its first run on implementation commit `90dd60f` stopped before application tests because actions/checkout was given an empty token input despite an SSH key. The workflow fix supplies the ephemeral GitHub token as the action input fallback, retains the read-only weather SSH key, and passed in the subsequent run on `9da2b61`. [CI evidence](../artifacts/github-ci-verification.json) records the exact run and summaries. A configured key, successful health response, or passing fixture does not count as a live integration test.
 
@@ -36,7 +38,7 @@ GitHub Actions results are separate from local checks. The [controller draft PR 
 
 The 13-step simulation completed in the production browser with pause/reload/resume/restart coverage. Cross-tab SSE delivery passed with observer HTTP reads blocked; a 503 stream failure recovered through HTTP fallback and returned to SSE without a reload. Ten stream unit tests cover access failure, cancellation, native callback delivery, redaction and renewal. Five pending-worker tests ensure every job/import/verification endpoint rejects while setup is incomplete.
 
-GCP project and billing linkage are real, as are the runtime/build identities and four scoped Secret Manager entries. Both worker images built successfully and both Cloud Run services are deployed in setup-pending mode. Their public health routes report ready=false, and job routes reject requests with HTTP 503 until the remaining public URLs are configured. [Deployment evidence](../artifacts/gcp-worker-deployment.json) records the actual revisions, image digests and probes. Chromium execution on Cloud Run remains unverified. No live social post, weather fix or release is implied by infrastructure setup.
+GCP project and billing linkage are real, as are the runtime/build identities and four scoped Secret Manager entries. Both worker images built successfully. The original setup-pending revisions were replaced with active revisions after hosted origins were configured. Their health routes now report ok; social platform permission remains pending. [Deployment evidence](../artifacts/gcp-worker-deployment.json) records the actual revisions, image digests and probes. Cloud Run Chromium execution is verified by the hosted baseline evidence below. No live social post, weather fix or release is implied by infrastructure setup.
 
 ## Linear setup correction
 
@@ -44,8 +46,20 @@ The user’s real metadata request returned HTTP 400 with “Query too complex.�
 
 ## Slack configuration evidence
 
-The replacement bot token passed Slack auth.test for BitsUp; Mend is installed with chat:write and joined the created mend-approvals channel. All six settings, including the user-supplied Elen engineer ID and David marketer ID, are saved in .env/private bundle/local Convex. The first exposed token was revoked. Hosted Convex environment import and the public callback remain pending; no live approval message/test was sent. [Configuration record](../artifacts/slack-setup.json).
+The replacement bot token passed Slack auth.test for BitsUp; Mend is installed with chat:write and joined the created mend-approvals channel. All six settings, including the user-supplied Elen engineer ID and David marketer ID, are saved in .env/private bundle/local Convex. The first exposed token was revoked. Hosted Convex settings are now imported; the public callback is enabled and its URL persisted after browser reload. No live approval message/test was sent. [Configuration record](../artifacts/slack-setup.json).
 
 ## Populated workspace iteration — 2026-09-14
 
 Local verification on the complete seeded-workspace change passed 493 tests in 32 files, all 22 production browser scenarios together in 1.0 minute, lint, TypeScript and an isolated `.next-e2e` production build. The additional browser scenario seeds only its isolated test database, receives the changes over the event stream, filters the board, opens a persona reply and checks the mobile layout. Seed tests cover all stages, fixture-only targets, idempotence, preserved existing data and live-state rejection. [Recorded evidence](../artifacts/seed-workspace-verification.json). Cloud integration authentication remains separate from this local result.
+
+## Hosted verification — 14 September 2026
+
+- [Hosted Mend admission](../artifacts/hosted-mend-verification.json): unauthenticated page redirect, API denial, wrong-code denial, secure HttpOnly cookie and authenticated live Convex state all verified.
+- [Vercel and callback checks](../artifacts/hosted-provider-verification.json): token accesses the expected weather project, production alias resolves to the recorded deployment, candidate auto-assignment is disabled, only public identity settings exist, and unsigned Slack callback is refused.
+- [Cloud weather baseline](../artifacts/hosted-weather-baseline.json): signed GCP request returned 200; exact expected source identity matched; Chromium recorded 34 checks and reproduced the planted conversion defect. Twelve conversion observations intentionally fail. This is baseline reproduction, not a fixed release.
+- [Sandbox build](../artifacts/gcp-coding-sandbox-deployment.json): Cloud Build succeeded; immutable runtime passed Bun/Chromium smoke as UID 65532 with no network, read-only root and no Docker socket. Workflow lint and credential-cleanup checks passed. Real GitHub OIDC pull/candidate execution awaits reviewed workflow publication and a valid signed Build.
+
+No live public message or complete engineer-to-marketer approval flow is claimed.
+
+- GitHub Checks App 4934302: matching private key verified, selected weather-only installation confirmed, writer environment saved, repository-scoped token mint succeeded and probe token revoked. [Evidence](../artifacts/github-checks-app-setup.json).
+- X: normal-browser identity and hosted worker import both verified Vinaychamoc5. Platform automation permission remains unverified; no public send. [Evidence](../artifacts/x-connection-verification.json).

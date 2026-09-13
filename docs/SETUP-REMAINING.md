@@ -1,55 +1,69 @@
-# Configured setup and remaining account steps
+# Mend: what remains to set up
 
-Updated 2026-09-14. This inventory separates actual settings from services that still need an account. No secret values belong in this document or chat.
+Updated 14 September 2026. This is the checklist for the existing installation. Do not recreate the completed projects.
 
 ## Already configured
 
-- The controller repository is `Aarush-Dubey/hackathon`. The independent private weather repository is `Aarush-Dubey/hackathon-weather`; its seeded baseline is pinned in the controller's GitHub variable `WEATHER_BASELINE_SHA` and local `FDE_BASE_SHA`.
-- Both `main` branches require pull requests and successful checks, with admin enforcement and force-push/deletion protection. Controller requires `checks`; weather requires `Protected weather`.
-- The weather repository has a dedicated read-only SSH deploy key. Its private half is installed as `WEATHER_REPO_READ_SSH_KEY` in controller Actions and the `engineering-controller` environment. It cannot write weather code.
-- `engineering-controller` and `engineering-pr-writer` are separate GitHub environments restricted to `main`. Signing/callback secrets, the target repository, target branch, and trusted PR-writer credential are installed.
-- The existing GitHub CLI OAuth credential is reused for trusted local controller API calls and the trusted PR-writer job. It has broader account repository access than a dedicated GitHub App; it is never passed into the generated candidate container. The separate checkout key has only weather read access.
-- OpenAI is configured in the local app and local Convex backend. Real `gpt-5-mini` writer and durable-triage calls have succeeded. No other app model is enabled.
-- Local Convex is running. Server access, social grants/callbacks, engineering grants/callbacks, browser-verification signing, a hosted access code, and session encryption secrets have been generated.
-- Vercel CLI 59.16.0 is installed globally via Bun at `/home/big-daddy/.bun/bin/vercel`. CLI installation does not create or authenticate projects.
-- Slack Mend app exists in BitsUp with chat:write. Its replacement bot token passed auth.test; bot token, signing secret and workspace ID are saved in `.env`, private Convex bundle and local Convex. The mend-approvals channel ID and Elen’s engineer ID are also configured locally; Mend joined the channel. David’s marketer ID is also configured, completing all six settings locally. The hosted callback and live approval test remain pending.
-- Linear’s actual API key was verified with a read-only lookup. The sole team Drizzle and its Done status IDs are saved in `.env`, the private Convex bundle and the running local Convex backend; no issues were created or updated.
-- GCP project `mend-hackathon-260914` is linked to billing. Both browser-worker images built and both Cloud Run services are deployed with separate runtime identities and four scoped secrets. Worker URLs are saved in `.env`; services explicitly reject work until public dependency URLs are configured.
-- Bun 1.4.2 is installed and used for both application lockfiles, commands, and workflow installs.
-- Clerk has been removed. The local app opens without login on loopback. Hosted access uses the generated shared code; approval roles still come from Slack IDs.
+| Service | Existing installation | Evidence and remaining verification |
+| --- | --- | --- |
+| Convex | Team `vinay-chamola`, project `mend-hackathon`, production `resilient-perch-131` | Functions deployed; hosted authenticated state works. |
+| Mend website | [mend-hackathon.vercel.app](https://mend-hackathon.vercel.app) | Shared-code admission verified. Local populated demo remains on port 3002; hosted production is separate. |
+| Weather website | [mend-weather.vercel.app](https://mend-weather.vercel.app) | Revision `a96c50e` deployed and exact identity verified. GCP Chromium reproduced the planted conversion defect. |
+| Vercel API | Token saved and imported into production Convex | Real project, deployment, production alias, staging settings and environment allowlist verified. Automatic domain assignment is disabled. |
+| GCP | Project `mend-hackathon-260914`, region `us-central1` | Social and verifier services active; immutable sandbox image built and offline Chromium smoke passed. No further GCP credentials needed. |
+| OpenAI | App key installed; `gpt-5-mini` | Prior real writer, triage and persona evaluation passed. |
+| Linear | Drizzle team and Done state configured in hosted Convex | Metadata read verified; issue creation/update still needs a controlled live flow. |
+| GitHub | Separate controller/weather repositories and engineering environments | Hosted callback and private sandbox pull variables saved. Checks App configured; workflow publication described below. |
+| Slack | Mend app in BitsUp, bot in `#mend-approvals` | Elen is engineer; David is marketer. Hosted secrets saved. Callback enabled and URL persisted after reload; actual human button test remains. |
 
-Private deployment secret bundles are saved under `.data/deployment-secrets/` in the controller checkout, with directory permissions 0700 and file permissions 0600. These files are ignored by Git. Use each bundle only for its named service; generated secrets do not create cloud services. Local configuration does not automatically configure hosting.
+## 1. Finish the reviewed GitHub workflow and baseline publication
 
-## Account steps still required
+**The Checks App is complete.** `brio-mkc`, App ID `4934302`, is owned by Aarush-Dubey and installed only on `hackathon-weather`. It has Checks write and Metadata read. The downloaded key matched the app; `WEATHER_CHECKS_APP_ID` and `WEATHER_CHECKS_APP_PRIVATE_KEY` are saved in `engineering-pr-writer`. A scoped installation token was minted successfully and revoked after the read-only setup probe. No extra GitHub credential is currently needed from the user. [Evidence](../artifacts/github-checks-app-setup.json).
 
-| Service | What you must provide or create | Settings and destination |
-|---|---|---|
-| Hosted Convex | Sign into Convex and create/select a project and production deployment. The anonymous local backend cannot receive public Slack or worker callbacks. | Deploy controller functions, import the private `convex.env` bundle, and supply the resulting function URL to Next.js as `NEXT_PUBLIC_CONVEX_URL`. Set the public HTTP-action URL as `CONVEX_SITE_URL` in both GitHub engineering environments and the social worker. |
-| Slack | Existing Mend app, bot credentials, approval channel, Elen’s engineer ID and David’s marketer ID are configured. Supply the real hosted Convex callback and import all six settings there, then verify signed approvals. | Convex: `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_TEAM_ID`, `SLACK_CHANNEL_ID`, `SLACK_ENGINEER_USER_IDS`, `SLACK_MARKETER_USER_IDS`; optionally `SLACK_ADMIN_USER_IDS`. Interactivity URL: your Convex HTTP-action origin plus `/slack/interactions`. Engineer Build/No-build and marketer Go/No-go, reply approval, and policy activation occur here. |
-| Linear | The local API key and Drizzle/Done IDs are configured and metadata access is verified. Import those settings into hosted Convex, then verify the required issue write access during the controlled live flow. | Convex: `LINEAR_API_KEY`, `LINEAR_TEAM_ID`, `LINEAR_RELEASED_STATE_ID`. No Linear webhook is required by this implementation. |
-| Vercel | Sign in and create two separate projects: controller app and independent weather target. Provide a scoped API token. Weather root is the repository root; disable automatic production alias assignment for candidates. | Convex: `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, `VERCEL_PROJECT_NAME`, `WEATHER_PRODUCTION_DOMAIN`; optionally `VERCEL_TEAM_ID`, `VERCEL_RELEASE_TOKEN`. Next.js: generated access secrets and the hosted Convex URL. Set the actual `CONTROL_APP_ORIGIN` in Next.js, Convex and the social worker. Hosted `FDE_LOCAL_ACCESS=false`. |
-| Worker hosting | Finish the existing Cloud Run services using [SETUP-GCP.md](SETUP-GCP.md): add actual public origins/hosts, remove setup-pending mode, and enable always-allocated CPU plus one minimum instance for live social jobs. No GCP budget policy was created, as requested; reconcile actual provider charges separately. | Use `social.env` only on the social worker and `verifier.env` only on the verifier. Add actual allowed origins/hosts and Convex URL. Convex gets `SOCIAL_WORKER_URL` and `ENGINEERING_WORKER_URL`; verifier gets `WEATHER_ALLOWED_HOSTS`. Record hosting commitments before enabling execution. |
-| Coding sandbox image | Provide a working Docker daemon/build runner and an authorized image registry. Local Docker is installed but the current user cannot access its daemon. | Build and verify `workers/engineering/Dockerfile`; publish the reviewed image and set the immutable digest as GitHub `engineering-controller` variable `CODING_SANDBOX_IMAGE`. The application refuses to run generated code unrestricted on the host. |
-| X brand account | Sign in as the dedicated brand account and establish the permitted automation capability. | Import its session through the app's Connections page once the worker is hosted. Set the exact account handle there. Only then enable worker `X_PLATFORM_PERMISSION_APPROVED`; keep polling disabled until the account passes checks. No X API key is used by this browser adapter. |
-| Reddit, optional | Obtain approved Reddit API access, create the OAuth app, and authorize the dedicated account for the permitted communities. | Social worker only: `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET`, `REDDIT_REFRESH_TOKEN`, `REDDIT_USER_AGENT`, `REDDIT_ALLOWED_SUBREDDITS`. Enable `REDDIT_API_APPROVED=true` on worker and Convex only after access is approved. Otherwise keep Reddit disabled and use the tracked manual flow. |
+The remaining work is source publication and execution verification:
 
-No weather API key is needed: the target uses deterministic fixtures. No Clerk keys or accounts are needed.
+1. Complete the independent review and tests, then publish the reviewed controller workflow on protected `main`.
+2. Run the pinned weather Bun bootstrap workflow. It verifies the existing migration and honestly records that the planted conversion bug remains.
+3. Merge the reviewed weather toolchain migration after its required check passes.
+4. Deploy that actual resulting weather-main SHA and tree as the fresh buggy baseline, then update production `FDE_BASE_SHA`. A merge commit may have the same tree but a different SHA from the current a96c50e deployment; they must not be treated as identical.
+5. Pin the actual reviewed controller-main commit in Convex as `GITHUB_CONTROLLER_SHA`.
+6. Exercise a current signed engineer Build to verify GitHub OIDC image pull and restricted candidate execution.
 
-## One GitHub account step that the existing CLI login cannot complete
+The immutable sandbox is built and its private registry access is configured. [Sandbox evidence](../artifacts/gcp-coding-sandbox-deployment.json). The independent audit also found an approval-hash mismatch in dispatch; its fix and regression test are in progress before the first live Build.
 
-Create a GitHub App with repository **Checks: read and write**, install it only on `hackathon-weather`, and generate its private key. In controller environment `engineering-pr-writer`, set variable `WEATHER_CHECKS_APP_ID` and secret `WEATHER_CHECKS_APP_PRIVATE_KEY`. The workflow mints an installation token for the check-writing job. This token creates the required `Protected weather` result only after trusted candidate verification; it does not grant candidate code credentials.
+## 2. Verify Slack decisions
 
-The existing GitHub CLI OAuth token cannot create check runs. GitHub documents the distinction in [Checks API authentication](https://docs.github.com/en/rest/checks/runs). A GitHub App is the supported path here; no success check is fabricated to bypass this missing capability.
+The expected configuration is:
 
-After the reviewed controller implementation is merged to `main`, pin its actual deployed SHA as `GITHUB_CONTROLLER_SHA` in Convex. Add the hosted Convex URL and verified sandbox image digest to the already-created engineering environment variables. These values depend on the merge and cloud setup; placeholder URLs or unverified image tags are not configured as working values.
+- App: Mend in BitsUp.
+- Socket Mode: **Off**; this app receives HTTP interactions.
+- Interactivity: **On**.
+- Request URL: `https://resilient-perch-131.convex.site/slack/interactions`.
+- Engineer: Elen (`U0C1L62486M`).
+- Marketer: David (`U0C1DJRE4KF`).
 
-## Verification order
+After saving, reload the Slack settings page to confirm the URL persisted. An unsigned request to the hosted endpoint correctly returns HTTP 403. This does not replace a real engineer/marketer button test. No message history scope is required for these signed button interactions.
 
-1. Deploy Convex and the control app; confirm hosted access and direct Convex credential checks.
-2. Install Slack and set member IDs. Verify a signed engineer Build decision and rejection of a wrong-role decision.
-3. Connect Linear and Vercel; deploy the seeded weather target to its own project.
-4. Deploy workers and the immutable sandbox image; record hosting costs.
-5. Exercise reproduction, approved Build, restricted candidate tests, exact Go, staged promotion and protected live verification.
-6. Enable only the selected approved social account, then test controlled publication and receipt reconciliation. Keep the manual fallback available.
+## 3. X session is connected; platform permission remains
 
-The full variable inventory and placement rules are in [ENVIRONMENT.md](ENVIRONMENT.md).
+The latest intended X account is **@Vinaychamoc5**. Its normal Chrome login was verified and its session imported into hosted Mend. The worker verified matching identity on 14 September 2026. Earlier incorrect/unavailable account connections were replaced.
+
+Mend reports `access_pending` because platform automation permission is not yet verified. Establish that capability before enabling `X_PLATFORM_PERMISSION_APPROVED` on the worker and `X_AUTOMATION_PERMISSION_CONFIRMED` on the controller, or enabling polling. A valid login alone does not approve automated posting. No X post/reply was sent; the manual workflow remains available.
+
+## 4. Reddit is optional for the first demo
+
+The intended Reddit account is **u/drizzle-123**. Provide the subreddit names that Mend is allowed to monitor. No permitted community has been supplied yet.
+
+1. Log in through your normal browser and complete Reddit's human-verification challenge. Current automated login/app settings are blocked by network security.
+2. Obtain approved API access for this use and create the OAuth app following [Reddit setup](SETUP-REDDIT.md).
+3. Save `REDDIT_CLIENT_ID` and `REDDIT_CLIENT_SECRET` privately in the app's `.env` worksheet. They must then be installed only on the social worker, not in browser-visible configuration.
+4. Configure an accurate `REDDIT_USER_AGENT` and the allowed subreddit list. Set the OAuth redirect URI exactly to `https://mend-social-worker-ajmx2yigqq-uc.a.run.app/v1/oauth/reddit/callback`.
+5. Authorize `drizzle-123` through the account connection flow after that integration is deployed. Keep `REDDIT_API_APPROVED=false` until access is approved.
+
+OAuth/readiness/polling implementation and focused tests are complete; final review, full-suite validation and deployment are in progress. Browser access, credentials and approval remain unverified; no Reddit send has been performed. You do not need to send passwords or manually extract refresh tokens.
+
+## Final live verification
+
+After these account steps, exercise an actual complaint, engineer Build, isolated candidate verification, marketer Go, staged promotion, protected live verification and an approved reply with receipt reconciliation. A seeded presentation, configured token or worker health response is not evidence that this full flow has passed.
+
+No Clerk or weather API account is needed. See [environment inventory](ENVIRONMENT.md), [GCP setup](SETUP-GCP.md), and the [test report](TEST-REPORT.md).
