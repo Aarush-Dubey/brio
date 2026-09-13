@@ -1,0 +1,44 @@
+{
+  "verifiedAt": "2026-09-13T21:15:28.570Z",
+  "appId": "A0C1N1T82UU",
+  "teamId": "T0C1G4Z2H5L",
+  "workspace": "BitsUp",
+  "botId": "B0C1L9WCLUR",
+  "botUserId": "U0C131053JB",
+  "tokenAuthTestPassed": true,
+  "configuredNames": [
+    "SLACK_BOT_TOKEN",
+    "SLACK_SIGNING_SECRET",
+    "SLACK_TEAM_ID",
+    "SLACK_CHANNEL_ID",
+    "SLACK_ENGINEER_USER_IDS"
+  ],
+  "previousExposedTokenRevoked": true,
+  "channelSetup": "created and Mend bot joined",
+  "roleSelection": {
+    "engineer": "Elen",
+    "marketer": "deferred by user"
+  },
+  "roleIdsVerified": false,
+  "interactivityUrlConfigured": false,
+  "messagesSent": 0,
+  "localConvexConfiguredNames": [
+    "SLACK_BOT_TOKEN",
+    "SLACK_SIGNING_SECRET",
+    "SLACK_TEAM_ID",
+    "SLACK_CHANNEL_ID",
+    "SLACK_ENGINEER_USER_IDS"
+  ],
+  "channelId": "C0C1324SFF1",
+  "channelName": "mend-approvals",
+  "engineerUserId": "U0C1L62486M",
+  "engineerIdSource": "explicit user configuration",
+  "botMembershipVerified": true,
+  "botMembershipEvidence": "Slack channel system event: Mend joined",
+  "updatedAt": "2026-09-13T21:22:09.315302+00:00",
+  "remaining": [
+    "Hosted Convex .site/slack/interactions callback",
+    "Marketer Slack member ID deferred by user",
+    "Actual signed Slack approval test"
+  ]
+}

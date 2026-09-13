@@ -101,3 +101,7 @@ The standalone protected baseline correctly reproduces the deliberate 20°C→20
 ## Final Mend production browser coverage
 
 The production build at `.next-e2e` preserves the user’s running `.next` dev server. The 21-scenario suite passed 19 initially. Both new cross-tab/fallback tests initially searched for a separate case after submitting a complaint deliberately grouped into an existing canonical incident. Unique non-canonical complaint fixtures corrected that test assumption; both then passed in 12.7 seconds. The observer receives card movement with its HTTP snapshot endpoint blocked; a 503 stream failure recovers through polling and then native EventSource without reload. The 13-step autoplay/pause/resume/restart scenario passed in 29.7 seconds. All 21 scenarios have passing evidence across those runs; no complete 21-pass single rerun is claimed.
+
+## Complete GitHub browser run
+
+The fresh GitHub runner passed all **21 browser tests together in 1.4 minutes** on source commit `9da2b61`, after frozen installs and both production builds. Lint, TypeScript and all 490 automated tests also passed. [Run](https://github.com/Aarush-Dubey/hackathon/actions/runs/34782975073), [recorded summaries](../artifacts/github-ci-verification.json). This supersedes the earlier local split-run limitation above. Live provider decisions, browser accounts and deployment receipts remain separate prerequisites.

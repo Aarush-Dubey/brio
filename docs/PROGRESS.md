@@ -1,6 +1,6 @@
 # Mend implementation progress
 
-Last updated: 2026-09-13T21:01:25.890052+00:00
+Last updated: 2026-09-13T21:22:09.315302+00:00
 
 ## Current objective
 
@@ -10,12 +10,12 @@ Deliver the Mend interface, live Kanban/timeline, persona workflows and Slack ap
 
 - PRD v1.2 includes the supplied Mend design, live updates, presentation controls, persona rules and 36 acceptance scenarios with an integrated two-person ownership plan.
 - Mend pages and persistent 13-step demo are implemented. Next.js runtime/MCP inspection and desktop/mobile visual checks passed. Native Convex revision delivery and 10 stream tests passed.
-- Full automated suite: 486 tests across 31 files passed. Final lint, TypeScript and isolated production build passed. All 21 production browser scenarios have passing evidence: 19 passed initially, then both corrected stream-fixture cases passed on targeted rerun. See [test report](TEST-REPORT.md).
+- GitHub CI on source commit `9da2b61` passed all 490 automated tests across 31 files, all 21 production browser tests together in 1.4 minutes, lint, TypeScript and both application builds. See [test report](TEST-REPORT.md).
 - Controller and separate weather target use Bun 1.4.2. Weather's intentional 20°C → 20°F defect is retained and reproduced by the protected baseline checks.
 - Real gpt-5-mini writer and durable triage succeeded. The live 60-case persona evaluation accepted all 20 eligible examples and none of the 40 excluded, ambiguous or factual examples for autonomous replies. Policy remains unapproved; nothing was posted.
 - Recorded pre-GCP model usage is $0.013440, unknown reservations $0.009157 and infrastructure allowance $1. The $1.022597 recorded exposure does not yet include reconciled GCP charges. No GCP budget/alert policy was created, following the latest instruction.
 - Clerk removed. Local loopback and hosted shared-code admission work; real approval authority remains configured Slack member IDs.
-- Private weather repository, protected branches, read-only checkout key, engineering environments, signatures and PR credentials configured. Weather Bun migration is draft PR #1. Controller commit `90dd60f` is pushed on `codex/hackathon-mvp` in [draft PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1); The first GitHub run found a checkout input error; its correction is being rerun.
+- Private weather repository, protected branches, read-only checkout key, engineering environments, signatures and PR credentials configured. Weather Bun migration is draft PR #1. Controller commit `90dd60f` is pushed on `codex/hackathon-mvp` in [draft PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1); GitHub run 34782975073 passed after the checkout input correction.
 - Grouped root `.env` preserves existing secrets; `.env.local` has no overrides. Beginner setup, engineering, GCP and optional Reddit guides are complete. Reddit's automatic identity/readiness gap is explicit.
 - GCP project/billing, image repository, source bucket, builder/runtime identities and four scoped secrets configured. Both images built and both Cloud Run services deployed. Health reports ready=false and actual work routes reject with HTTP 503. Worker URLs are saved in `.env` and private bundles. [Deployment evidence](../artifacts/gcp-worker-deployment.json).
 
@@ -23,14 +23,14 @@ Deliver the Mend interface, live Kanban/timeline, persona workflows and Slack ap
 
 | Work | Status |
 | --- | --- |
-| Slack account configuration | Local browser access succeeded; Mend app created in BitsUp with chat:write. First exposed token was revoked; private replacement collection is in progress. User selected David as engineer and Ellen as marketer; actual member IDs still need lookup. |
+| Slack account configuration | Local browser access succeeded; Mend app created in BitsUp with chat:write. First exposed token was revoked. Replacement token authenticated successfully; bot token, signing secret and workspace ID are saved in .env, private Convex bundle and local Convex. Mend joined #mend-approvals; its channel ID and Elen’s engineer ID are saved in .env/private bundle/local Convex. User deferred the marketer ID. Hosted callback and actual approval test remain pending. |
 | Activate hosted worker execution | Needs real hosted Mend, Convex and weather URLs; social live mode also needs always-allocated CPU and minimum 1 instance. Current deployed services intentionally remain disabled. |
 | Controller draft PR | Created as PR #1; inspect GitHub checks and keep provider setup gates explicit. |
 | Full live customer-to-reply run | Blocked by remaining provider setup; local simulations and health checks do not establish live completion. |
 
 ## Remaining external setup
 
-Hosted Convex, confirmed Slack credentials/role IDs, Linear settings on hosted Convex, Vercel projects, the reviewed immutable coding-sandbox image and a check-writing GitHub App remain prerequisites. The local Docker daemon is inaccessible, so generated candidate execution is unverified. Selected live social platforms additionally require an authorized account and capability. No weather API or Clerk account is needed. See [remaining settings](SETUP-REMAINING.md) and the [beginner guide](SETUP-GUIDE.md).
+Hosted Convex, Slack settings on hosted Convex, its callback URL and the deferred marketer ID, Linear settings on hosted Convex, Vercel projects, the reviewed immutable coding-sandbox image and a check-writing GitHub App remain prerequisites. The local Docker daemon is inaccessible, so generated candidate execution is unverified. Selected live social platforms additionally require an authorized account and capability. No weather API or Clerk account is needed. See [remaining settings](SETUP-REMAINING.md) and the [beginner guide](SETUP-GUIDE.md).
 
 ## Change log
 
@@ -57,3 +57,7 @@ Hosted Convex, confirmed Slack credentials/role IDs, Linear settings on hosted C
 - 2026-09-13T21:08:33.003766+00:00: Pushed the implementation as `90dd60f` and opened controller draft PR #1. Application checks started on GitHub. Slack app created by the browser agent; initial token was revoked after tool-output exposure, and replacement collection is in progress. David/engineer and Ellen/marketer were selected by the user; no IDs are invented.
 
 - 2026-09-13T21:09:38.373540+00:00: First GitHub run 34782885287 stopped before application tests because actions/checkout requires its token input even with SSH. All three target-checkout workflows now provide the ephemeral GitHub token when the optional read token is absent; the actual weather checkout still uses its dedicated read-only SSH key. YAML parsing passed; corrected CI run pending.
+
+- 2026-09-13T21:17:05.628508+00:00: GitHub CI passed 490 tests/31 files, all 21 browser scenarios together, lint/types and both builds. GPT-5.5 subagent installed Vercel CLI 59.16.0 globally via Bun and verified version/help; executable is /home/big-daddy/.bun/bin/vercel. Replacement Slack token passed auth.test and three Slack settings are configured locally; no messages were sent.
+
+- 2026-09-13T21:22:09.315302+00:00: Completed Slack channel creation and verified Mend joined it. Saved all five available Slack settings in .env, private Convex bundle and local Convex; corrected engineer to Elen using the user-supplied ID. User explicitly deferred marketer configuration. Slack remains partially configured until the hosted callback and real approval test exist. Updated the guide with exact remaining steps.
