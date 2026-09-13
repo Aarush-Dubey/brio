@@ -1,10 +1,12 @@
 # brio
 
+**[Watch the demo](https://drive.google.com/file/d/1r_ZpACtP0KhSlO39drxLUy0nQIcyJCd1/view?usp=sharing)** · **[Open brio](https://mend-hackathon.vercel.app/cases)**
+
+**Workspace access code:** `ab37ee43c3d2cd841d56609bd2f743934b4d0a7c34a50a4f72259a78ffed8d73`
+
 **From customer complaint to product fix, with a personality.**
 
 brio connects customer conversations to engineering work. It brings reports, investigation, approvals, fixes, and replies into one workflow, with humans making the key decisions in Slack and a live Kanban board showing every step.
-
-**[Watch the demo](https://drive.google.com/file/d/1r_ZpACtP0KhSlO39drxLUy0nQIcyJCd1/view?usp=sharing)** · **[Open brio](https://mend-hackathon.vercel.app/cases)**
 
 ![brio incident board](artifacts/brio-hosted-demo-board.png)
 
