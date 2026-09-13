@@ -384,6 +384,8 @@ Allow browser navigation only to approved social hosts or owned weather deployme
 
 ### WK-03 — External readiness and limitations
 
+**Current operator decision — 14 September 2026:** the account owner explicitly requested X enablement. Mend’s existing worker/controller switches are enabled, and a fresh import verified `Vinaychamoc5`; the connection reports ready and unpaused. These configuration flags record operator authorization and do not establish independent approval from X. Background social polling remains off. Exact marketer approval or a current marketer-approved persona policy is still required for the applicable reply path, and no live public send has been verified.
+
 The selected X browser adapter remains in implementation scope. X explicitly prohibits website scripting, warns of suspension, requires prior written approval for AI reply bots, and restricts automated replies to eligible opted-in interactions with opt-out support and one automated reply per interaction. Marketer Go or persona activation does not override those restrictions. Treat live X browser operation as an experimental dependency with unresolved platform permission risk, not a supported integration guarantee. [X automation rules](https://help.x.com/en/rules-and-policies/x-automation).
 
 Reddit live use remains conditional on approved API access, permitted use, and community requirements. Until available, expose access_pending and support labeled manual/fixture intake. [Reddit Responsible Builder Policy](https://support.reddithelp.com/hc/en-us/articles/42728983564564-Responsible-Builder-Policy).

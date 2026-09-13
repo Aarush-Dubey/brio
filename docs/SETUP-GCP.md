@@ -1,19 +1,19 @@
 # Mend setup: GCP instead of Render
 
-This replaces the Render step in [SETUP-GUIDE.md](SETUP-GUIDE.md#step-8). You will create **two Cloud Run services** using the Dockerfiles already in this repository. The Mend/weather websites remain on Vercel, and the database/workflows remain on Convex.
+This replaces the Render step in [SETUP-GUIDE.md](SETUP-GUIDE.md#step-8). The existing installation has **two Cloud Run services** built from the Dockerfiles in this repository. The Mend/weather websites remain on Vercel, and the database/workflows remain on Convex.
 
 **Current project:** `mend-hackathon-260914`, region `us-central1`. Both services are active and configured with the hosted Mend, Convex and weather origins. The steps below document reproducible setup; do not create duplicate resources.
 
 | Service | Deployed URL | Verified state |
 | --- | --- | --- |
-| Weather verifier | https://mend-weather-verifier-ajmx2yigqq-uc.a.run.app | Real Chromium checked the exact hosted revision and reproduced the planted defect. |
-| Social worker | https://mend-social-worker-ajmx2yigqq-uc.a.run.app | Healthy; always-allocated CPU and minimum/maximum one instance. Social account permission gates remain closed. |
+| Weather verifier | https://mend-weather-verifier-ajmx2yigqq-uc.a.run.app | Revision `mend-weather-verifier-00003-s98` is healthy. Real Chromium verified merged weather main `161835dba251f9739d25194ec21db0f2461df989` and reproduced the planted defect at both staged and stable URLs. |
+| Social worker | https://mend-social-worker-ajmx2yigqq-uc.a.run.app | Revision `mend-social-worker-00004-77f` is healthy; always-allocated CPU and minimum/maximum one instance. X reimport verified, connection ready and unpaused after operator enablement; background polling remains off. |
 
-The [worker evidence](../artifacts/gcp-worker-deployment.json) records current revisions and health checks. The [hosted weather evidence](../artifacts/hosted-weather-baseline.json) records 34 browser observations and expected revision matching. The baseline is intentionally failing conversion tests; this verifies reproduction, not a repaired release.
+Cloud Build `569f3b8b-c458-490d-bf73-1d9775c4bc86` succeeded for source `6981750`. The [worker evidence](../artifacts/gcp-worker-deployment.json) records current revisions and health checks. The [merged weather evidence](../artifacts/weather-main-baseline-deployment.json) records 34 browser observations at each of the staged and stable URLs with exact revision matching. The baseline is intentionally failing conversion tests; this verifies reproduction, not a repaired release.
 
-The third image is the **coding sandbox**, pulled by GitHub Actions rather than run as a Cloud Run service. Its immutable image and restricted keyless pull identity are configured. See [sandbox setup and validation](SETUP-CODING-SANDBOX-GCP.md). Actual GitHub OIDC pull awaits the reviewed workflow on main and a valid signed Build.
+The third image is the **coding sandbox**, pulled by GitHub Actions rather than run as a Cloud Run service. Its immutable image and restricted keyless pull identity are configured. See [sandbox setup and validation](SETUP-CODING-SANDBOX-GCP.md). The reviewed controller workflow has merged to main. Production Convex is pinned to controller main `8a7636e`. The merged weather baseline is deployed and verified. Production `FDE_BASE_SHA` is pinned to `161835dba251f9739d25194ec21db0f2461df989`; actual GitHub OIDC pull awaits a valid signed Build.
 
-No additional GCP credentials are currently required from the user. Reddit API credentials and X session/permission are service-account setup outside GCP. No budget/alert policy was created. [Google's browser-automation guide](https://docs.cloud.google.com/run/docs/browser-automation).
+No additional GCP credentials are currently required from the user. The X session is ready after operator enablement; external X approval is not independently verified. Reddit is skipped, disabled and paused, with no setup action required. No budget/alert policy was created. [Google's browser-automation guide](https://docs.cloud.google.com/run/docs/browser-automation).
 
 ## 1. Create/select the Google Cloud project
 
@@ -215,7 +215,7 @@ Use the application to perform the actual checks:
 1. Finish the identified weather seed deployment in [engineering setup section 4](SETUP-ENGINEERING.md#seed-deployment).
 2. Follow [main setup Step 11](SETUP-GUIDE.md#step-11): open hosted Mend → Board → Manual signal intake, enter the original owned test complaint URL/text, and store it. Open the created case and inspect its investigation/evidence timeline. The controller signs the weather request; you do not manually paste the signing secret into a request.
 3. For the initial seed, expect identity matching the deployed seed and browser evidence of `20°C → 20°F`. The bug check must fail; it must not report the seed as fixed. A verified candidate later needs `68°F` and the remaining protected regression checks to pass.
-4. Follow [main setup Step 10](SETUP-GUIDE.md#step-10) for the authorized X session import. Observe its account/status without resetting the imported connection. The controlled job/reply check in Step 11 then proves the social worker can complete its background work and return a real receipt.
+4. The current X session for `Vinaychamoc5` was reimported after operator enablement and reports ready with verified identity. Keep that connection and leave background polling off for the controlled test. [Main setup Step 11](SETUP-GUIDE.md#step-11) must still prove background completion and a real receipt.
 
 Cloud Run reporting Ready or `/health` returning 200 alone does not prove Chromium or X works. Record the case's actual evidence and receipt links separately from the simulated local demo.
 

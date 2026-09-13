@@ -6,28 +6,27 @@ Updated 14 September 2026. This is the checklist for the existing installation. 
 
 | Service | Existing installation | Evidence and remaining verification |
 | --- | --- | --- |
-| Convex | Team `vinay-chamola`, project `mend-hackathon`, production `resilient-perch-131` | Functions deployed; hosted authenticated state works. |
-| Mend website | [mend-hackathon.vercel.app](https://mend-hackathon.vercel.app) | Shared-code admission verified. Local populated demo remains on port 3002; hosted production is separate. |
-| Weather website | [mend-weather.vercel.app](https://mend-weather.vercel.app) | Revision `a96c50e` deployed and exact identity verified. GCP Chromium reproduced the planted conversion defect. |
+| Convex | Team `vinay-chamola`, project `mend-hackathon`, production `resilient-perch-131` | Functions from `6981750` deployed; hosted authenticated state works. |
+| Mend website | [mend-hackathon.vercel.app](https://mend-hackathon.vercel.app) | Source `e8f2dd0` deployed as `dpl_BXDqW34ib72uTQoTVsCCfbgXY3m4`; shared-code admission verified. Local populated demo remains on port 3002; hosted production is separate. |
+| Weather website | [mend-weather.vercel.app](https://mend-weather.vercel.app) | Merged main `161835dba251f9739d25194ec21db0f2461df989` deployed as `dpl_2j3VMkCbdSJtAh565FdkXpu76PGK`; staged and stable URLs each passed exact identity verification and reproduced the planted defect in 34 browser checks. |
 | Vercel API | Token saved and imported into production Convex | Real project, deployment, production alias, staging settings and environment allowlist verified. Automatic domain assignment is disabled. |
-| GCP | Project `mend-hackathon-260914`, region `us-central1` | Social and verifier services active; immutable sandbox image built and offline Chromium smoke passed. No further GCP credentials needed. |
+| GCP | Project `mend-hackathon-260914`, region `us-central1` | Social revision `00004-77f` and verifier `00003-s98` active and healthy; immutable sandbox image built and offline Chromium smoke passed. No further GCP credentials needed. |
 | OpenAI | App key installed; `gpt-5-mini` | Prior real writer, triage and persona evaluation passed. |
 | Linear | Drizzle team and Done state configured in hosted Convex | Metadata read verified; issue creation/update still needs a controlled live flow. |
-| GitHub | Separate controller/weather repositories and engineering environments | Hosted callback and private sandbox pull variables saved. Checks App configured; workflow publication described below. |
+| GitHub | Separate controller/weather repositories and engineering environments | Controller PR #1 merged as `8a7636e`; final CI passed. Hosted callback, sandbox pull settings and Checks App configured; remaining baseline and execution work is below. |
 | Slack | Mend app in BitsUp, bot in `#mend-approvals` | Elen is engineer; David is marketer. Hosted secrets saved. Callback enabled and URL persisted after reload; actual human button test remains. |
 
-## 1. Finish the reviewed GitHub workflow and baseline publication
+## 1. Verify a real signed Build
 
 **The Checks App is complete.** `brio-mkc`, App ID `4934302`, is owned by Aarush-Dubey and installed only on `hackathon-weather`. It has Checks write and Metadata read. The downloaded key matched the app; `WEATHER_CHECKS_APP_ID` and `WEATHER_CHECKS_APP_PRIVATE_KEY` are saved in `engineering-pr-writer`. A scoped installation token was minted successfully and revoked after the read-only setup probe. No extra GitHub credential is currently needed from the user. [Evidence](../artifacts/github-checks-app-setup.json).
 
-The remaining work is source publication and execution verification:
+Controller review and tests are complete. [Final CI 34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`; [controller PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged as `8a7636e2709d039773afa73857e6cb66f08a7d6f`. Production Convex is pinned to that controller commit.
 
-1. Complete the independent review and tests, then publish the reviewed controller workflow on protected `main`.
-2. Run the pinned weather Bun bootstrap workflow. It verifies the existing migration and honestly records that the planted conversion bug remains.
-3. Merge the reviewed weather toolchain migration after its required check passes.
-4. Deploy that actual resulting weather-main SHA and tree as the fresh buggy baseline, then update production `FDE_BASE_SHA`. A merge commit may have the same tree but a different SHA from the current a96c50e deployment; they must not be treated as identical.
-5. Pin the actual reviewed controller-main commit in Convex as `GITHUB_CONTROLLER_SHA`.
-6. Exercise a current signed engineer Build to verify GitHub OIDC image pull and restricted candidate execution.
+Weather [bootstrap 34786278162](https://github.com/Aarush-Dubey/hackathon/actions/runs/34786278162) also passed, recording 34 checks and the intentional defect on the migration head. Weather [PR #1](https://github.com/Aarush-Dubey/hackathon-weather/pull/1) merged as `161835dba251f9739d25194ec21db0f2461df989`, tree `2fc58d5c57da18d60ff7ece9952faf273117f22d`.
+
+The merged weather baseline is deployed and promoted as `dpl_2j3VMkCbdSJtAh565FdkXpu76PGK`. Both staged and stable URLs matched the exact SHA/tree and reproduced the intentional conversion defect in 34 Chromium checks each. Production `FDE_BASE_SHA` is confirmed as `161835dba251f9739d25194ec21db0f2461df989`; no deployment pin work remains. [Weather baseline evidence](../artifacts/weather-main-baseline-deployment.json).
+
+The next check is a current signed engineer Build, which must verify GitHub OIDC image pull and restricted candidate execution.
 
 The immutable sandbox is built and its private registry access is configured. [Sandbox evidence](../artifacts/gcp-coding-sandbox-deployment.json). The independent audit found and fixed a Build approval-hash mismatch; the regression tests passed.
 
@@ -42,28 +41,22 @@ The expected configuration is:
 - Engineer: Elen (`U0C1L62486M`).
 - Marketer: David (`U0C1DJRE4KF`).
 
-After saving, reload the Slack settings page to confirm the URL persisted. An unsigned request to the hosted endpoint correctly returns HTTP 403. This does not replace a real engineer/marketer button test. No message history scope is required for these signed button interactions.
+The saved URL has already been verified after reloading Slack settings. An unsigned request to the hosted endpoint correctly returns HTTP 403. A signed non-action probe also passed signature validation and was correctly refused with `slack_context_denied` because it had no valid action context. [Callback evidence](../artifacts/slack-signed-callback-verification.json). The remaining check is a real engineer/marketer button test on the current case. No message history scope is required for these signed button interactions.
 
-## 3. X session is connected; platform permission remains
+## 3. X is ready; the controlled posting check remains
 
-The latest intended X account is **@Vinaychamoc5**. Its normal Chrome login was verified and its session imported into hosted Mend. The worker verified matching identity on 14 September 2026. Earlier incorrect/unavailable account connections were replaced.
+**@Vinaychamoc5** was reimported after the operator explicitly requested enablement. The hosted worker returned HTTP 200 and verified the account identity; Mend reports **ready** with **paused false**. Both X switches are enabled on social revision `mend-social-worker-00004-77f` and production Convex. [Enablement evidence](../artifacts/x-automation-enablement.json).
 
-Mend reports `access_pending` because platform automation permission is not yet verified. Establish that capability before enabling `X_PLATFORM_PERMISSION_APPROVED` on the worker and `X_AUTOMATION_PERMISSION_CONFIRMED` on the controller, or enabling polling. A valid login alone does not approve automated posting. No X post/reply was sent; the manual workflow remains available.
+Background social polling remains **off**, and no X post or reply has been sent. Keep the verified connection and exercise the approved case flow below; do not import another session or create another account. Operator enablement does not establish external X approval, which has not been independently verified.
 
 ## 4. Reddit is deferred
 
-The user chose to skip Reddit for now. Both approval flags remain false. The connector is implemented and tested; the following steps are only for a future opt-in. The intended account is **u/drizzle-123**; no community has been selected.
-
-1. Log in through your normal browser and complete Reddit's human-verification challenge. Current automated login/app settings are blocked by network security.
-2. Obtain approved API access for this use and create the OAuth app following [Reddit setup](SETUP-REDDIT.md).
-3. Save `REDDIT_CLIENT_ID` and `REDDIT_CLIENT_SECRET` privately in the app's `.env` worksheet. They must then be installed only on the social worker, not in browser-visible configuration.
-4. Configure an accurate `REDDIT_USER_AGENT` and the allowed subreddit list. Set the OAuth redirect URI exactly to `https://mend-social-worker-ajmx2yigqq-uc.a.run.app/v1/oauth/reddit/callback`.
-5. Authorize `drizzle-123` through the account connection flow after that integration is deployed. Keep `REDDIT_API_APPROVED=false` until access is approved.
-
-OAuth/readiness/polling implementation and focused tests are complete; final review, full-suite validation and deployment are in progress. Browser access, credentials and approval remain unverified; no Reddit send has been performed. You do not need to send passwords or manually extract refresh tokens.
+The user chose to skip Reddit for now. The connection is **disabled and paused**, and both approval flags remain false. There is no Reddit setup action to take. Connector code is implemented, tested and deployed, but live API approval, account access and posting remain unverified. If the user opts in later, follow [Reddit setup](SETUP-REDDIT.md).
 
 ## Final live verification
 
-After these account steps, exercise an actual complaint, engineer Build, isolated candidate verification, marketer Go, staged promotion, protected live verification and an approved reply with receipt reconciliation. A seeded presentation, configured token or worker health response is not evidence that this full flow has passed.
+Using the verified and pinned baseline above, exercise an actual complaint, engineer Build, isolated candidate verification, marketer Go, staged promotion, protected live verification and an approved reply with receipt reconciliation. A seeded presentation, configured token or worker health response is not evidence that this full flow has passed.
+
+The demo video is deferred by the user. No recording is required now.
 
 No Clerk or weather API account is needed. See [environment inventory](ENVIRONMENT.md), [GCP setup](SETUP-GCP.md), and the [test report](TEST-REPORT.md).

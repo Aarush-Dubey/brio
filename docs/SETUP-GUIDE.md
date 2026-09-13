@@ -10,23 +10,24 @@ Mend is the website with the Kanban board. It receives a complaint, asks an engi
 
 | Service | Plain-English job | Do you need to create anything? |
 | --- | --- | --- |
-| GitHub | Stores both apps and runs the code-fixing jobs | Repositories, Checks App and sandbox image exist. Finish reviewed workflow publication and execution verification. |
+| GitHub | Stores both apps and runs the code-fixing jobs | Controller merged; Checks App and sandbox image exist. Both repositories merged and pinned; signed execution verification remains. |
 | OpenAI | Generates classifications, patches and persona replies | Your key is already saved and tested. Reuse it. |
 | Convex | Stores cases and runs Mend's background work | Done: mend-hackathon / resilient-perch-131. |
 | Vercel | Makes the two websites available on the internet | Done: mend-hackathon and mend-weather; API token verified. |
-| Slack | Where the engineer clicks Build and marketer clicks Go | Existing Mend app in BitsUp; finish callback verification. |
+| Slack | Where the engineer clicks Build and marketer clicks Go | Mend app, hosted callback and roles configured; actual human decisions remain to be tested. |
 | Linear | Stores the engineering ticket | Key and Drizzle/Done IDs configured; live issue write still unverified. |
 | Google Cloud (GCP) | Runs the two automated browsers on Cloud Run | Workers active; weather browser baseline and sandbox runtime verified. |
-| X | The brand account that receives and sends replies | Connect your own dedicated account if using live X. |
-| Reddit | An additional reply destination | Optional. Skip for the first demo. |
+| X | The brand account that receives and sends replies | @Vinaychamoc5 is ready after operator-authorized enablement; polling off, real posting check remains. |
+| Reddit | An additional reply destination | Skipped by user. Disabled and paused; no setup action required. |
 
 **No Clerk account, weather API key, or ChatGPT connector installation is needed.** The weather readings are fixed test data. Application model calls use `gpt-5-mini`. The existing application model ledger retains its configured limit. Per the later instruction, no GCP budget or alert policy was created.
 
 ### Choose how far to go
 
 - **See the demo on this laptop:** do Step 1 only. It simulates the external services and clearly labels that fact.
-- **Set up the real application:** complete Steps 2–11. Steps 2–8 collect and connect the accounts; Step 9 handles the remaining GitHub execution setup.
-- **Add Reddit later:** use the optional section at the end. It is not required for the X/weather demonstration.
+- **Finish this existing installation:** use the [remaining checklist](SETUP-REMAINING.md), then the live checks in Step 11.
+- **Create a new installation:** Steps 2–11 provide the full reference procedure; completed account steps do not need repeating here.
+- **Reddit and demo video:** both are deferred by the user. No action is needed now.
 
 ### Jump to a step
 
@@ -105,15 +106,15 @@ In a website's environment-variable form, enter `CONTROL_APP_ORIGIN` in **Name/K
 | --- | --- |
 | `next-hosted.env` | Current hosted Mend settings; already installed in Vercel. |
 | `convex-hosted.env` | Hosted production settings; already imported. Keep later targeted credential updates synchronized before reimporting. `convex.env` is the older preparation bundle. |
-| `social.env` | Import into the **Cloud Run social worker** in Step 8. |
-| `verifier.env` | Import into the **Cloud Run weather verifier** in Step 8. |
+| `social.env` | Current worker settings are installed in Cloud Run; use this private bundle only for coordinated future updates. |
+| `verifier.env` | Current verifier settings are installed in Cloud Run; use this private bundle only for coordinated future updates. |
 | `engineering.env` | Signing keys already installed in GitHub. Keep them; do not replace them with new random values. |
 
 The generated passwords already match across these files. Copy them exactly. The directory is excluded from Git. Do not put real values in this guide or in a new Markdown file inside `docs/`.
 
 ### Your main file for entering new values
 
-Open `/home/big-daddy/Desktop/hackathon/.env` in your text editor. It now contains clearly labeled sections and blank fields for the missing Slack, Linear, Vercel and worker settings. **Fill these blanks in this one file.** Your OpenAI key and existing settings have been preserved. Vercel linking added an OIDC value to `.env.local`; it does not replace the application settings. Keep both files private.
+Open `/home/big-daddy/Desktop/hackathon/.env` in your text editor when an authorized configuration change is needed. Slack, Linear, Vercel and worker settings are already configured; blank optional fields do not mean those services need recreating. Preserve the existing values. Vercel linking added an OIDC value to `.env.local`; it does not replace the application settings. Keep both files private.
 
 The private service bundles above are starting values for hosting. When you add a new value to `.env`, also copy it into the particular online service named in its step. Nothing synchronizes these files automatically. Do not import all of `.env` into a provider: it contains settings for several different services and local URLs.
 
@@ -137,12 +138,14 @@ For example, `https://calm-fox-123.convex.cloud` is a Convex function URL and `h
 
 Both private repositories exist: [Mend/controller](https://github.com/Aarush-Dubey/hackathon) and [weather](https://github.com/Aarush-Dubey/hackathon-weather). Their branch protections, read-only weather checkout key, GitHub signing keys and PR-writing credential are configured. Your OpenAI key has also been tested.
 
-**Publication status at this guide's update:** the new Mend implementation is still being finalized on `codex/hackathon-mvp`. The weather Bun changes are in [draft PR #1](https://github.com/Aarush-Dubey/hackathon-weather/pull/1). Account creation can proceed now. Deploying `main` before the reviewed changes merge can deploy the old application. Step 9 explains the outstanding code-publication checks.
+**Current publication status:** final CI [34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`; controller [PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged to protected `main` as `8a7636e2709d039773afa73857e6cb66f08a7d6f`. Hosted Mend runs `e8f2dd0`, and production Convex plus the workers run source `6981750`. Weather bootstrap passed and weather PR #1 merged as `161835dba251f9739d25194ec21db0f2461df989`. Production Convex is pinned to controller main `8a7636e`; the merged weather baseline is deployed and verified at staged and stable URLs, and production `FDE_BASE_SHA` is pinned to `161835dba251f9739d25194ec21db0f2461df989`. See [remaining setup](SETUP-REMAINING.md) for the latest remaining work.
 
 <a id="step-3"></a>
 ## Step 3 — Create the hosted Convex backend
 
-**CLI account login first:** the CLI is installed, but local anonymous Convex does not imply a cloud account login. Run these commands from the Mend folder and finish the browser sign-in when prompted:
+**Existing installation: complete.** Production `resilient-perch-131` is deployed with hosted settings and authenticated access verified. Skip this step for the current project. The instructions below are for a new installation.
+
+**For a new CLI login:** run these commands from the Mend folder and finish browser sign-in when prompted:
 
 ```bash
 export PATH="/home/big-daddy/.bun/bin:$PATH"
@@ -173,7 +176,7 @@ Save it. Do not paste this key into Vercel, the weather app, or a chat message.
 
 ### 3B. Add the backend settings
 
-1. Open the existing private `convex.env` file in your text editor.
+1. Open the current private `convex-hosted.env` file in your text editor. Preserve later targeted credential updates before importing an older bundle.
 2. In the Convex **Production** deployment, open **Settings → Environment Variables**.
 3. For each non-empty `NAME=value` line in that file, add one environment variable using the Name and Value fields. Skip any line starting with `#`.
 4. Confirm `OPENAI_API_KEY` is included. It is the working key you supplied; you do not need a second one.
@@ -204,10 +207,12 @@ Official reference: [Convex environment settings](https://docs.convex.dev/produc
 <a id="step-4"></a>
 ## Step 4 — Put the Mend website on Vercel
 
-**CLI alternative:** Vercel CLI is installed. Run `vercel login`, complete its browser sign-in, then run `vercel whoami`. A successful result shows your account name. Until this succeeds, the CLI cannot create the two projects in your account. Continue with the settings below after signing in; a temporary unclaimed deployment is not a substitute for account setup.
+**Existing installation: complete.** [Hosted Mend](https://mend-hackathon.vercel.app) is deployed with shared-code admission verified. Skip project creation for this installation.
+
+**CLI alternative for a new installation:** Vercel CLI is installed. Run `vercel login`, complete browser sign-in, then verify your account with `vercel whoami` before creating projects.
 
 
-**You need:** the Convex `.cloud` address and private `next.env` file. This project is for **Mend**, not weather.
+**You need:** the Convex `.cloud` address and private `next-hosted.env` file. This project is for **Mend**, not weather.
 
 1. Open [vercel.com/new](https://vercel.com/new) and sign in with GitHub.
 2. Under **Import Git Repository**, find `Aarush-Dubey/hackathon` and click **Import**. If it is absent, use **Adjust GitHub App Permissions** and allow Vercel access to that repository.
@@ -219,21 +224,21 @@ Official reference: [Convex environment settings](https://docs.convex.dev/produc
 | Install Command | `bunx bun@1.4.2 install --frozen-lockfile --ignore-scripts` |
 | Build Command | `bunx bun@1.4.2 run build` |
 
-5. Expand **Environment Variables**. Add each line from `next.env`, then add the following settings. For later edits, the same form is under **Project → Settings → Environment Variables**. Select **Production** as the target environment.
+5. Expand **Environment Variables**. Add each line from `next-hosted.env`, then add the following settings. For later edits, the same form is under **Project → Settings → Environment Variables**. Select **Production** as the target environment.
 
 | Name | Value to enter |
 | --- | --- |
-| `CONTROL_SERVICE_SECRET` | Already in `next.env`; must equal the value in Convex. |
-| `CONTROL_ACCESS_PASSWORD` | Already in `next.env`; this is the code you will type to enter Mend. |
+| `CONTROL_SERVICE_SECRET` | Already in `next-hosted.env`; must equal the value in Convex. |
+| `CONTROL_ACCESS_PASSWORD` | Already in `next-hosted.env`; this is the code you will type to enter Mend. |
 | `NEXT_PUBLIC_CONVEX_URL` | Your actual `.convex.cloud` URL from Step 3. |
 | `FDE_LOCAL_ACCESS` | `false` |
 | `FDE_DEMO_MODE` | `false` |
 
-6. Deploy the reviewed Mend code. **If GitHub `main` still contains the old application, keep the project and its settings but return after the controller PR merges.** Account configuration is not lost. The Vercel deployment page shows which commit it built.
+6. Deploy the reviewed Mend commit. The current controller PR has merged; verify the source shown on Vercel matches the intended reviewed revision.
 7. When the deployment says **Ready**, copy its stable project address, such as `https://mend-control.vercel.app`, into your note. Use the project's normal domain, not a different temporary URL for every build.
 8. Add `CONTROL_APP_ORIGIN` with that exact address in **both** places: Mend Vercel environment variables and Convex Production environment variables. Do not add a trailing path such as `/cases`.
 9. In Vercel, open **Deployments**, choose the latest correct deployment's **… → Redeploy**, and confirm. Vercel needs a redeploy after environment-variable changes.
-10. Open the Mend address in a private/incognito browser window. Enter the value of `CONTROL_ACCESS_PASSWORD` from `next.env` when the access page appears.
+10. Open the Mend address in a private/incognito browser window. Enter the value of `CONTROL_ACCESS_PASSWORD` from `next-hosted.env` when the access page appears.
 
 **You are done when:** the hosted board opens after entering the code. A different browser profile, or a new private session after closing all existing private windows, should still require the code. Connections can show missing services at this stage; you have not set those up yet.
 
@@ -244,11 +249,11 @@ Official reference: [Vercel environment settings](https://vercel.com/docs/enviro
 <a id="step-5"></a>
 ## Step 5 — Set up Slack decisions
 
-**Current setup:** the `Mend` app is installed in `BitsUp` with `chat:write` and has joined `#mend-approvals`. The replacement bot token passed Slack’s `auth.test`. These six settings are saved in local `.env`, the private Convex bundle and the running local Convex backend: `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_TEAM_ID`, `SLACK_CHANNEL_ID`, `SLACK_ENGINEER_USER_IDS` (Elen), and `SLACK_MARKETER_USER_IDS` (David), using the IDs supplied by the user.
+**Current setup:** the `Mend` app is installed in `BitsUp` with `chat:write` and has joined `#mend-approvals`. The replacement bot token passed Slack's `auth.test`. All six settings are installed in hosted production Convex, with Elen (`U0C1L62486M`) as engineer and David (`U0C1DJRE4KF`) as marketer.
 
-**Still required:** the public Convex HTTP-action URL, importing these six settings into that hosted deployment, and a live Slack approval test. Elen and David are both configured locally; no member ID is missing. No live Slack approval test has run.
+Socket Mode is **Off** and Interactivity is **On**. The callback `https://resilient-perch-131.convex.site/slack/interactions` was saved and verified after reloading settings. An unsigned request correctly returns HTTP 403. A signed non-action probe passed signature validation and was refused for missing action context. **Only the live human approval test remains**; skip 5A–5C for the existing app.
 
-To finish the callback after completing Step 4, open the existing [Mend Slack app](https://api.slack.com/apps/A0C1N1T82UU/general) → **Interactivity & Shortcuts** → turn **Interactivity** on → set **Request URL** to the actual hosted Convex `.site` URL followed by `/slack/interactions` → **Save Changes**. The local `127.0.0.1:3211` URL cannot receive Slack callbacks. Copy all configured Slack settings into that hosted Convex deployment too.
+For a future callback change, open the existing [Mend Slack app](https://api.slack.com/apps/A0C1N1T82UU/general) → **Interactivity & Shortcuts**, update **Request URL**, save and reload to confirm. Keep the matching production Convex settings synchronized.
 
 To change the marketer later, open that person’s Slack profile → **More (⋯) → Copy member ID**. Save the resulting `U…` ID as `SLACK_MARKETER_USER_IDS` in `.env` and the matching Convex deployment. The live check is in Step 11; credentials alone do not establish successful button delivery.
 
@@ -305,6 +310,8 @@ Official reference: [Slack app creation](https://docs.slack.dev/quickstart/), [b
 <a id="step-6"></a>
 ## Step 6 — Set up Linear tickets
 
+**Current installation: configured.** The key and Drizzle/Done IDs are installed in hosted Convex, and metadata reads passed. Skip key creation below; creating and updating a real issue remains part of Step 11.
+
 **Purpose:** Mend creates one ticket for a reproduced bug and updates it after release.
 
 ### 6A. Create the key
@@ -331,7 +338,7 @@ bun --no-env-file scripts/setup-linear.ts
 
 **You are done when:** Convex contains `LINEAR_API_KEY`, `LINEAR_TEAM_ID` and `LINEAR_RELEASED_STATE_ID`. The two IDs look like long UUIDs, not the short team label `WTH`. The final state is a team workflow status, not a Linear Releases pipeline. No Linear webhook or separate Linear–Slack integration is needed.
 
-**Current setup:** the real key successfully read the sole team **Drizzle (DRI)** and its **Done** completed status. Both IDs are already saved in local `.env` and the private Convex bundle. Import that bundle into the matching hosted Convex deployment once it exists.
+**Current setup:** the real key successfully read the sole team **Drizzle (DRI)** and its **Done** completed status. Both IDs and the key are already saved privately and installed in hosted production Convex.
 
 **If the old helper returned HTTP 400:** it requested too many nested objects and Linear reported “Query too complex.” The current helper fixes that query; the error did not mean your key was wrong. [Linear query limits](https://linear.app/developers/rate-limiting).
 
@@ -342,6 +349,8 @@ Official reference: [Linear API-key settings](https://linear.app/docs/api-and-we
 <a id="step-7"></a>
 ## Step 7 — Create the separate weather website
 
+**Existing installation:** [mend-weather.vercel.app](https://mend-weather.vercel.app) already exists and its seeded defect has been reproduced by the GCP browser. Merged weather main `161835dba251f9739d25194ec21db0f2461df989` is deployed and verified. Skip project creation; follow the remaining checklist for final configuration and the real Build.
+
 **You need:** the separate [weather repository](https://github.com/Aarush-Dubey/hackathon-weather). Do not add this website inside the Mend Vercel project.
 
 ### 7A. Create its Vercel project
@@ -349,8 +358,8 @@ Official reference: [Linear API-key settings](https://linear.app/docs/api-and-we
 1. Open [vercel.com/new](https://vercel.com/new) again.
 2. Import **`Aarush-Dubey/hackathon-weather`**. Name the project `mend-weather` if available.
 3. Select **Next.js**, root `./`, and the same pinned Bun install/build commands from Step 4.
-4. Do **not** import `next.env` or `convex.env`. The weather app needs no private API keys.
-5. Create the project. A build from the old `main` can fail until the Bun PR is merged. Keep the project and finish the settings below; the seed deployment comes after Step 9.
+4. Do **not** import `next-hosted.env` or `convex.env`. The weather app needs no private API keys.
+5. Create the project from the reviewed weather `main`; its Bun migration has merged. The seed deployment must use the exact Git identity described in Step 9.
 6. Open **Settings → Environments → Production → Branch Tracking**. Turn **Auto-assign Custom Production Domains** off and save. This lets Mend test a build before sending visitors to it.
 7. Open **Settings → Domains** and record the project's stable weather domain. Add the hostname, without `https://` or `/`, as Convex `WEATHER_PRODUCTION_DOMAIN`.
 8. Open **Settings → General**. Copy **Project ID** into Convex `VERCEL_PROJECT_ID` and the exact project name into `VERCEL_PROJECT_NAME`.
@@ -378,7 +387,7 @@ Official reference: [Vercel project settings](https://vercel.com/docs/project-co
 
 We are using **Google Cloud Run** for both workers. You do not need a Render account.
 
-The project and both services are already created; their URLs are saved in `.env`. They currently reject work because the public app, Convex and weather settings are missing. Follow the **finish existing services** instructions at the top of [SETUP-GCP.md](SETUP-GCP.md), then its configuration sections 5–7. You do not need to recreate the project or rebuild the images for these settings.
+The project and both services are configured with hosted URLs and current images. Social revision `mend-social-worker-00004-77f` and verifier revision `mend-weather-verifier-00003-s98` pass their health checks. X is enabled at the operator’s request and its reimported account reports ready; background polling remains off. No GCP setup action is required now; [SETUP-GCP.md](SETUP-GCP.md) is the reference for future configuration and shutdown.
 
 | Service | What it does | Setting to copy back |
 | --- | --- | --- |
@@ -394,14 +403,9 @@ The GCP walkthrough includes the different CPU settings these services need. Kee
 
 Most GitHub settings are already configured. **You do not need to recreate the repositories, generate another checkout key, or replace the existing signing keys.**
 
-This step contains several terminal commands, so it has its own walkthrough: **[Open SETUP-ENGINEERING.md](SETUP-ENGINEERING.md)**. Complete it in its numbered order:
+The Checks App `brio-mkc` (4934302), weather-only installation, private key and immutable coding sandbox image are configured and verified. Controller PR #1 is merged after passing final CI. Do not repeat those setup steps.
 
-1. Create the small GitHub App that is allowed to report test results.
-2. Put its numeric App ID and downloaded private key in the exact GitHub environment.
-3. Publish the restricted coding image and save its immutable image address.
-4. Complete the reviewed controller and weather baseline merges. The guide explains the currently pending baseline-check requirement.
-5. Deploy the deliberately buggy weather seed with its actual Git identity.
-6. Add the final GitHub addresses/revision values to Convex and GitHub.
+Controller and weather revisions are pinned in production, and the fresh weather baseline is verified. Follow the [remaining checklist](SETUP-REMAINING.md) to exercise an actual signed engineer Build in Step 11. [SETUP-ENGINEERING.md](SETUP-ENGINEERING.md) retains the full provisioning and troubleshooting reference.
 
 **Do not skip the seed identity step.** A weather page that renders correctly is not enough for Mend to prove which version it tested.
 
@@ -410,9 +414,11 @@ This step contains several terminal commands, so it has its own walkthrough: **[
 <a id="step-10"></a>
 ## Step 10 — Connect the X brand account
 
+**Current installation:** **@Vinaychamoc5** was reimported successfully after the operator requested enablement. The worker verified matching identity; Mend reports **ready**, **paused false**, with both X switches enabled. Keep this connection. Background polling is off and no public post has been sent. Sections 10A–10B are a reference for a new connection or an expired session; the remaining check is the controlled case flow in Step 11.
+
 **You need:** the live Mend website, working social worker, and an X account you own and intend to use as the brand account. This implementation uses a browser session; it does not ask for an X API key.
 
-X requires prior approval for AI reply bots and restricts automated replies to permitted interactions. Use the tracked manual posting fallback until your intended account and browser-based use are authorized. The switches below record that status; they do not obtain permission. [X automation rules](https://help.x.com/en/rules-and-policies/x-automation).
+X requires prior approval for AI reply bots and restricts automated replies to permitted interactions. The current switches record the operator’s enablement; external X approval has not been independently verified. The switches do not obtain platform approval. [X automation rules](https://help.x.com/en/rules-and-policies/x-automation).
 
 ### 10A. Save the account in Mend
 
@@ -422,7 +428,7 @@ X requires prior approval for AI reply bots and restricts automated replies to p
 
 ### 10B. Enable the approved capability, then import the session
 
-Before the final live import, set `X_PLATFORM_PERMISSION_APPROVED=true` on Cloud Run's social worker and `X_AUTOMATION_PERMISSION_CONFIRMED=true` on Convex **only after the intended use is approved**. Save/redeploy the Cloud Run worker first. If approval is still pending, keep both flags false and use manual posting. An import in that state can remain `access_pending`; changing the flags later requires importing the session again.
+For a new connection, keep both switches false until the account owner authorizes the intended automation and applicable platform requirements are addressed. `X_PLATFORM_PERMISSION_APPROVED` is on the Cloud Run social worker and `X_AUTOMATION_PERMISSION_CONFIRMED` is on Convex. Save/redeploy the worker before importing a session after a capability change. An import with the switches off remains `access_pending`. The existing connection has already completed enablement and reimport; skip this section now.
 
 Then import only that account's session:
 
@@ -449,7 +455,7 @@ For automatic low-risk banter, first configure the persona and obtain the market
 <a id="step-11"></a>
 ## Step 11 — Check the setup in this order
 
-These are observable checks. A saved API key is not yet proof that the integration works.
+These are observable checks. Hosted admission and both worker health checks have passed. The fresh merged weather baseline passed exact identity and seeded-defect checks at both staged and stable URLs. The complaint, signed human decisions, generated candidate, release and real receipt remain to be tested. A saved API key is not proof of that complete flow.
 
 | Order | What you do | What you should see |
 | --- | --- | --- |
@@ -474,7 +480,7 @@ Use this to catch a value pasted into the wrong service:
 | Destination | Must contain |
 | --- | --- |
 | Mend Vercel | `CONTROL_SERVICE_SECRET`, `CONTROL_ACCESS_PASSWORD`, `NEXT_PUBLIC_CONVEX_URL`, `CONTROL_APP_ORIGIN`, `SOCIAL_WORKER_URL`, both local/demo flags `false`. |
-| Convex Production | Existing `convex.env` settings plus Slack keys/role IDs, three Linear settings, Vercel project/token/domain, both worker URLs, `CONTROL_APP_ORIGIN`, exact controller/weather revisions. |
+| Convex Production | Current `convex-hosted.env` settings plus Slack keys/role IDs, three Linear settings, Vercel project/token/domain, both worker URLs, `CONTROL_APP_ORIGIN`, exact controller/weather revisions. |
 | Cloud Run social worker | Its own `social.env`, `CONTROL_APP_ORIGIN`, `CONVEX_SITE_URL`; platform flags set deliberately. |
 | Cloud Run verifier | Its own `verifier.env`, `WEATHER_ALLOWED_HOSTS`, `WEATHER_ACCEPT_SIGNED_DEPLOYMENT_HOSTS`; Vercel automation secret only if needed. |
 | GitHub `engineering-controller` | Existing signing/checkout secrets plus `CONVEX_SITE_URL` and `CODING_SANDBOX_IMAGE`. |
@@ -491,7 +497,7 @@ Use this to catch a value pasted into the wrong service:
 | `bun: command not found` | Run `export PATH="/home/big-daddy/.bun/bin:$PATH"` in that terminal. On a different machine, install Bun from [the official instructions](https://bun.com/docs/installation), pinned to 1.4.2. |
 | `next: command not found` or dependencies missing | From the correct repository folder, run `bun install --frozen-lockfile --ignore-scripts`, then retry. Both apps have their own dependencies. |
 | Local page will not open on port 3000 | Read the terminal's **Local** URL; another server may have moved it to 3002 or another port. |
-| `/access` keeps rejecting the code | Use `CONTROL_ACCESS_PASSWORD` from `next.env`. It is not your GitHub password or the service secret. Check Vercel Production has the same value, then redeploy. |
+| `/access` keeps rejecting the code | Use `CONTROL_ACCESS_PASSWORD` from `next-hosted.env`. It is not your GitHub password or the service secret. Check Vercel Production has the same value, then redeploy. |
 | Hosted board says backend unavailable | Check Vercel's `.convex.cloud` URL, matching service secret, and deployed Convex functions. Do not use `.convex.site` for `NEXT_PUBLIC_CONVEX_URL`. |
 | Slack card never appears | Check bot scope `chat:write`, bot channel membership, `SLACK_CHANNEL_ID`, and Convex logs. |
 | Slack button fails or says unauthorized | Check the `.site/slack/interactions` URL, signing secret, workspace ID and the clicking person's member ID/role. Old cards can expire; use the current card. |
@@ -506,7 +512,7 @@ Use this to catch a value pasted into the wrong service:
 
 ## Optional — Reddit
 
-Skip this for the first demo. Reddit requires approved API access, an OAuth app and a refresh token. It is independent of the X session. The additional walkthrough is in [SETUP-REDDIT.md](SETUP-REDDIT.md).
+The user chose to skip Reddit. Its connection is disabled and paused, with both approval flags false; no action is required now. The implemented connector has automated test coverage, but live provider access is unverified. Use [SETUP-REDDIT.md](SETUP-REDDIT.md) only if the user opts in later.
 
 ## After the hackathon
 

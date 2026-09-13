@@ -1,6 +1,6 @@
 # Mend implementation progress
 
-Last updated: 2026-09-13T22:10:08.037667+00:00
+Last updated: 14 September 2026 (Asia/Kolkata)
 
 ## Current objective
 
@@ -10,11 +10,11 @@ Finish the live Mend integration while preserving the populated local demo. Keep
 
 - PRD v1.3, reference-matched web interface, live Kanban/timeline, persona workflows and the separate intentionally buggy weather repository are implemented.
 - Local workspace contains 38 cases and 167 reports, including 36 additive curated examples. Persona replies and live transitions are visible; fixture provenance remains explicit.
-- Source `296f8d4` passed GitHub CI run [34784514320](https://github.com/Aarush-Dubey/hackathon/actions/runs/34784514320). Latest source 6981750 passed 530 tests in 37 files, all 22 production browser scenarios in 1.1 minutes, lint, TypeScript and the isolated production build.
-- Hosted production Convex `resilient-perch-131` is deployed in project `mend-hackathon`, team `vinay-chamola`. Slack, Linear, model, GitHub, Vercel and worker settings are imported. Local development targets remain separate.
-- [Mend](https://mend-hackathon.vercel.app) is deployed. Hosted checks verified unauthenticated denial, wrong-code denial, secure HttpOnly admission and authenticated live Convex access. Hosted production is a separate empty workspace, not a copy of local fixtures.
-- [Weather](https://mend-weather.vercel.app) is deployed from `a96c50ee70b0a97171b03cde8ea10df6a2f008c8`. The real Vercel token was checked against the correct project and imported into production Convex. Automatic domain assignment is disabled for candidates; project settings contain only public weather identity values.
-- Both Cloud Run services are active. The verifier ran real Chromium against the hosted weather revision, passed identity verification and reproduced the intentional conversion defect over 34 observations. The social worker uses always-allocated CPU and one minimum instance; platform permission gates remain off.
+- Source `6981750` passed 530 tests in 37 files, all 22 production browser scenarios in 1.1 minutes, lint, TypeScript and the isolated production build. Final GitHub CI [34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`. Controller [PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged to protected `main` as `8a7636e2709d039773afa73857e6cb66f08a7d6f`.
+- Hosted production Convex `resilient-perch-131` runs functions from `6981750` in project `mend-hackathon`, team `vinay-chamola`. Slack, Linear, model, GitHub, Vercel and worker settings are imported. Local development targets remain separate.
+- [Mend](https://mend-hackathon.vercel.app) is deployed from `e8f2dd0` as `dpl_BXDqW34ib72uTQoTVsCCfbgXY3m4`. Hosted checks verified unauthenticated denial, wrong-code denial, secure HttpOnly admission and authenticated live Convex access. Hosted production is a separate empty workspace, not a copy of local fixtures.
+- [Weather](https://mend-weather.vercel.app) is deployed from merged main `161835dba251f9739d25194ec21db0f2461df989` as `dpl_2j3VMkCbdSJtAh565FdkXpu76PGK`. Both staged and production URLs passed exact SHA/tree checks and reproduced the intentional defect in 34 Chromium observations each. The real Vercel token was checked against the correct project and imported into production Convex. Automatic domain assignment is disabled for candidates; project settings contain only public weather identity values.
+- Cloud Build `569f3b8b-c458-490d-bf73-1d9775c4bc86` succeeded for source `6981750`; Cloud Run revisions `mend-social-worker-00004-77f` and `mend-weather-verifier-00003-s98` are active and healthy. The verifier ran real Chromium against the hosted weather revision, passed identity verification and reproduced the intentional conversion defect over 34 observations. The social worker uses always-allocated CPU and one minimum instance. Its latest revision includes the operator-authorized X enablement; background social polling remains off.
 - The immutable coding sandbox built successfully in Cloud Build. Chromium/Bun ran as UID 65532 with networking disabled and a read-only root. GitHub environment variables and narrowly scoped keyless registry access are configured. The actual GitHub OIDC pull and signed candidate Build remain unverified.
 - Clerk is removed. Engineer Elen and marketer David are mapped to the supplied Slack member IDs. GitHub callback variables point at hosted Convex.
 - No GCP budget or alert policy was created, as requested. The existing model cost ledger is separate; GCP charges are not yet reconciled into it.
@@ -23,12 +23,13 @@ Finish the live Mend integration while preserving the populated local demo. Keep
 
 | Work | Current state |
 | --- | --- |
-| Slack callback | Bot, channel and identities configured on hosted Convex. Socket Mode disabled. Interactivity enabled and callback URL saved/verified after reload; unsigned callback correctly rejects with HTTP 403. No live approval decision is claimed. |
+| Slack callback | Bot, channel and identities configured on hosted Convex. Socket Mode disabled. Interactivity enabled and callback URL saved/verified after reload; unsigned callback correctly rejects with HTTP 403. A signed non-action probe passed signature validation and was refused for missing action context (`slack_context_denied`). No live approval decision is claimed. |
 | GitHub Checks App | App brio-mkc (4934302) key verified; installed only on hackathon-weather with Checks write. ID and private key saved in engineering-pr-writer. Scoped token mint and revocation verified. |
-| Reviewed workflows | Sandbox workflow and Build hash fix are committed. Final CI and reviewed publication to protected main remain. The subsequent signed Build must prove registry pull and candidate execution. |
-| X | Vinaychamoc5 imported from the normal browser and worker identity verified (HTTP 200). Status access_pending: platform automation approval remains unverified; no posts sent. |
-| Reddit | Deferred by user. Connector code and tests are complete; both API approval flags remain false. No further Reddit account setup is being pursued. |
+| Reviewed workflows | Controller PR #1 merged after final CI passed. Weather bootstrap [34786278162](https://github.com/Aarush-Dubey/hackathon/actions/runs/34786278162) passed and weather PR #1 merged as `161835dba251f9739d25194ec21db0f2461df989`. Production `GITHUB_CONTROLLER_SHA` is pinned to `8a7636e2709d039773afa73857e6cb66f08a7d6f`; the fresh weather baseline is deployed and verified, with production `FDE_BASE_SHA` pinned to `161835dba251f9739d25194ec21db0f2461df989`. A subsequent signed Build must prove registry pull and candidate execution. |
+| X | Vinaychamoc5 reimported with HTTP 200; worker identity verified, status ready, paused false. Both X switches enabled at the operator’s request; polling remains off and no posts sent. External X approval is not independently verified. |
+| Reddit | Skipped by user. Connection disabled and paused; both approval flags remain false. Implemented connector is deployed, but live API access is unverified. No Reddit action is required. |
 | Complete live flow | A real engineer Build, marketer Go, verified repair, approved publication and receipt reconciliation remain to be exercised. |
+| Demo video | Deferred by user; no recording is required now. |
 
 ## Change log
 
