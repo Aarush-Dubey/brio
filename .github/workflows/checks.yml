@@ -46,7 +46,7 @@ jobs:
           repository: Aarush-Dubey/hackathon-weather
           ref: ${{ env.WEATHER_BASELINE_SHA }}
           ssh-key: ${{ secrets.WEATHER_REPO_READ_SSH_KEY }}
-          token: ${{ secrets.WEATHER_REPO_READ_TOKEN }}
+          token: ${{ secrets.WEATHER_REPO_READ_TOKEN || github.token }}
           path: weather-target
           persist-credentials: false
       - uses: actions/setup-node@v4

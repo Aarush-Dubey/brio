@@ -56,7 +56,7 @@ jobs:
           ref: ${{ steps.scope.outputs.base_sha }}
           path: weather-target
           ssh-key: ${{ secrets.WEATHER_REPO_READ_SSH_KEY }}
-          token: ${{ secrets.WEATHER_REPO_READ_TOKEN }}
+          token: ${{ secrets.WEATHER_REPO_READ_TOKEN || github.token }}
           persist-credentials: false
       - name: Load the reviewed immutable sandbox image
         run: docker pull "$CODING_SANDBOX_IMAGE"

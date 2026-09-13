@@ -30,7 +30,7 @@ The tests cover revision-bound approvals, role and service-key checks, signed Sl
 
 No full customer-to-fix-to-public-reply run is claimed. The current user cannot access the local Docker daemon, so generated candidate execution has not run. Slack, Linear, hosted Convex, Vercel, the check-writing GitHub App, and the chosen social accounts require the account setup in [SETUP-REMAINING.md](SETUP-REMAINING.md). There has been no live PR-based weather repair, staging/promotion, X send, or Reddit send. Manual fallback and provider behavior have local automated coverage.
 
-GitHub Actions results are separate from local checks and should be inspected on the submitted pull request. A configured key, successful health response, or passing fixture does not count as a live integration test.
+GitHub Actions results are separate from local checks. The [controller draft PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) is open. Its first run on implementation commit `90dd60f` stopped before application tests because actions/checkout was given an empty token input despite an SSH key. The workflow fix supplies the ephemeral GitHub token as the action input fallback, retains the read-only weather SSH key, and is being rerun. No CI pass is claimed until the run finishes. A configured key, successful health response, or passing fixture does not count as a live integration test.
 
 ## Mend and GCP follow-up
 
