@@ -6,7 +6,8 @@ import { ProviderAdapters, type ProviderConfig } from "../src/integrations/provi
 import { signGrant, requireSecret } from "../workers/shared/security";
 import { buildRequestSchema } from "../workers/engineering/coding-runner";
 import { bindingPayload } from "../src/control/reducer";
-import { hashText, canonicalJson } from "../src/core/domain";
+import { approvalBinding } from "../src/core/approvals";
+import { hashText } from "../src/core/domain";
 import type { ControlState, Task } from "../src/control/types";
 import { executeEngineering } from "../src/integrations/engineering";
 export function providerConfig(): ProviderConfig {
@@ -52,7 +53,7 @@ async function executeTask(ctx: ActionCtx, task: Task, state: ControlState): Pro
   if (task.kind === "build_candidate") {
     const a = state.authorities.find(a => a.request.requestId === task.payload.authorityId); if (!a || a.request.kind !== "build") throw new Error("build_missing");
     const binding = bindingPayload(state, a);
-    const build = buildRequestSchema.parse({ jobId: task.id, attemptId: task.attemptId, workspaceId: state.workspaceId, caseId: c.id, authorizationRef: a.request.requestId, authorizationExpiresAt: a.request.grantExpiresAt ?? 0, scopeHash: hashText(canonicalJson(binding)), repository: c.repository, baseSha: c.baseSha, trustedControllerSha: process.env.GITHUB_CONTROLLER_SHA, allowedPaths: c.scope, approvedPlan: "Repair the reproduced temperature conversion defect within the allowlisted arithmetic helper.", acceptanceCriteria: binding.acceptanceCriteria, linearUrl: c.evidence.find(e => e.label === "Linear engineering issue")?.url, buildConfigRevision: process.env.WEATHER_BUILD_CONFIG_REVISION ?? "weather-build-v1" });
+    const build = buildRequestSchema.parse({ jobId: task.id, attemptId: task.attemptId, workspaceId: state.workspaceId, caseId: c.id, authorizationRef: a.request.requestId, authorizationExpiresAt: a.request.grantExpiresAt ?? 0, scopeHash: hashText(approvalBinding("build", binding)), repository: c.repository, baseSha: c.baseSha, trustedControllerSha: process.env.GITHUB_CONTROLLER_SHA, allowedPaths: c.scope, approvedPlan: "Repair the reproduced temperature conversion defect within the allowlisted arithmetic helper.", acceptanceCriteria: binding.acceptanceCriteria, linearUrl: c.evidence.find(e => e.label === "Linear engineering issue")?.url, buildConfigRevision: process.env.WEATHER_BUILD_CONFIG_REVISION ?? "weather-build-v1" });
     await ctx.runMutation(internal.workerControl.bindBuild, { taskId: task.id, attemptId: task.attemptId, build });
     return { status: "dispatched", output: await providers.githubDispatchCoding({ build }) };
   }
