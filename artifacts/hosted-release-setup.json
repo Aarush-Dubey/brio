@@ -1,6 +1,6 @@
 {
-  "controllerSourceRevision": "e8f2dd01e8403ca97c392bf16ef93bcaa81d01ba",
-  "appDeploymentId": "dpl_BXDqW34ib72uTQoTVsCCfbgXY3m4",
+  "controllerSourceRevision": "872c22676bf8b7eef6385efc179bd1da804f3655",
+  "appDeploymentId": "dpl_3Ywkgbs9Q3afzFf2jH7acFkfm2Dd",
   "appOrigin": "https://mend-hackathon.vercel.app",
   "convexDeployment": "resilient-perch-131",
   "convexFunctionsSource": "6981750",
@@ -10,7 +10,7 @@
   "redditDeferred": true,
   "publicRepliesSent": 0,
   "endToEndBuildRunVerified": false,
-  "verifiedAt": "2026-09-13T22:22:29.910862+00:00",
+  "verifiedAt": "2026-09-13T22:29:36.535565+00:00",
   "controllerMainRevision": "8a7636e2709d039773afa73857e6cb66f08a7d6f",
   "weatherMainRevision": "161835dba251f9739d25194ec21db0f2461df989",
   "weatherDeploymentId": "dpl_2j3VMkCbdSJtAh565FdkXpu76PGK",
@@ -18,5 +18,6 @@
   "xAutomaticPostingEnabled": true,
   "xAuthorizationSource": "Explicit account-owner instruction",
   "externalXPlatformApproval": "not independently verified",
-  "socialPollingEnabled": false
+  "socialPollingEnabled": false,
+  "productName": "brio"
 }
