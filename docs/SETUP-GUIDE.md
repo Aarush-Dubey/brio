@@ -140,7 +140,7 @@ For example, `https://calm-fox-123.convex.cloud` is a Convex function URL and `h
 
 Both private repositories exist: [brio/controller](https://github.com/Aarush-Dubey/hackathon) and [weather](https://github.com/Aarush-Dubey/hackathon-weather). Their branch protections, read-only weather checkout key, GitHub signing keys and PR-writing credential are configured. Your OpenAI key has also been tested.
 
-**Current publication status:** final CI [34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`; controller [PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged to protected `main` as `8a7636e2709d039773afa73857e6cb66f08a7d6f`. Hosted brio runs lowercase-brand source `872c226`, and production Convex and the verifier run source `6981750`, and the social worker runs `872c226`. Weather bootstrap passed and weather PR #1 merged as `161835dba251f9739d25194ec21db0f2461df989`. Production Convex is pinned to controller main `8a7636e`; the merged weather baseline is deployed and verified at staged and stable URLs, and production `FDE_BASE_SHA` is pinned to `161835dba251f9739d25194ec21db0f2461df989`. See [remaining setup](SETUP-REMAINING.md) for the latest remaining work.
+**Publication history:** initial controller CI [34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`; controller [PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged to protected `main` as `8a7636e2709d039773afa73857e6cb66f08a7d6f`. Hosted brio runs lowercase-brand source `872c226`, and production Convex and the verifier run source `6981750`, and the social worker runs `872c226`. Weather bootstrap passed and weather PR #1 merged as `161835dba251f9739d25194ec21db0f2461df989`. Production `GITHUB_CONTROLLER_SHA` tracks the latest reviewed controller `main` commit and is synchronized after each merge; the merged weather baseline is deployed and verified at staged and stable URLs, and production `FDE_BASE_SHA` is pinned to `161835dba251f9739d25194ec21db0f2461df989`. The lowercase brio rename is deployed, tested and pushed to GitHub; its reviewed publication to protected `main` is pending. See [remaining setup](SETUP-REMAINING.md) for the latest remaining work.
 
 <a id="step-3"></a>
 ## Step 3 — Create the hosted Convex backend
@@ -236,7 +236,7 @@ Official reference: [Convex environment settings](https://docs.convex.dev/produc
 | `FDE_LOCAL_ACCESS` | `false` |
 | `FDE_DEMO_MODE` | `false` |
 
-6. Deploy the reviewed brio commit. The current controller PR has merged; verify the source shown on Vercel matches the intended reviewed revision.
+6. Deploy the reviewed brio commit and verify the source shown on Vercel. After each protected controller merge, synchronize production `GITHUB_CONTROLLER_SHA` to the resulting reviewed `main` commit before a new Build.
 7. When the deployment says **Ready**, copy its stable project address, such as `https://mend-control.vercel.app`, into your note. Use the project's normal domain, not a different temporary URL for every build.
 8. Add `CONTROL_APP_ORIGIN` with that exact address in **both** places: brio Vercel environment variables and Convex Production environment variables. Do not add a trailing path such as `/cases`.
 9. In Vercel, open **Deployments**, choose the latest correct deployment's **… → Redeploy**, and confirm. Vercel needs a redeploy after environment-variable changes.
@@ -407,7 +407,7 @@ Most GitHub settings are already configured. **You do not need to recreate the r
 
 The Checks App `brio-mkc` (4934302), weather-only installation, private key and immutable coding sandbox image are configured and verified. Controller PR #1 is merged after passing final CI. Do not repeat those setup steps.
 
-Controller and weather revisions are pinned in production, and the fresh weather baseline is verified. Follow the [remaining checklist](SETUP-REMAINING.md) to exercise an actual signed engineer Build in Step 11. [SETUP-ENGINEERING.md](SETUP-ENGINEERING.md) retains the full provisioning and troubleshooting reference.
+The fresh weather baseline is verified and pinned. Production `GITHUB_CONTROLLER_SHA` must follow the latest reviewed controller `main` commit, synchronized after each merge. Follow the [remaining checklist](SETUP-REMAINING.md) to exercise an actual signed engineer Build in Step 11. [SETUP-ENGINEERING.md](SETUP-ENGINEERING.md) retains the full provisioning and troubleshooting reference.
 
 **Do not skip the seed identity step.** A weather page that renders correctly is not enough for brio to prove which version it tested.
 

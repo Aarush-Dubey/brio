@@ -6,7 +6,7 @@ This continues [Step 9 of the setup guide](SETUP-GUIDE.md#step-9). Complete the 
 
 Follow sections 1–6 in order. The existing signing keys and PR credential are already installed; leave them in place.
 
-**Existing installation update:** Checks App `4934302` is configured, controller PR #1 is merged at `8a7636e2709d039773afa73857e6cb66f08a7d6f`, and the weather bootstrap passed before weather PR #1 merged normally. [Weather production](https://mend-weather.vercel.app) now serves weather main `161835dba251f9739d25194ec21db0f2461df989`, tree `2fc58d5c57da18d60ff7ece9952faf273117f22d`. Both staged and production identities were verified by `/api/version` and 34-check Cloud Run browser runs; the intentional `20°C → 20°F` defect remains. The sandbox image and GitHub keyless pull variables are configured; use [GCP sandbox notes](SETUP-CODING-SANDBOX-GCP.md). The real signed Build remains to be exercised. [Deployment evidence](../artifacts/weather-main-baseline-deployment.json) and [remaining checklist](SETUP-REMAINING.md) record the current state; sections below retain the setup procedure.
+**Existing installation update:** Checks App `4934302` is configured, the first controller PR merged at `8a7636e2709d039773afa73857e6cb66f08a7d6f`, and the weather bootstrap passed before weather PR #1 merged normally. [Weather production](https://mend-weather.vercel.app) now serves weather main `161835dba251f9739d25194ec21db0f2461df989`, tree `2fc58d5c57da18d60ff7ece9952faf273117f22d`. Both staged and production identities were verified by `/api/version` and 34-check Cloud Run browser runs; the intentional `20°C → 20°F` defect remains. The sandbox image and GitHub keyless pull variables are configured; use [GCP sandbox notes](SETUP-CODING-SANDBOX-GCP.md). Production `GITHUB_CONTROLLER_SHA` tracks the latest reviewed controller `main` commit, synchronized after each merge. The brio rename is deployed, tested and pushed; its reviewed merge is pending. The real signed Build remains to be exercised. [Deployment evidence](../artifacts/weather-main-baseline-deployment.json) and [remaining checklist](SETUP-REMAINING.md) record the current state; sections below retain the setup procedure.
 
 ## 1. Create the GitHub App that reports test results
 
@@ -212,7 +212,7 @@ Official reference: [Vercel staged deployment commands](https://vercel.com/docs/
 | --- | --- |
 | `GITHUB_CONTROLLER_REPOSITORY` | `Aarush-Dubey/hackathon` |
 | `GITHUB_CONTROLLER_BRANCH` | `main` |
-| `GITHUB_CONTROLLER_SHA` | Exact reviewed controller commit copied above. |
+| `GITHUB_CONTROLLER_SHA` | Latest reviewed controller `main` commit; synchronize production after each merge. |
 | `FDE_WEATHER_REPOSITORY` | `Aarush-Dubey/hackathon-weather` |
 | `GITHUB_DEFAULT_BRANCH` | `main` |
 | `GITHUB_REQUIRED_CHECKS` | `Protected weather` |
@@ -223,7 +223,7 @@ Official reference: [Vercel staged deployment commands](https://vercel.com/docs/
 
 The controller commit and weather commit are **two different values**. The separate GitHub repository variable `WEATHER_BASELINE_SHA` selects the CI fixture; it does not automatically update the live seed setting.
 
-If the reviewed controller branch advances later, update its pinned SHA deliberately before requesting a new Build. Existing approvals refer to their original scope and can become stale.
+After every reviewed merge into controller `main`, synchronize production `GITHUB_CONTROLLER_SHA` to the exact resulting commit before requesting a new Build. Existing approvals refer to their original scope and can become stale.
 
 ## 6. Final engineering checklist
 

@@ -13,18 +13,18 @@ Updated 14 September 2026. This is the checklist for the existing installation. 
 | GCP | Project `mend-hackathon-260914`, region `us-central1` | Social revision `00005-6wc` and verifier `00003-s98` active and healthy; immutable sandbox image built and offline Chromium smoke passed. No further GCP credentials needed. |
 | OpenAI | App key installed; `gpt-5-mini` | Prior real writer, triage and persona evaluation passed. |
 | Linear | Drizzle team and Done state configured in hosted Convex | Metadata read verified; issue creation/update still needs a controlled live flow. |
-| GitHub | Separate controller/weather repositories and engineering environments | Controller PR #1 merged as `8a7636e`; final CI passed. Hosted callback, sandbox pull settings and Checks App configured; remaining baseline and execution work is below. |
+| GitHub | Separate controller/weather repositories and engineering environments | Controller PR #1 merged as `8a7636e`; final CI passed. Hosted callback, sandbox pull settings and Checks App configured; reviewed brio publication and signed execution verification are below. |
 | Slack | brio’s app remains registered as `Mend` in BitsUp, bot in `#mend-approvals` | Elen is engineer; David is marketer. Hosted secrets saved. Callback enabled and URL persisted after reload; actual human button test remains. |
 
 ## 1. Verify a real signed Build
 
 **The Checks App is complete.** `brio-mkc`, App ID `4934302`, is owned by Aarush-Dubey and installed only on `hackathon-weather`. It has Checks write and Metadata read. The downloaded key matched the app; `WEATHER_CHECKS_APP_ID` and `WEATHER_CHECKS_APP_PRIVATE_KEY` are saved in `engineering-pr-writer`. A scoped installation token was minted successfully and revoked after the read-only setup probe. No extra GitHub credential is currently needed from the user. [Evidence](../artifacts/github-checks-app-setup.json).
 
-Controller review and tests are complete. [Final CI 34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`; [controller PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged as `8a7636e2709d039773afa73857e6cb66f08a7d6f`. Production Convex is pinned to that controller commit.
+Initial controller review and tests passed. [CI 34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`; [controller PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged as `8a7636e2709d039773afa73857e6cb66f08a7d6f`. That is the historical first merge. Production `GITHUB_CONTROLLER_SHA` tracks the latest reviewed controller `main` commit and is synchronized after each merge. The lowercase brio rename is deployed, tested and pushed to GitHub; its reviewed merge to protected `main` is pending.
 
 Weather [bootstrap 34786278162](https://github.com/Aarush-Dubey/hackathon/actions/runs/34786278162) also passed, recording 34 checks and the intentional defect on the migration head. Weather [PR #1](https://github.com/Aarush-Dubey/hackathon-weather/pull/1) merged as `161835dba251f9739d25194ec21db0f2461df989`, tree `2fc58d5c57da18d60ff7ece9952faf273117f22d`.
 
-The merged weather baseline is deployed and promoted as `dpl_2j3VMkCbdSJtAh565FdkXpu76PGK`. Both staged and stable URLs matched the exact SHA/tree and reproduced the intentional conversion defect in 34 Chromium checks each. Production `FDE_BASE_SHA` is confirmed as `161835dba251f9739d25194ec21db0f2461df989`; no deployment pin work remains. [Weather baseline evidence](../artifacts/weather-main-baseline-deployment.json).
+The merged weather baseline is deployed and promoted as `dpl_2j3VMkCbdSJtAh565FdkXpu76PGK`. Both staged and stable URLs matched the exact SHA/tree and reproduced the intentional conversion defect in 34 Chromium checks each. Production `FDE_BASE_SHA` is confirmed as `161835dba251f9739d25194ec21db0f2461df989`; the weather baseline pin is complete. [Weather baseline evidence](../artifacts/weather-main-baseline-deployment.json).
 
 The next check is a current signed engineer Build, which must verify GitHub OIDC image pull and restricted candidate execution.
 
