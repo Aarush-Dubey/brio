@@ -3,19 +3,19 @@ import type { Actor, ControlState } from "./types";
 
 export const DEMO_STEP_INTERVAL_MS = 2000;
 export const DEMO_STEPS = [
-  { title: "Seeded report received", detail: "SIMULATED X report: 20°C displays as 20°F instead of 68°F.", phase: "RECEIVED" },
-  { title: "Report triaged", detail: "Deterministic fixture triage routes the conversion defect to engineering resolution.", phase: "TRIAGING" },
-  { title: "Defect reproduced", detail: "SIMULATED reproduction records 20°F actual versus 68°F expected.", phase: "INVESTIGATING" },
-  { title: "Build approval requested", detail: "A scoped Build request binds the weather repository, base revision, and lib/temperature.ts.", phase: "AWAITING_BUILD" },
-  { title: "Simulated Build approved", detail: "Simulated engineer approves the exact Build scope. No Slack decision occurred.", phase: "BUILDING" },
-  { title: "Candidate built", detail: "SIMULATED patch corrects the Celsius-to-Fahrenheit formula; candidate identity is recorded.", phase: "VERIFYING_CANDIDATE" },
-  { title: "Candidate verified", detail: "SIMULATED protected checks cover 20°C, 0°C, −40°C, 100°C, repeated toggles, and default units.", phase: "VERIFYING_CANDIDATE" },
-  { title: "Go approval requested", detail: "The exact candidate, check evidence, and customer reply are bound to a Go request.", phase: "AWAITING_GO" },
-  { title: "Simulated Go approved", detail: "Simulated marketer approves the exact candidate and reply. No Slack decision occurred.", phase: "RELEASING" },
-  { title: "Release promoted", detail: "SIMULATED promotion records the approved candidate. No repository or deployment provider was changed.", phase: "VERIFYING_LIVE" },
-  { title: "Live behavior verified", detail: "SIMULATED deployment identity and 20°C → 68°F behavior match the approved candidate.", phase: "READY_TO_PUBLISH" },
-  { title: "Approved reply sending", detail: "The publication guard checks the exact approval and fresh simulated evidence before the fixture send.", phase: "PUBLISHING" },
-  { title: "Reply confirmed", detail: "A SIMULATED receipt confirms the fixture reply. No public message was sent.", phase: "COMPLETED" },
+  { title: "Report received", detail: "20°C displays as 20°F instead of 68°F.", phase: "RECEIVED" },
+  { title: "Report triaged", detail: "The conversion defect is routed to engineering.", phase: "TRIAGING" },
+  { title: "Defect reproduced", detail: "Unit conversion returns 20°F; the expected result is 68°F.", phase: "INVESTIGATING" },
+  { title: "Build approval requested", detail: "The engineer reviews the repository, base revision, and allowed change scope.", phase: "AWAITING_BUILD" },
+  { title: "Build approved", detail: "The engineer's decision authorizes the scoped change.", phase: "BUILDING" },
+  { title: "Candidate built", detail: "The patch corrects the Celsius-to-Fahrenheit formula; candidate identity is recorded.", phase: "VERIFYING_CANDIDATE" },
+  { title: "Candidate verified", detail: "Checks cover 20°C, 0°C, −40°C, 100°C, repeated toggles, and default units.", phase: "VERIFYING_CANDIDATE" },
+  { title: "Go approval requested", detail: "The marketer reviews the candidate, check evidence, and exact customer reply.", phase: "AWAITING_GO" },
+  { title: "Go approved", detail: "The marketer's decision authorizes this candidate and reply.", phase: "RELEASING" },
+  { title: "Release promoted", detail: "The approved candidate advances to production verification.", phase: "VERIFYING_LIVE" },
+  { title: "Live behavior verified", detail: "Deployment identity and 20°C → 68°F behavior match the approved candidate.", phase: "READY_TO_PUBLISH" },
+  { title: "Approved reply sending", detail: "Publication checks pass for the exact reply, current approval, and fresh verification.", phase: "PUBLISHING" },
+  { title: "Reply confirmed", detail: "Reply receipt recorded. The report-to-resolution loop is closed.", phase: "COMPLETED" },
 ] as const;
 
 export const SIMULATED_DEMO_ACTOR: Actor = { id: "simulated-demo-run", name: "Simulated demo runner", roles: ["engineer", "marketer"] };

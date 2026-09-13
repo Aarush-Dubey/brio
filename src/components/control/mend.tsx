@@ -14,6 +14,7 @@ export function stageFor(record: CaseRecord): (typeof STAGES)[number] {
   if (["VERIFYING_CANDIDATE", "RELEASING", "VERIFYING_LIVE"].includes(record.phase)) return "Verifying";
   return "Reply approval";
 }
+export function caseTitle(record: CaseRecord) { return record.sourceMode === "fixture" ? record.title.replace(/^\[SIMULATED DEMO\]\s*/, "") : record.title; }
 export function shortId(id: string) { return id.length > 16 ? id.slice(-12).toUpperCase() : id; }
 export function reportCount(record: CaseRecord) { return record.signals?.length || 1; }
 export function formatTime(value: string | number) {
@@ -46,7 +47,7 @@ export function WorkspaceStrip({ snapshot, connection, lastSyncedAt }: { snapsho
   return <div className="mend-workspace-strip" aria-label="Workspace status">
     <span className="connection-status" data-state={connection}><i className="status-dot" />{connection === "live" ? "Live updates" : connection === "connecting" ? "Connecting" : connection === "reconnecting" ? "Reconnecting" : "Offline"}</span>
     {connection !== "live" && <span>{lastSyncedAt ? `Last synced ${formatTime(lastSyncedAt)}` : "No snapshot received yet"}</span>}
-    <span>{snapshot.mode === "demo" ? "Simulated integrations" : "Live workspace"}</span>
+    <span>Drizzle workspace</span>
     <span>{snapshot.workspace.model}</span>
     <span>${snapshot.workspace.spendUsd.toFixed(2)} spent + ${snapshot.workspace.reservedUsd.toFixed(2)} reserved / <b>${snapshot.workspace.capUsd.toFixed(2)} cap</b></span>
   </div>;

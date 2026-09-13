@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { expect, test, type Page } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 import { promises as fs } from "node:fs";
@@ -107,7 +108,7 @@ test("clearly labels demo provenance, model and budget; connection imports stay 
   page,
 }) => {
   await expect(
-    page.getByText("Local demo — simulated integrations"),
+    page.getByText("Demo data"),
   ).toBeVisible();
   await expect(page.getByLabel("Workspace status")).toContainText("gpt-5-mini");
   await expect(page.getByLabel("Workspace status")).toContainText(
@@ -971,7 +972,7 @@ test("simulated autoplay pauses, resumes, completes with fixture receipts, and r
   test.setTimeout(75_000);
   await identity(page, "engineer");
   const controls = page.getByRole("region", { name: "Live demo controls" });
-  await controls.getByRole("button", { name: /Run demo$/ }).click();
+  await controls.getByRole("button", { name: /Run workflow$/ }).click();
   await expect.poll(async () => (await snapshot(page)).demoRun?.stepIndex).toBeGreaterThanOrEqual(2);
   await controls.getByRole("button", { name: /Pause$/ }).click();
   await expect.poll(async () => (await snapshot(page)).demoRun?.status).toBe("paused");
@@ -993,7 +994,8 @@ test("simulated autoplay pauses, resumes, completes with fixture receipts, and r
   expect(result.phase).toBe("COMPLETED");
   expect(result.publications[0]).toMatchObject({ mode: "fixture", status: "confirmed" });
   expect(result.approvals.every(item => item.simulated)).toBe(true);
-  await expect(page.getByRole("region", { name: "Live event feed" })).toContainText("SIMULATED");
+  await expect(page.getByRole("region", { name: "Live event feed" })).toContainText("Reply confirmed");
+  await expect(page.getByText("Demo data", { exact: true })).toBeVisible();
   await controls.getByRole("button", { name: /Restart$/ }).click();
   await expect.poll(async () => (await snapshot(page)).demoRun?.runId).not.toBe(paused.runId);
   await controls.getByRole("button", { name: /Pause$/ }).click();
@@ -1001,4 +1003,28 @@ test("simulated autoplay pauses, resumes, completes with fixture receipts, and r
   expect(restarted.demoRun?.caseId).not.toBe(paused.caseId);
   expect(restarted.cases.find(item => item.id === paused.caseId)?.phase).toBe("COMPLETED");
   expect(restarted.demoRun?.status).toBe("paused");
+});
+
+
+test("rich workspace seed streams into the board and exposes persona conversations", async ({ page }) => {
+  const result = JSON.parse(execFileSync("bun", ["--no-env-file", "scripts/seed-demo.ts"], {
+    cwd: process.cwd(), encoding: "utf8",
+    env: { NODE_ENV: "test", PATH: process.env.PATH, FDE_DEMO_MODE: "true", FDE_DEMO_DATA_PATH: ".data/browser-tests.json" },
+  }));
+  expect(result.added).toBe(36);
+  await expect(page.locator('[data-case-id="MND-1041"]')).toBeAttached();
+  await expect(page.getByText("Demo data", { exact: true })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Live demo controls" })).not.toContainText(/simulated/i);
+  await page.getByRole("textbox", { name: "Search", exact: true }).fill("umbrella optimist");
+  await expect(page.locator("[data-case-id]")).toHaveCount(1);
+  await page.locator('[data-case-id="MND-1071"]').click();
+  await expect(page.getByRole("heading", { name: "BRAND REPLY", exact: true })).toBeVisible();
+  await expect(page.locator(".reply-preview")).toContainText("Playful Challenger");
+  await expect(page.locator(".reply-preview")).toContainText("Respectfully: bruh.");
+  await expect(page.locator(".ticket-timeline")).not.toContainText("Approve build");
+  await page.setViewportSize({ width: 390, height: 844 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.goto("/dashboard");
+  await expect(page.locator(".metric-stats")).toContainText("Signals recorded");
+  await expect(page.locator(".metric-stats")).not.toContainText(/simulated/i);
 });
