@@ -142,6 +142,18 @@ Both private repositories exist: [Mend/controller](https://github.com/Aarush-Dub
 <a id="step-3"></a>
 ## Step 3 — Create the hosted Convex backend
 
+**CLI account login first:** the CLI is installed, but local anonymous Convex does not imply a cloud account login. Run these commands from the Mend folder and finish the browser sign-in when prompted:
+
+```bash
+export PATH="/home/big-daddy/.bun/bin:$PATH"
+cd /home/big-daddy/Desktop/hackathon
+bun --no-env-file x --no-install convex login --login-flow poll --device-name mend-development
+bun --no-env-file x --no-install convex login status
+```
+
+A successful status check identifies your account/team. Do not share access tokens in chat. Device login links expire; rerun the login command for a fresh link if needed.
+
+
 **Purpose:** gives Mend an online database and a place to run background tasks. The existing local Convex instance does not accept callbacks from Slack or GitHub.
 
 ### 3A. Create the project and copy its addresses
@@ -191,6 +203,9 @@ Official reference: [Convex environment settings](https://docs.convex.dev/produc
 
 <a id="step-4"></a>
 ## Step 4 — Put the Mend website on Vercel
+
+**CLI alternative:** Vercel CLI is installed. Run `vercel login`, complete its browser sign-in, then run `vercel whoami`. A successful result shows your account name. Until this succeeds, the CLI cannot create the two projects in your account. Continue with the settings below after signing in; a temporary unclaimed deployment is not a substitute for account setup.
+
 
 **You need:** the Convex `.cloud` address and private `next.env` file. This project is for **Mend**, not weather.
 
@@ -496,3 +511,16 @@ Skip this for the first demo. Reddit requires approved API access, an OAuth app 
 ## After the hackathon
 
 Pause automated intake/publication in Mend. Delete paid Cloud Run services you no longer need, review Vercel/Convex billing, and revoke temporary provider tokens. Update the recorded budget when commitments actually end. Pausing a case in Mend does not stop a hosting subscription.
+
+
+## Populate the local presentation workspace
+
+The current local board has 38 incidents and 167 reports, including the two earlier workflow runs. To add the same 36-case sample pack to another local demo, run:
+
+```bash
+export PATH="/home/big-daddy/.bun/bin:$PATH"
+cd /home/big-daddy/Desktop/hackathon
+FDE_DEMO_MODE=true bun --no-env-file scripts/seed-demo.ts
+```
+
+Open the URL printed by your Next development server (`http://127.0.0.1:3002/cases` on the current machine). The board updates without a refresh. Running the seed again adds no duplicates and preserves existing cases. It saves a private backup beside `.data/demo-state.json`; optional `FDE_DEMO_DATA_PATH` selects another local file. The sample pack creates no live posts, approvals, deployments, connector sessions, or model charges. Use **Run workflow** on the board to show the moving incident; **Pause**, **Resume**, and **Restart** retain their existing behavior.

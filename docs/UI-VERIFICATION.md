@@ -105,3 +105,9 @@ The production build at `.next-e2e` preserves the user’s running `.next` dev s
 ## Complete GitHub browser run
 
 The fresh GitHub runner passed all **21 browser tests together in 1.4 minutes** on source commit `9da2b61`, after frozen installs and both production builds. Lint, TypeScript and all 490 automated tests also passed. [Run](https://github.com/Aarush-Dubey/hackathon/actions/runs/34782975073), [recorded summaries](../artifacts/github-ci-verification.json). This supersedes the earlier local split-run limitation above. Live provider decisions, browser accounts and deployment receipts remain separate prerequisites.
+
+## Rich workspace — 2026-09-14
+
+The local preview now has 38 incidents and 167 reports. All columns are populated with functional scrolling, excerpts, timestamps, varied routes and failures. The dashboard derives its charts from those records. The shared shell shows one compact Demo data indicator; stored fixture provenance remains available in operational records. Incident pages show persona name, draft version/status and reply text; engagement/support paths omit irrelevant build steps.
+
+Next.js compilation/runtime error checks passed; agent-browser React tree and fiber inspection verified CasesView. Desktop board/dashboard and the 390×844 persona view were inspected. All 22 production browser scenarios passed. See [board](../artifacts/seed-board.png), [dashboard](../artifacts/seed-dashboard.png), [persona reply](../artifacts/seed-persona-reply.png), [mobile](../artifacts/seed-persona-mobile.png), and [verification data](../artifacts/seed-workspace-verification.json).

@@ -1,6 +1,6 @@
 # PRD — FDE for B2C Apps
 
-**Status:** Final implementation baseline, v1.2\
+**Status:** Final implementation baseline, v1.3\
 **Finalized:** 2026-09-14\
 **Scope:** Two-person hackathon MVP\
 **Product:** A customer-to-engineering system with a configurable brand persona\
@@ -461,15 +461,21 @@ Show connecting, live, reconnecting, and offline/stale states with a last-update
 
 ### UI-03 — Repeatable presentation demo
 
-In explicit local demo mode, provide Run demo, Pause, Resume, and Restart. Start one new labeled weather incident and advance it through persisted fixture transitions: intake, triage, reproduction, waiting for engineer Build, simulated Build, candidate work and verification, waiting for marketer Go, simulated Go, release/live verification, and a confirmed simulated reply. Show the active stage and a running event timeline; the same record remains visible on the board and incident page.
+In explicit local demo mode, provide Run workflow, Pause, Resume, and Restart. Start one new weather incident with fixture provenance and advance it through persisted fixture transitions: intake, triage, reproduction, waiting for engineer Build, simulated Build, candidate work and verification, waiting for marketer Go, simulated Go, release/live verification, and a confirmed simulated reply. Show the active stage and a running event timeline; the same record remains visible on the board and incident page.
 
 Persist run identity, case identity, step index, status, next-step time, and event IDs. Advance at most one step per tick under the same state lock so simultaneous viewers or reconnection cannot duplicate a step. Pause stops progression; resuming or refreshing continues the current run. Restart creates a new run without deleting unrelated cases or receipts. Canceling the current case stops its demo progression. The presentation advances while the local demo is observed; it is not a substitute for durable live workflows.
 
-Every simulated approval, test, deployment, and receipt remains labeled. Demo actions are rejected in live mode and never call paid models, public social APIs, Slack, GitHub, Linear, Vercel, or the coding sandbox. Real mode displays actual workflow events and still waits for the engineer's Build and marketer's Go in Slack. The Mend tutorial may illustrate the sequence but must not be mistaken for live evidence.
+Keep one compact “Demo data” indicator in the shared workspace shell. Retain fixture provenance, simulated decision actors, and non-live receipts in stored records and the operational audit. Do not repeat simulation banners on cards, timelines, metrics, or activity. Demo actions are rejected in live mode and never call paid models, public social APIs, Slack, GitHub, Linear, Vercel, or the coding sandbox. Real mode displays actual workflow events and still waits for the engineer's Build and marketer's Go in Slack. The Mend tutorial may illustrate the sequence but must not be mistaken for live evidence.
 
 ### UI-04 — Living delivery documents
 
 Maintain `docs/PROGRESS.md` after meaningful work, verification, and blocker changes. Record completed work, work in progress, next steps, exact test evidence, and external prerequisites without secret values. Maintain `docs/SETUP-GUIDE.md` as the self-service instructions for every required app, connector, API credential, scope, callback URL, hosting setting, and configuration destination. Clearly identify already configured settings and manual account steps. Keep these documents and this PRD consistent when the user changes scope.
+
+### UI-05 — Rich seeded workspace and visible brand voice
+
+Provide an additive, repeatable local seed with at least 36 fictional incidents and 150 grouped reports across all seven Kanban columns, both source platforms, engineering, known-remedy and engagement routes. Include pending approvals, blocked evidence, failed checks, manual handoff, completed fixes, support instructions, praise, banter and light roasts. Spread timestamps across the prior week so dashboard charts reflect stored records. Existing cases, ongoing playback, persona policies, connection state, costs and actual provider configuration must survive seeding. Refuse live-state seeding, preserve a private backup before mutation, create no provider jobs, and leave capacity for interactive workflows.
+
+Make the workspace feel like a populated product: concise titles, report excerpts, dates, report counts, functional filters, scrollable columns, recorded activity and incident details. Show the selected persona name, draft version/status and full reply beside the original signal. Engagement and support timelines omit irrelevant build/release stages. Seeded approvals and receipts retain their internal fixture identity; examples cannot activate a live persona, fabricate a real provider receipt or grant production authority. Keep real live connectors gated on verified setup.
 
 ## 14. Reliability, limits, and recovery
 

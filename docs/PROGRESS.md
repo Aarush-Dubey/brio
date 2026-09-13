@@ -1,6 +1,6 @@
 # Mend implementation progress
 
-Last updated: 2026-09-13T21:23:35.522220+00:00
+Last updated: 2026-09-13T21:39:43.691140+00:00
 
 ## Current objective
 
@@ -8,7 +8,7 @@ Deliver the Mend interface, live Kanban/timeline, persona workflows and Slack ap
 
 ## Completed and verified
 
-- PRD v1.2 includes the supplied Mend design, live updates, presentation controls, persona rules and 36 acceptance scenarios with an integrated two-person ownership plan.
+- PRD v1.3 includes the supplied Mend design, live updates, presentation controls, persona rules and 36 acceptance scenarios with an integrated two-person ownership plan.
 - Mend pages and persistent 13-step demo are implemented. Next.js runtime/MCP inspection and desktop/mobile visual checks passed. Native Convex revision delivery and 10 stream tests passed.
 - GitHub CI on source commit `9da2b61` passed all 490 automated tests across 31 files, all 21 production browser tests together in 1.4 minutes, lint, TypeScript and both application builds. See [test report](TEST-REPORT.md).
 - Controller and separate weather target use Bun 1.4.2. Weather's intentional 20°C → 20°F defect is retained and reproduced by the protected baseline checks.
@@ -63,3 +63,11 @@ Hosted Convex, Slack settings on hosted Convex, its callback URL and live approv
 - 2026-09-13T21:22:09.315302+00:00: Completed Slack channel creation and verified Mend joined it. Saved all five available Slack settings in .env, private Convex bundle and local Convex; corrected engineer to Elen using the user-supplied ID. User explicitly deferred marketer configuration. Slack remains partially configured until the hosted callback and real approval test exist. Updated the guide with exact remaining steps.
 
 - 2026-09-13T21:23:35.522220+00:00: User supplied David’s marketer ID after the temporary deferral. Saved it in .env/private Convex bundle and verified the exact value in local Convex. All six Slack settings are now configured locally. Hosted Convex environment import, Interactivity callback and live approval test are the remaining Slack steps.
+
+- 2026-09-13T21:25:23.478446+00:00: User requested the local UI. Reused the existing Mend demo on 127.0.0.1:3002; landing, board and control API return HTTP 200, with mode demo. Queued the board in Codex’s browser panel. Confirmed installed Convex CLI 1.45.0 using Bun and a successful read-only CLI connection to the running local backend at 127.0.0.1:3210; all six Slack setting names are present. No reinstall or duplicate servers were needed.
+
+- 2026-09-13T21:37:59.974216+00:00: Added 36 fictional incidents and 165 reports without replacing the existing two cases: local preview now has 38 cases / 167 reports. Seed is additive/idempotent, rejects live state, keeps a private pre-seed backup, preserves existing policies/connections/costs and queues no provider work. Removed repeated simulation banners, retained a compact Demo data indicator and audit provenance, added excerpts and scrollable columns, merged recorded activity, and exposed persona replies with route-specific timelines. All 493 automated tests passed; lint/type checks and isolated production build passed. All 22 production browser scenarios passed together in 1.0 minute, including the new seeded-workspace stream/search/persona/mobile scenario.
+
+- 2026-09-13T21:37:59.974216+00:00: User requested remaining CLI account setup. Convex CLI 1.45.0 and Vercel CLI 59.16.0 are installed, but both report logged out for cloud access. Started browser device sign-in for both; hosted project creation cannot proceed before authentication completes. Existing anonymous local Convex backend remains intact. No public deployment or temporary unauthenticated Vercel site was created.
+
+- 2026-09-13T21:39:43.691140+00:00: Final local Next.js MCP checks report no compilation or runtime errors. React introspection confirms the populated CasesView, and the 390×844 persona incident view has no horizontal overflow. Saved the seed/UI verification record and desktop/mobile screenshots. GitHub CLI has write access to the existing controller repository; preparing separate seed, presentation, and documentation commits for PR #1. Convex/Vercel cloud login still reports not authenticated.

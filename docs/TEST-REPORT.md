@@ -45,3 +45,7 @@ The user’s real metadata request returned HTTP 400 with “Query too complex.�
 ## Slack configuration evidence
 
 The replacement bot token passed Slack auth.test for BitsUp; Mend is installed with chat:write and joined the created mend-approvals channel. All six settings, including the user-supplied Elen engineer ID and David marketer ID, are saved in .env/private bundle/local Convex. The first exposed token was revoked. Hosted Convex environment import and the public callback remain pending; no live approval message/test was sent. [Configuration record](../artifacts/slack-setup.json).
+
+## Populated workspace iteration — 2026-09-14
+
+Local verification on the complete seeded-workspace change passed 493 tests in 32 files, all 22 production browser scenarios together in 1.0 minute, lint, TypeScript and an isolated `.next-e2e` production build. The additional browser scenario seeds only its isolated test database, receives the changes over the event stream, filters the board, opens a persona reply and checks the mobile layout. Seed tests cover all stages, fixture-only targets, idempotence, preserved existing data and live-state rejection. [Recorded evidence](../artifacts/seed-workspace-verification.json). Cloud integration authentication remains separate from this local result.
