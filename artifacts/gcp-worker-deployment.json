@@ -1,9 +1,9 @@
 {
-  "verifiedAt": "2026-09-13T21:57:38.704761+00:00",
+  "verifiedAt": "2026-09-13T22:22:06.005773+00:00",
   "projectId": "mend-hackathon-260914",
   "projectNumber": "428020372764",
   "region": "us-central1",
-  "cloudBuildId": "b06bcb6d-1bcf-4958-b04b-4f5ecb516b56",
+  "cloudBuildId": "569f3b8b-c458-490d-bf73-1d9775c4bc86",
   "cloudBuildStatus": "SUCCESS",
   "budgetPolicyCreated": false,
   "secretNames": [
@@ -17,8 +17,8 @@
       "service": "mend-weather-verifier",
       "origin": "https://mend-weather-verifier-ajmx2yigqq-uc.a.run.app",
       "worker": "verifier",
-      "revision": "mend-weather-verifier-00002-lfc",
-      "imageDigest": "sha256:ae5de1e9cb4f6064ed1eb9201f99b80b58fe040a516abbc1db5f31d96c6d98df",
+      "revision": "mend-weather-verifier-00003-s98",
+      "imageDigest": "sha256:f15cf144092f0acbb686d259df2a51812eeb0499129528c5c87c5fe0445530eb",
       "serviceAccount": "mend-verifier-runtime@mend-hackathon-260914.iam.gserviceaccount.com",
       "containerConcurrency": 1,
       "timeoutSeconds": 180,
@@ -51,16 +51,16 @@
         "run.googleapis.com/execution-environment": "gen2",
         "run.googleapis.com/startup-cpu-boost": "true"
       },
-      "image": "us-central1-docker.pkg.dev/mend-hackathon-260914/mend-workers/verifier@sha256:ae5de1e9cb4f6064ed1eb9201f99b80b58fe040a516abbc1db5f31d96c6d98df",
+      "image": "us-central1-docker.pkg.dev/mend-hackathon-260914/mend-workers/verifier@sha256:f15cf144092f0acbb686d259df2a51812eeb0499129528c5c87c5fe0445530eb",
       "browserVerified": true,
-      "note": "Cloud Chromium reproduced exact-revision seeded defect."
+      "note": "Fresh merged weather main verified through cloud Chromium: exact deployment identity and intended seeded defect reproduced."
     },
     {
       "service": "mend-social-worker",
       "origin": "https://mend-social-worker-ajmx2yigqq-uc.a.run.app",
       "worker": "social",
-      "revision": "mend-social-worker-00002-9kc",
-      "imageDigest": "sha256:5a2d8d8604bb47df5e7f368624ec3a9188eb0837779412c09494b70074230513",
+      "revision": "mend-social-worker-00004-77f",
+      "imageDigest": "sha256:681914f5e626c56db91a7a25e0edb7e63b69672575d4ae5f1c8b38a7054280dc",
       "serviceAccount": "mend-social-runtime@mend-hackathon-260914.iam.gserviceaccount.com",
       "containerConcurrency": 1,
       "timeoutSeconds": 180,
@@ -71,7 +71,7 @@
         }
       },
       "setupPending": false,
-      "readyForJobs": false,
+      "readyForJobs": true,
       "probes": [
         {
           "method": "GET",
@@ -81,7 +81,7 @@
             "status": "ok",
             "implementation": "experimental",
             "queue": "convex",
-            "livePermission": "access_pending"
+            "livePermission": "configured_unverified"
           }
         }
       ],
@@ -94,14 +94,14 @@
         "run.googleapis.com/execution-environment": "gen2",
         "run.googleapis.com/startup-cpu-boost": "true"
       },
-      "image": "us-central1-docker.pkg.dev/mend-hackathon-260914/mend-workers/social@sha256:5a2d8d8604bb47df5e7f368624ec3a9188eb0837779412c09494b70074230513",
-      "browserVerified": false,
-      "note": "Execution enabled; social accounts and platform permission remain gated."
+      "image": "us-central1-docker.pkg.dev/mend-hackathon-260914/mend-workers/social@sha256:681914f5e626c56db91a7a25e0edb7e63b69672575d4ae5f1c8b38a7054280dc",
+      "browserVerified": true,
+      "note": "Vinaychamoc5 session revalidated. Automatic posting enabled by explicit account-owner instruction; external platform approval not independently verified. Background polling off; Reddit disabled."
     }
   ],
   "remaining": [
-    "Exact drizzle123 X session and verified platform permission",
-    "Approved Reddit API access, OAuth application and permitted subreddits",
-    "GitHub signed Build after reviewed controller workflow merge"
-  ]
+    "Exercise real engineer Build through GitHub OIDC sandbox pull",
+    "Exercise human marketer Go, release verification and approved reply receipt"
+  ],
+  "sourceRevision": "6981750"
 }

@@ -1,0 +1,22 @@
+{
+  "controllerSourceRevision": "e8f2dd01e8403ca97c392bf16ef93bcaa81d01ba",
+  "appDeploymentId": "dpl_BXDqW34ib72uTQoTVsCCfbgXY3m4",
+  "appOrigin": "https://mend-hackathon.vercel.app",
+  "convexDeployment": "resilient-perch-131",
+  "convexFunctionsSource": "6981750",
+  "workerBuild": "569f3b8b-c458-490d-bf73-1d9775c4bc86",
+  "socialRevision": "mend-social-worker-00004-77f",
+  "verifierRevision": "mend-weather-verifier-00003-s98",
+  "redditDeferred": true,
+  "publicRepliesSent": 0,
+  "endToEndBuildRunVerified": false,
+  "verifiedAt": "2026-09-13T22:22:29.910862+00:00",
+  "controllerMainRevision": "8a7636e2709d039773afa73857e6cb66f08a7d6f",
+  "weatherMainRevision": "161835dba251f9739d25194ec21db0f2461df989",
+  "weatherDeploymentId": "dpl_2j3VMkCbdSJtAh565FdkXpu76PGK",
+  "controllerAndWeatherProductionPinsConfigured": true,
+  "xAutomaticPostingEnabled": true,
+  "xAuthorizationSource": "Explicit account-owner instruction",
+  "externalXPlatformApproval": "not independently verified",
+  "socialPollingEnabled": false
+}
