@@ -10,7 +10,7 @@ Updated 14 September 2026. This is the checklist for the existing installation. 
 | brio website | [mend-hackathon.vercel.app](https://mend-hackathon.vercel.app) | Source `872c226` deployed as `dpl_3Ywkgbs9Q3afzFf2jH7acFkfm2Dd`; shared-code admission verified. Local populated demo remains on port 3002; hosted production is separate. |
 | Weather website | [mend-weather.vercel.app](https://mend-weather.vercel.app) | Merged main `161835dba251f9739d25194ec21db0f2461df989` deployed as `dpl_2j3VMkCbdSJtAh565FdkXpu76PGK`; staged and stable URLs each passed exact identity verification and reproduced the planted defect in 34 browser checks. |
 | Vercel API | Token saved and imported into production Convex | Real project, deployment, production alias, staging settings and environment allowlist verified. Automatic domain assignment is disabled. |
-| GCP | Project `mend-hackathon-260914`, region `us-central1` | Social revision `00004-77f` and verifier `00003-s98` active and healthy; immutable sandbox image built and offline Chromium smoke passed. No further GCP credentials needed. |
+| GCP | Project `mend-hackathon-260914`, region `us-central1` | Social revision `00005-6wc` and verifier `00003-s98` active and healthy; immutable sandbox image built and offline Chromium smoke passed. No further GCP credentials needed. |
 | OpenAI | App key installed; `gpt-5-mini` | Prior real writer, triage and persona evaluation passed. |
 | Linear | Drizzle team and Done state configured in hosted Convex | Metadata read verified; issue creation/update still needs a controlled live flow. |
 | GitHub | Separate controller/weather repositories and engineering environments | Controller PR #1 merged as `8a7636e`; final CI passed. Hosted callback, sandbox pull settings and Checks App configured; remaining baseline and execution work is below. |
@@ -45,7 +45,7 @@ The saved URL has already been verified after reloading Slack settings. An unsig
 
 ## 3. X is ready; the controlled posting check remains
 
-**@Vinaychamoc5** was reimported after the operator explicitly requested enablement. The hosted worker returned HTTP 200 and verified the account identity; brio reports **ready** with **paused false**. Both X switches are enabled on social revision `mend-social-worker-00004-77f` and production Convex. [Enablement evidence](../artifacts/x-automation-enablement.json).
+**@Vinaychamoc5** was reimported after the operator explicitly requested enablement. The hosted worker returned HTTP 200 and verified the account identity; brio reports **ready** with **paused false**. Both X switches are enabled on social revision `mend-social-worker-00005-6wc` and production Convex. [Enablement evidence](../artifacts/x-automation-enablement.json).
 
 Background social polling remains **off**, and no X post or reply has been sent. Keep the verified connection and exercise the approved case flow below; do not import another session or create another account. Operator enablement does not establish external X approval, which has not been independently verified.
 

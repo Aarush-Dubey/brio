@@ -140,7 +140,7 @@ For example, `https://calm-fox-123.convex.cloud` is a Convex function URL and `h
 
 Both private repositories exist: [brio/controller](https://github.com/Aarush-Dubey/hackathon) and [weather](https://github.com/Aarush-Dubey/hackathon-weather). Their branch protections, read-only weather checkout key, GitHub signing keys and PR-writing credential are configured. Your OpenAI key has also been tested.
 
-**Current publication status:** final CI [34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`; controller [PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged to protected `main` as `8a7636e2709d039773afa73857e6cb66f08a7d6f`. Hosted brio runs lowercase-brand source `872c226`, and production Convex plus the workers run source `6981750`. Weather bootstrap passed and weather PR #1 merged as `161835dba251f9739d25194ec21db0f2461df989`. Production Convex is pinned to controller main `8a7636e`; the merged weather baseline is deployed and verified at staged and stable URLs, and production `FDE_BASE_SHA` is pinned to `161835dba251f9739d25194ec21db0f2461df989`. See [remaining setup](SETUP-REMAINING.md) for the latest remaining work.
+**Current publication status:** final CI [34785978933](https://github.com/Aarush-Dubey/hackathon/actions/runs/34785978933) passed on `e8f2dd0`; controller [PR #1](https://github.com/Aarush-Dubey/hackathon/pull/1) merged to protected `main` as `8a7636e2709d039773afa73857e6cb66f08a7d6f`. Hosted brio runs lowercase-brand source `872c226`, and production Convex and the verifier run source `6981750`, and the social worker runs `872c226`. Weather bootstrap passed and weather PR #1 merged as `161835dba251f9739d25194ec21db0f2461df989`. Production Convex is pinned to controller main `8a7636e`; the merged weather baseline is deployed and verified at staged and stable URLs, and production `FDE_BASE_SHA` is pinned to `161835dba251f9739d25194ec21db0f2461df989`. See [remaining setup](SETUP-REMAINING.md) for the latest remaining work.
 
 <a id="step-3"></a>
 ## Step 3 — Create the hosted Convex backend
@@ -389,7 +389,7 @@ Official reference: [Vercel project settings](https://vercel.com/docs/project-co
 
 We are using **Google Cloud Run** for both workers. You do not need a Render account.
 
-The project and both services are configured with hosted URLs and current images. Social revision `mend-social-worker-00004-77f` and verifier revision `mend-weather-verifier-00003-s98` pass their health checks. X is enabled at the operator’s request and its reimported account reports ready; background polling remains off. No GCP setup action is required now; [SETUP-GCP.md](SETUP-GCP.md) is the reference for future configuration and shutdown.
+The project and both services are configured with hosted URLs and current images. Social revision `mend-social-worker-00005-6wc` and verifier revision `mend-weather-verifier-00003-s98` pass their health checks. X is enabled at the operator’s request and its reimported account reports ready; background polling remains off. No GCP setup action is required now; [SETUP-GCP.md](SETUP-GCP.md) is the reference for future configuration and shutdown.
 
 | Service | What it does | Setting to copy back |
 | --- | --- | --- |

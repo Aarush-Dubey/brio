@@ -5,7 +5,7 @@
   "convexDeployment": "resilient-perch-131",
   "convexFunctionsSource": "6981750",
   "workerBuild": "569f3b8b-c458-490d-bf73-1d9775c4bc86",
-  "socialRevision": "mend-social-worker-00004-77f",
+  "socialRevision": "mend-social-worker-00005-6wc",
   "verifierRevision": "mend-weather-verifier-00003-s98",
   "redditDeferred": true,
   "publicRepliesSent": 0,
@@ -19,5 +19,6 @@
   "xAuthorizationSource": "Explicit account-owner instruction",
   "externalXPlatformApproval": "not independently verified",
   "socialPollingEnabled": false,
-  "productName": "brio"
+  "productName": "brio",
+  "socialWorkerBuild": "e31a15fd-5a36-4c02-903c-1ce57a415aa1"
 }

@@ -41,7 +41,7 @@ GitHub Actions results are separate from local checks. Controller PR #1 is merge
 
 The 13-step simulation completed in the production browser with pause/reload/resume/restart coverage. Cross-tab SSE delivery passed with observer HTTP reads blocked; a 503 stream failure recovered through HTTP fallback and returned to SSE without a reload. Ten stream unit tests cover access failure, cancellation, native callback delivery, redaction and renewal. Five pending-worker tests ensure every job/import/verification endpoint rejects while setup is incomplete.
 
-GCP project and billing linkage are real, as are the runtime/build identities and four scoped Secret Manager entries. Cloud Build `569f3b8b-c458-490d-bf73-1d9775c4bc86` successfully built worker source `6981750`. Active revisions are `mend-social-worker-00004-77f` and `mend-weather-verifier-00003-s98`. Their health routes report ok. Social revision `00004-77f` applies the later operator-authorized X configuration; identity reimport is verified, polling remains off, and no posting test is claimed. [Deployment evidence](../artifacts/gcp-worker-deployment.json) records the actual revisions, image digests and probes. Cloud Run Chromium execution is verified by the hosted baseline evidence below. No live social post, weather fix or release is implied by infrastructure setup.
+GCP project and billing linkage are real, as are the runtime/build identities and four scoped Secret Manager entries. Cloud Build `569f3b8b-c458-490d-bf73-1d9775c4bc86` successfully built worker source `6981750`. Active revisions are `mend-social-worker-00005-6wc` and `mend-weather-verifier-00003-s98`. Their health routes report ok. Social revision `00005-6wc` applies brio source `872c226` from the later social-only build `e31a15fd-5a36-4c02-903c-1ce57a415aa1`, preserving the operator-authorized X configuration; identity reimport is verified, polling remains off, and no posting test is claimed. [Initial deployment evidence](../artifacts/gcp-worker-deployment.json) and [latest social deployment evidence](../artifacts/brio-social-worker-deployment.json) record the revisions, image digests and probes. Cloud Run Chromium execution is verified by the hosted baseline evidence below. No live social post, weather fix or release is implied by infrastructure setup.
 
 ## Linear setup correction
 
@@ -57,7 +57,7 @@ Local verification on the complete seeded-workspace change passed 493 tests in 3
 
 ## Hosted verification — 14 September 2026
 
-Hosted brio deployment `dpl_BXDqW34ib72uTQoTVsCCfbgXY3m4` runs source `e8f2dd0`; production Convex `resilient-perch-131` and both rebuilt workers run function/worker source `6981750`. These deployment identities do not prove a completed customer repair.
+Hosted brio deployment `dpl_3Ywkgbs9Q3afzFf2jH7acFkfm2Dd` and the social worker run lowercase-brand source `872c226`; production Convex `resilient-perch-131` and the verifier run source `6981750`. These deployment identities do not prove a completed customer repair.
 
 - [Hosted brio admission](../artifacts/hosted-mend-verification.json): unauthenticated page redirect, API denial, wrong-code denial, secure HttpOnly cookie and authenticated live Convex state all verified.
 - [Vercel and callback checks](../artifacts/hosted-provider-verification.json): token accesses the expected weather project, production alias resolves to the recorded deployment, candidate auto-assignment is disabled, only public identity settings exist, and unsigned Slack callback is refused.
@@ -69,7 +69,7 @@ Weather bootstrap [34786278162](https://github.com/Aarush-Dubey/hackathon/action
 No live public message or complete engineer-to-marketer approval flow is claimed.
 
 - GitHub Checks App 4934302: matching private key verified, selected weather-only installation confirmed, writer environment saved, repository-scoped token mint succeeded and probe token revoked. [Evidence](../artifacts/github-checks-app-setup.json).
-- X: operator-authorized enablement set both switches true; reimport returned HTTP 200 and verified `Vinaychamoc5` at 22:21:24 UTC on 13 September (14 September locally). The connection reports ready, paused false; social revision `00004-77f` serves all traffic. Polling remains off and no public send is verified. External X approval is not independently verified. [Enablement evidence](../artifacts/x-automation-enablement.json).
+- X: operator-authorized enablement set both switches true; reimport returned HTTP 200 and verified `Vinaychamoc5` at 22:21:24 UTC on 13 September (14 September locally). The connection reports ready, paused false; social revision `00005-6wc` now serves all traffic. Polling remains off and no public send is verified. External X approval is not independently verified. [Enablement evidence](../artifacts/x-automation-enablement.json).
 
 ## Complete connector and dispatch verification
 
